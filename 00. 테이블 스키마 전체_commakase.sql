@@ -258,7 +258,9 @@ DROP SEQUENCE goods_reply_seq;
 DROP SEQUENCE cart_seq;
 DROP SEQUENCE payment_seq;
 
-CREATE TABLE goods_reply (
+-- 2. 객체 생성
+    -- 2-1. 리뷰
+    CREATE TABLE goods_reply (
     ID VARCHAR2(30),
     PW VARCHAR2(60),
     write_date DATE,
@@ -271,42 +273,90 @@ CREATE TABLE goods_reply (
     goods_name VARCHAR2(300)
 );
 
-CREATE TABLE cart (
-    goods_no NUMBER NOT NULL,
-    goods_name VARCHAR2(300) NOT NULL,
-    image_name VARCHAR2(300),
-    price NUMBER NOT NULL,
-    goods_cnt NUMBER NOT NULL,
-    goods_total_price NUMBER NOT NULL, 
-    selected_goods_price NUMBER NOT NULL,
-    delivery_charge NUMBER,
-    cart_no NUMBER PRIMARY KEY NOT NULL,
-    discount NUMBER,
-    total_discount NUMBER,
-    final_price NUMBER,
-    selected NUMBER(1) DEFAULT 0 NOT NULL -- 0: false, 1: true    
-);
-
-CREATE TABLE payment (
-    goods_no NUMBER NOT NULL,
-    goods_name VARCHAR2(300) NOT NULL,
-    image_name VARCHAR2(300),
-    price NUMBER NOT NULL,
-    goods_cnt NUMBER NOT NULL,
-    goods_total_price NUMBER NOT NULL, 
-    delivery_charge NUMBER,
-    cart_no NUMBER NOT NULL,
-    total_discount NUMBER,
-    final_price NUMBER,
-    delivery_place VARCHAR2(300),
-    payment_id NUMBER,
-    created_at DATE,
-    payment_status NUMBER
-);
+    -- 2-1. 장바구니
+    CREATE TABLE cart (
+        id VARCHAR2(50) not null,
+        goods_no NUMBER NOT NULL,
+        goods_name VARCHAR2(300) NOT NULL,
+        image_name VARCHAR2(300),
+        price NUMBER NOT NULL,
+        quantity NUMBER NOT NULL,
+        goods_total_price NUMBER NOT NULL, 
+        selected_goods_price NUMBER NOT NULL,
+        delivery_charge NUMBER,
+        cart_no NUMBER NOT NULL,
+        item_no NUMBER NOT NULL,
+        discount NUMBER,
+        total_discount NUMBER,
+        totalAmount NUMBER,
+        selected NUMBER(1) DEFAULT 0 NOT NULL -- 0: false, 1: true    
+        );
+        
+    -- 2-1. 결제
+    CREATE TABLE payment (  
+        goods_no NUMBER NOT NULL,
+        goods_name VARCHAR2(300) NOT NULL,
+        image_name VARCHAR2(300),
+        price NUMBER NOT NULL,
+        quantity NUMBER NOT NULL,
+        goods_total_price NUMBER NOT NULL, 
+        delivery_charge NUMBER,
+        cart_no NUMBER NOT NULL,
+        total_discount NUMBER,
+        totalAmount NUMBER,
+        delivery_place VARCHAR2(300),
+        payment_id NUMBER,
+        created_at DATE,
+        payment_status NUMBER
+        );
     
 CREATE SEQUENCE goods_reply_seq;
 CREATE SEQUENCE cart_seq;
 CREATE SEQUENCE payment_seq;
+
+-- 샘플데이터 추가
+     -- 샘플 데이터 1
+    INSERT INTO cart (id, goods_no, goods_name, image_name, price, quantity, goods_total_price, 
+                   selected_goods_price, delivery_charge, cart_no, discount, total_discount, 
+                   totalAmount, selected, item_no)
+    VALUES (1, 1001, '스마트폰', 'smartphone.jpg', 500000, 1, 500000, 
+        0, 3000, 1, 0, 0, 503000, 0, cart_seq.NEXTVAL);
+
+    -- 샘플 데이터 2
+    INSERT INTO cart (id, goods_no, goods_name, image_name, price, quantity, goods_total_price, 
+                   selected_goods_price, delivery_charge, cart_no, discount, total_discount, 
+                   totalAmount, selected, item_no)
+    VALUES (1, 1002, '노트북', 'laptop.jpg', 1200000, 1, 1200000, 
+        0, 5000, 1, 100000, 0, 1100000, 1, cart_seq.NEXTVAL);
+
+    -- 샘플 데이터 3
+    INSERT INTO cart (id, goods_no, goods_name, image_name, price, quantity, goods_total_price, 
+                   selected_goods_price, delivery_charge, cart_no, discount, total_discount, 
+                   totalAmount, selected, item_no)
+    VALUES (1, 1003, '헤드폰', 'headphones.jpg', 150000, 2, 300000, 
+        0, 0, 1, 0, 0, 300000, 0, cart_seq.NEXTVAL);
+        
+         -- 샘플 데이터 1
+    INSERT INTO cart (id, goods_no, goods_name, image_name, price, quantity, goods_total_price, 
+                   selected_goods_price, delivery_charge, cart_no, discount, total_discount, 
+                   totalAmount, selected, item_no)
+    VALUES (2, 1001, '스마트폰', 'smartphone.jpg', 500000, 1, 500000, 
+        0, 3000, 1, 0, 0, 503000, 0, cart_seq.NEXTVAL);
+
+    -- 샘플 데이터 2
+    INSERT INTO cart (id, goods_no, goods_name, image_name, price, quantity, goods_total_price, 
+                   selected_goods_price, delivery_charge, cart_no, discount, total_discount, 
+                   totalAmount, selected, item_no)
+    VALUES (2, 1002, '노트북', 'laptop.jpg', 1200000, 1, 1200000, 
+        0, 5000, 1, 100000, 0, 1100000, 1, cart_seq.NEXTVAL);
+
+    -- 샘플 데이터 3
+    INSERT INTO cart (id, goods_no, goods_name, image_name, price, quantity, goods_total_price, 
+                   selected_goods_price, delivery_charge, cart_no, discount, total_discount, 
+                   totalAmount, selected, item_no)
+    VALUES (2, 1003, '헤드폰', 'headphones.jpg', 150000, 2, 300000, 
+        0, 0, 1, 0, 0, 300000, 0, cart_seq.NEXTVAL);
+commit;
 
 -- ★★★★★★ MEMBER, GRADE (SEQ O) (DROP, CREATE, INSERT, 예시) ★★★★★★ ----------------------------------------------------------
 drop table member cascade constraints purge;
@@ -342,4 +392,4 @@ insert into member (id, pw, nicname, email, address, gradeNo) values('user1','us
 insert into member (id, pw, nicname, email, address, gradeNo) values('user2','user2','박유저','user2@gmail.com','강원 동해시 낙수대로 38, 낙수힐스테이트 312동 101호',1);
 commit;
 
-
+SELECT goods_no, COUNT(*) FROM cart GROUP BY goods_no HAVING COUNT(*) > 1;

@@ -1,0 +1,148 @@
+@charset "UTF-8";
+
+pre {
+    background: white;
+    border: 0px;
+}
+
+.navbar {
+    margin-bottom: 0;
+    border-radius: 0;
+    background-color: #003366 !important; /* 다크 블루 배경색 */
+}
+
+.navbar-brand, .nav-link, .btn-outline-light {
+    color: white !important; /* 연한 블루 텍스트 색상 */
+}
+
+.footer {
+    background-color: #003366; /* 짙은 블루 */
+    color: white;
+    padding: 20px 0;
+}
+
+.footer-content {
+    max-width: 1200px; /* 최대 너비 설정 */
+    margin: 0 auto; /* 중앙 정렬 */
+    padding: 0 20px; /* 좌우 패딩 */
+}
+
+.footer-links {
+    margin: 10px 0;
+}
+
+.footer-links .nav {
+    list-style: none; /* 리스트 스타일 제거 */
+    padding: 0; /* 패딩 제거 */
+}
+
+.footer-links .nav-item {
+    display: inline; /* 가로 나열 */
+    margin: 0 10px; /* 간격 조정 */
+}
+
+.footer-links .nav-link {
+    color: white;
+    text-decoration: none;
+}
+
+.footer-links .nav-link:hover {
+    text-decoration: underline; /* 마우스 오버 시 언더라인 효과 */
+}
+
+.company-info, .family-sites {
+    margin: 15px 0;
+}
+
+.family-sites img {
+    max-width: 150px; /* 로고 이미지 최대 너비 */
+    height: auto; /* 비율 유지 */
+}
+
+h4 {
+    margin: 10px 0; /* 제목의 마진 조정 */
+}
+
+
+.carousel-inner img {
+    width: 100%;
+    margin: auto;
+    min-height: 200px;
+}
+
+@media (max-width: 600px) {
+    .carousel-caption {
+        display: none;
+    }
+}
+
+article {
+    min-height: 795px;
+    padding-top: 15px;
+}
+
+.card {
+    border: 1px solid;
+}
+
+.card-title {
+    color: #003366;
+}
+
+.btn-primary {
+    background-color: #003366;
+    border-color: #003366;
+}
+
+/* Session msg 모달 스타일 */
+#msgModal .modal-content {
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    background-color: #ffffff; /* 흰색 배경 */
+}
+
+#msgModal .modal-header {
+    background-color: #003366; /* 블루 계열 */
+    color: #ffffff; /* 흰색 텍스트 */
+    border-bottom: none;
+}
+
+#msgModal .modal-body {
+    padding: 1.5rem;
+    color: #333;
+}
+
+#msgModal .modal-footer {
+    background-color: #f8f9fa;
+    border-top: none;
+    padding: 1rem;
+}
+
+/* 리스트 그룹 아이템 스타일 */
+.list-group-item {
+    background-color: #f8f9fa; 밝은 회색 배경
+    color: #333; 텍스트 색상
+    border: 1px solid #ddd; 경계선 색상
+    transition: background-color 0.3s ease; 마우스 오버 시 효과
+}
+
+.list-group-item:hover {
+    background-color: #e2e6ea; 마우스 오버 시 배경색
+}
+
+/* 대분류, 중분류 탭 스타일 */
+.nav-tabs .nav-link {
+    background-color: #6c757d; 짙은 회색 배경
+    color: white; 탭 텍스트 색상
+    border: 1px solid #ddd; 경계선
+    transition: background-color 0.3s ease; 마우스 오버 시 효과
+}
+
+.nav-tabs .nav-link:hover {
+    background-color: #5a6268; 마우스 오버 시 색상
+}
+
+.nav-tabs .nav-link.active {
+    background-color: #003366; 활성 탭 배경색
+    color: white; 활성 탭 텍스트 색상
+}

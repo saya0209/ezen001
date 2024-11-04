@@ -85,7 +85,7 @@ public class CartController {
     
     // 결제완료 화면
     @PostMapping("/completePayment/{id}")
-    public String completePayment(@PathVariable("id") Long id, Model model) {
+    public String completePayment(@PathVariable("id") String id, Model model) {
         log.info("completePayment() 호출 - id: " + id);
 
         // 필요한 경우 결제 완료에 필요한 정보 추가

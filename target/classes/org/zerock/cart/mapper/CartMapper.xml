@@ -32,7 +32,7 @@
     </update>
 
     <!-- 상품 번호로 장바구니 아이템 조회 -->
-    <select id="getCartItemByGoodsNo" parameterType="long" resultType="org.zerock.cart.vo.CartItemVO">
+    <select id="getCartItemByGoodsNo" parameterType="string" resultType="org.zerock.cart.vo.CartItemVO">
         SELECT *
         FROM cart
         WHERE goods_no = #{goods_no}

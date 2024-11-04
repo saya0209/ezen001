@@ -23,6 +23,13 @@
 	    SET quantity = #{quantity}, goods_total_price = #{goods_total_price}
 	    WHERE goods_no = #{goods_no} AND id = #{id}
 	</update>
+	
+	<!-- 장바구니 선택 여부 업데이트 -->
+	<update id="updateSelection">
+	    UPDATE cart 
+	    SET selected = #{selected} 
+	    WHERE goods_no = #{goodsNo} AND id = #{id}
+	</update>
 
     <!-- 총 가격 업데이트 -->
     <update id="updateGoodsTotalPrice">

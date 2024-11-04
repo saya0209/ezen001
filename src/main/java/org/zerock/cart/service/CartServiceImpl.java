@@ -67,6 +67,15 @@ public class CartServiceImpl implements CartService {
         }
         return totalAmount;
     }
+	
+	public void updateSelection(Long goodsNo, int selected, String id) {
+		Map<String, Object> params = new HashMap<>();
+	    params.put("goodsNo", goodsNo);
+	    params.put("selected", selected); // 'selected'가 맞는지 확인
+	    params.put("id", id);
+		
+		mapper.updateSelection(params);
+	}
 
 	@Override
     public void updateGoodsTotalPrice(Long goods_no, int quantity) {

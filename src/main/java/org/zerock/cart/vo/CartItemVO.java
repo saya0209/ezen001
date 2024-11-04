@@ -1,6 +1,7 @@
 package org.zerock.cart.vo;
 
 import java.util.Date;
+import java.util.List;
 
 import lombok.Data;
 
@@ -24,5 +25,8 @@ public class CartItemVO {
     private Date purchase_date;         // 구매 날짜
     private String category;            // 상품 카테고리
 
+    
+    
 }
+
 

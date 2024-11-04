@@ -57,10 +57,9 @@
 	        // 가격 계산
 	        var delivery_charge = parseInt(document.getElementById('delivery_charge-' + goods_no).value); // 배송비 가져오기
 	        var price = parseInt(document.getElementById('price-' + goods_no).value); // 상품 가격
-	        var totalCell = document.getElementById('total' + goods_no); // 총 가격 셀
+	        var totalCell = document.getElementById('total-' + goods_no); // 총 가격 셀
 	        var total = newValue * price + delivery_charge; // 총 가격 계산
 	        totalCell.innerHTML = new Intl.NumberFormat().format(total) + ' 원'; // 총 가격 업데이트
-	
 	        // 전체 결제 금액 업데이트
 	        updateTotalAmount();
 	
@@ -70,20 +69,42 @@
 
         // 전체 결제 금액 업데이트 함수
         function updateTotalAmount() {
-            var totalAmount = 0;
-            var items = document.getElementsByClassName('item-total'); // 각 상품 총 가격 요소
-            for (var i = 0; i < items.length; i++) {
-                var goods_no = items[i].id.split('-')[1]; // goods_no 추출
-                var itemTotal = parseInt(items[i].innerHTML.replace(/ 원/g, '').replace(/,/g, '')); // 상품 총 가격
-                var checkbox = document.querySelector(`input[type="checkbox"][value="${goods_no}"]`); // 체크박스 선택
+		    console.log("updateTotalAmount 함수 시작"); // 함수 시작 시 로그 출력
+		    var totalAmount = 0;
+		    var items = document.querySelectorAll('.item-total'); // 각 상품 총 가격 요소를 NodeList로 가져오기
+		
+		    console.log(items);
+		    // items 요소 확인
+		    console.log('items 길이: ' + items.length);
+		    if (items.length === 0) {
+		        console.warn("item-total 클래스를 가진 요소가 없습니다.");
+		    }
+		
+		    items.forEach(function(item) {
+		        // goods_no 및 itemTotal 추출 및 확인
+		        console.log(item);
+		        var goods_no = item.id.split('-')[1]; // goods_no 추출
+		        var itemTotal = parseInt(item.innerHTML.replace(/ 원/g, '').replace(/,/g, ''));
+		        console.log('상품 번호: ' + goods_no + ', 상품 총 가격: ' + itemTotal);
+		
+		        var checkboxList = document.querySelectorAll('input[type="checkbox"].form-check-input');
+		        var checkbox = Array.from(checkboxList).find(cb => cb.value === goods_no);
 
-                // 체크된 상품의 총 가격만 계산
-                    totalAmount += itemTotal; // 체크된 상품의 가격만 합산
-                if (checkbox && checkbox.checked) {
-                }
-            }
-            document.getElementById('finalTotal').innerHTML = new Intl.NumberFormat().format(totalAmount) + ' 원'; // 최종 금액 업데이트
-        }
+		        if (checkbox) {
+		            console.log('체크박스 체크 여부 : '+goods_no+ ':' +checkbox.checked);
+		            if (checkbox.checked) {
+		                totalAmount += itemTotal;
+		            }
+		        } else {
+		            console.warn('체크박스를 찾을 수 없습니다. 상품 번호: '+goods_no);
+		        }
+		    });
+		
+		    console.log('최종 금액: '+totalAmount); // 최종 금액 로그
+		    document.getElementById('finalTotal').innerHTML = new Intl.NumberFormat().format(totalAmount) + ' 원';
+		}
+
+        
 
         // 페이지 로딩 시 전체 금액 계산
         window.onload = function() {
@@ -106,15 +127,83 @@
             };
             xhr.send("goods_no=" + encodeURIComponent(goods_no) + 
                      "&quantity=" + encodeURIComponent(quantity) + 
-                     "&goods_total_price=" + encodeURIComponent(goods_total_price) + // 추가된 부분
-                     "&id=" + encodeURIComponent('${id}')); // ${id}의 정의 확인
+                     "&goods_total_price=" + encodeURIComponent(goods_total_price) +
+                     "&id=" + encodeURIComponent('${id}'));
         }
         
-        function submitPaymentForm() {
+//         // 결제 페이지
+//         function submitPaymentForm() {
+// 		    var paymentData = {
+// 		        id: document.querySelector('input[name="id"]').value, // id 값을 가져옵니다.
+// 		        items: [] // 결제할 상품 목록을 저장할 배열
+// 		    };
+		
+// 		    var checkboxes = document.querySelectorAll('input[type="checkbox"].form-check-input:checked');
+		
+// 		    checkboxes.forEach(function(checkbox) {
+// 		        var goods_no = checkbox.value;
+// 		        var quantity = document.getElementById('quantity-'+goods_no).value;
+// 		        var price = document.getElementById('price-'+goods_no).value;
+// 		        var delivery_charge = document.getElementById('delivery_charge-'+goods_no).value;
+		
+// 		        paymentData.items.push({
+// 		            goods_no: goods_no,
+// 		            quantity: quantity,
+// 		            price: price,
+// 		            delivery_charge: delivery_charge
+// 		        });
+// 		    });
+		    
+// 		    // AJAX 요청으로 전송
+// 		    var xhr = new XMLHttpRequest();
+// 		    xhr.open("POST", "${pageContext.request.contextPath}/cart/paymentForm.do", true);
+// 		    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
+// 		    xhr.onreadystatechange = function() {
+// 		        if (xhr.readyState === XMLHttpRequest.DONE) {
+// 		            if (xhr.status === 200) {
+// 		                // 성공적으로 처리된 경우
+// 		                console.log("결제 정보 전송 성공");
+// 		                // 결제 페이지로 리다이렉트
+// 		                window.location.href = "${pageContext.request.contextPath}/cart/paymentForm.do?id=" + paymentData.id; // id를 포함하여 리다이렉트
+// 		            } else {
+// 		                console.error("결제 정보 전송 실패: " + xhr.status);
+// 		            }
+// 		        }
+// 		    };
+// 		    xhr.send(JSON.stringify(paymentData)); // JSON 형태로 데이터 전송
+// 		}
+
+		function submitPaymentForm() {
             document.getElementById("paymentForm").action = `${pageContext.request.contextPath}/cart/paymentForm.do`; // POST 요청을 보낼 URL
             document.getElementById("paymentForm").submit(); // 폼 전송
         }
-       
+		
+        // 선택 여부 업데이트 함수
+        function updateSelection(goods_no, selected) {
+            var xhr = new XMLHttpRequest();
+            xhr.open("POST", "${pageContext.request.contextPath}/cart/updateSelection", true);
+            xhr.setRequestHeader("Content-Type", "application/x-www-form-urlencoded");
+            xhr.onreadystatechange = function() {
+                if (xhr.readyState === XMLHttpRequest.DONE) {
+                    if (xhr.status === 200) {
+                        console.log("상품 선택 여부 업데이트 완료: " + selected);
+                    } else {
+                        console.error("상품 선택 여부 업데이트 실패: " + xhr.status);
+                    }
+                }
+            };
+            xhr.send("goods_no=" + encodeURIComponent(goods_no) + 
+                     "&selected=" + encodeURIComponent(selected ? 1 : 0) + 
+                     "&id=" + encodeURIComponent('${id}'));
+        }
+
+        // 체크박스 클릭 시 선택 여부 업데이트
+        function handleCheckboxClick(checkbox, goods_no) {
+            var selected = checkbox.checked;
+            updateSelection(goods_no, selected); // 서버에 선택 여부 전달
+            updateTotalAmount(); // 체크박스 클릭 시 총 결제 금액 업데이트
+        }
+   
     </script>
 </head>
 <body>
@@ -138,6 +227,7 @@
                                     <th>상품명</th>
                                     <th>수량</th>
                                     <th>가격</th>
+                                    <th>할인가</th>
                                     <th>배송비</th>
                                     <th>합계</th>
                                     <th>삭제</th>
@@ -148,12 +238,18 @@
                                     <tr>
                                         <!-- 선택여부 -->
                                         <td>
-                                            <div class="form-check centered">
-                                                <label class="form-check-label">
-                                                    <input type="checkbox" class="form-check-input" value="${item.goods_no}" ${item.selected == 1 ? 'checked' : ''}>
-                                                </label>
-                                            </div>
-                                        </td>
+										    <div class="form-check centered">
+										        <label class="form-check-label">
+											        <input type="hidden" name="goods_no" value="${item.goods_no}">
+											        <input type="hidden" name="quantity-${item.goods_no}" value="${item.quantity}">
+											        <input type="hidden" name="price-${item.goods_no}" value="${item.price}">
+											        <input type="hidden" name="delivery_charge-${item.goods_no}" value="${item.delivery_charge}">
+										            <input type="checkbox" class="form-check-input" value="${item.goods_no}" 
+												       ${item.selected == 1 ? 'checked' : ''} 
+												       onclick="handleCheckboxClick(this, ${item.goods_no})">
+										        </label>
+										    </div>
+										</td>
                                         <!-- 상품 이미지 -->
                                         <td>
                                             <img src="${pageContext.request.contextPath}/upload/image/${item.image_name}" alt="${item.goods_name}" class="product-image"/> <!-- 이미지 표시 -->
@@ -168,6 +264,8 @@
                                         </td>
                                         <!-- 상품 가격 -->
                                         <td><fmt:formatNumber value="${item.price}" pattern="#,###"/> 원</td> <!-- 상품 가격 -->
+                                        <!-- 상품 할인가 -->
+                                        <td><fmt:formatNumber value="${item.discount}" pattern="#,###"/> 원</td> <!-- 상품 할인가 -->
                                         <!-- 배송비  -->
                                         <td>${item.delivery_charge}
                                             <input type="hidden" id="delivery_charge-${item.goods_no}" value="${item.delivery_charge}">										
@@ -175,8 +273,8 @@
                                         <!-- 상품 총 가격  -->
                                         <td>
                                             <input type="hidden" id="price-${item.goods_no}" value="${item.price}"/> <!-- 상품 가격 -->
-                                            <span id="total${item.goods_no}" class="item-total">
-                                            	<c:set var="goods_total_price" value="${item.price * item.quantity + item.delivery_charge}" />
+                                            <span id="total-${item.goods_no}" class="item-total">
+                                            	<c:set var="goods_total_price" value="${(item.price-item.discount) * item.quantity + item.delivery_charge}" />
                                                 <fmt:formatNumber value="${goods_total_price}" pattern="#,###"/> 원
                                             </span>
                                         </td>
@@ -192,9 +290,6 @@
                             </tbody>
                         </table>
 
-                        
-
-                        
                     </c:otherwise>
                 </c:choose>
             </div>
@@ -202,10 +297,15 @@
             	<div class="total-section">
                 	총 결제 금액: <strong id="finalTotal"><fmt:formatNumber value="${totalAmount}" pattern="#,###"/> 원</strong>
 				    <form id="paymentForm" class="float-right" method="post">
-				        <input type="hidden" name="id" value="${id}">
-				        <input type="hidden" name="finalTotal" value="${totalAmount}"> <!-- 최종 총액 -->
-				        <input type="button" value="결제하기" class="btn btn-success" onclick="submitPaymentForm()">
-				    </form>
+					    <input type="hidden" name="id" value="${id}">
+					    <input type="button" value="결제하기" class="btn btn-success" onclick="submitPaymentForm()">
+					    <c:forEach var="item" items="${cartItems}">
+					        <input type="hidden" name="goods_no" value="${item.goods_no}">
+					        <input type="hidden" name="quantity-${item.goods_no}" value="${item.quantity}">
+					        <input type="hidden" name="price-${item.goods_no}" value="${item.price}">
+					        <input type="hidden" name="delivery_charge-${item.goods_no}" value="${item.delivery_charge}">
+					    </c:forEach>
+					</form>
 			    </div>
 			</div>
         </div>

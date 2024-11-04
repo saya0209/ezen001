@@ -24,4 +24,11 @@ public interface CartMapper {
 
     // 상품 번호로 장바구니 아이템 조회
     CartItemVO getCartItemByGoodsNo(Long goods_no);
+
+
+
+    void updateSelection(Map<String, Object> params);
+
+
+
 }

@@ -17,7 +17,7 @@
 		  <div class="card-body">
 			<p>${message}</p> <!-- 결제 완료 메시지 출력 -->
 	        <p>사용자 ID : ${id}</p>
-	        <p>주문 번호 : ${id}</p>
+	        <p>주문 번호 : ${orderNumber}</p>
 		  </div>
 		  <div class="card-footer">
 	        <a href="${pageContext.request.contextPath}/cart/list/${id}" class="btn btn-primary">장바구니로 돌아가기</a>

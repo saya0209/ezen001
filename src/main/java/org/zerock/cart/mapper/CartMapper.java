@@ -11,12 +11,12 @@ import org.zerock.cart.vo.CartItemVO;
 public interface CartMapper {
 
     // 장바구니 목록 조회
-    List<CartItemVO> cartList(Long id); // id를 Long 타입으로 변경
+    List<CartItemVO> cartList(String id); // id를 Long 타입으로 변경
 
     
     
     // 장바구니 상품 수량 및 가격 업데이트
-    CartItemVO getCartItem(@Param("goods_no") Long goods_no, @Param("id") Long id);
+    CartItemVO getCartItem(@Param("goods_no") Long goods_no, @Param("id") String id);
     Integer updateCartItem(Map<String, Object> params);
 
     // 특정 상품의 총 가격 업데이트

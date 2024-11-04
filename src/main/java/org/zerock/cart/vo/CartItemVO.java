@@ -7,7 +7,7 @@ import lombok.Data;
 // DB안의 Board table 의 한행의 데이터을 저장할 수 있는 클래스 
 @Data
 public class CartItemVO {
-	private Long id;                // 로그인 아이디 
+	private String id;                // 로그인 아이디 
     private Long goods_no;            // 상품 번호
     private String goods_name;         // 상품 이름
     private String image_name;         // 상품 이미지 파일명

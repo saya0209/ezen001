@@ -22,7 +22,7 @@ public class CartServiceImpl implements CartService {
     private CartMapper mapper;
 
 	@Override
-	public List<CartItemVO> cartList(Long id) {
+	public List<CartItemVO> cartList(String id) {
 		log.info("list() 실행 =====");
 		
 		// TODO Auto-generated method stub
@@ -30,7 +30,7 @@ public class CartServiceImpl implements CartService {
 	}
 
 	@Override
-	public Integer updateCartItem(Long id, Long goods_no, int quantity) {
+	public Integer updateCartItem(String id, Long goods_no, int quantity) {
 	    log.info("updateCartItem() 실행 =====");
 	    
 	    // 상품 정보를 가져옵니다.

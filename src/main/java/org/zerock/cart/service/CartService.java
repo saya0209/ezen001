@@ -4,9 +4,9 @@ import java.util.List;
 import org.zerock.cart.vo.CartItemVO;
 
 public interface CartService {
-    List<CartItemVO> cartList(Long id);
+    List<CartItemVO> cartList(String id);
 
-    Integer updateCartItem(Long id, Long goods_no, int quantity);
+    Integer updateCartItem(String id, Long goods_no, int quantity);
 	
 	void updateGoodsTotalPrice(Long goodsNo, int quantity);
 

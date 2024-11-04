@@ -107,7 +107,7 @@
             xhr.send("goods_no=" + encodeURIComponent(goods_no) + 
                      "&quantity=" + encodeURIComponent(quantity) + 
                      "&goods_total_price=" + encodeURIComponent(goods_total_price) + // 추가된 부분
-                     "&id=" + encodeURIComponent(${id})); // ${id}의 정의 확인
+                     "&id=" + encodeURIComponent('${id}')); // ${id}의 정의 확인
         }
         
         function submitPaymentForm() {

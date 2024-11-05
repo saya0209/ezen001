@@ -11,6 +11,7 @@ import org.zerock.category.vo.CategoryVO;
 import org.zerock.goods.mapper.GoodsMapper;
 import org.zerock.goods.vo.GoodsColorVO;
 import org.zerock.goods.vo.GoodsImageVO;
+import org.zerock.goods.vo.GoodsPriceVO;
 import org.zerock.goods.vo.GoodsSearchVO;
 import org.zerock.goods.vo.GoodsSizeVO;
 import org.zerock.goods.vo.GoodsVO;
@@ -36,30 +37,32 @@ public class GoodsServiceImpl implements GoodsService {
 		return mapper.list(pageObject, goodsSearchVO);
 	}
 
+	// 상품 정보 보기
 	@Override
 	public GoodsVO view(Long goods_no) {
 		// TODO Auto-generated method stub
 		return mapper.view(goods_no);
 	}
-	
 	// 상품 사이즈 리스트
 	@Override
 	public List<GoodsSizeVO> sizeList(Long goods_no) {
 		// TODO Auto-generated method stub
 		return mapper.sizeList(goods_no);
 	}
-	// 상품 색상 리스트
+	// 상품 컬러 리스트
 	@Override
 	public List<GoodsColorVO> colorList(Long goods_no) {
 		// TODO Auto-generated method stub
 		return mapper.colorList(goods_no);
 	}
-	// 상품 사이즈 리스트
+	// 상품 이미지 리스트
 	@Override
 	public List<GoodsImageVO> imageList(Long goods_no) {
 		// TODO Auto-generated method stub
 		return mapper.imageList(goods_no);
 	}
+	
+	
 
 	@Override
 	@Transactional	// 쿼리중 하나라도 문제가 생기거나 처리되지 않으면 자동 Rollback합니다.
@@ -113,15 +116,14 @@ public class GoodsServiceImpl implements GoodsService {
 
 	@Override
 	@Transactional
-	public Integer update(
-			GoodsVO vo,
+	public Integer update(GoodsVO vo,
 			List<String> size_names,
 			List<String> color_names) {
 		// TODO Auto-generated method stub
 		Integer result = mapper.update(vo);
 		result = mapper.updatePrice(vo);
+		// 사이즈 리스트 삭제 및 등록
 		Long goods_no = vo.getGoods_no();
-		
 		mapper.deleteSize(goods_no);
 		for (String sizeName : size_names) {
 			GoodsSizeVO sizeVO = new GoodsSizeVO();
@@ -129,7 +131,7 @@ public class GoodsServiceImpl implements GoodsService {
 			sizeVO.setSize_name(sizeName);
 			mapper.writeSize(sizeVO);
 		}
-		
+		// 컬러 리스트 삭제 및 등록
 		mapper.deleteColor(goods_no);
 		List<GoodsColorVO> colorList = null;
 		for (String colorName : color_names) {
@@ -140,20 +142,19 @@ public class GoodsServiceImpl implements GoodsService {
 			
 			colorList.add(colorVO);
 		}
-		
 		return result;
-	}
-
-	@Override
-	public List<CategoryVO> listCategory(Integer cate_code1) {
-		// TODO Auto-generated method stub
-		return mapper.getCategory(cate_code1);
 	}
 
 	@Override
 	public Integer delete(GoodsVO vo) {
 		// TODO Auto-generated method stub
 		return null;
+	}
+
+	@Override
+	public List<CategoryVO> listCategory(Integer cate_code1) {
+		// TODO Auto-generated method stub
+		return mapper.getCategory(cate_code1);
 	}
 
 	

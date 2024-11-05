@@ -11,12 +11,18 @@ public interface CategoryMapper {
 
 	// 1. 카테고리 리스트
 	public List<CategoryVO> list(@Param("cate_code1")  Integer cate_code1);
+	public List<CategoryVO> list(@Param("cate_code1")Integer cate_code1, @Param("cate_code2")Integer cate_code2);
+	public List<CategoryVO> list(@Param("cate_code1") Integer cate_code1,
+			@Param("cate_code2") Integer cate_code2,
+			@Param("cate_code3") Integer cate_code3);
 
 	// 2. 카테고리 등록
 	// 2-1. 대분류 등록
 	public Integer writeBig(CategoryVO vo);
 	// 2-2. 중분류 등록
 	public Integer writeMid(CategoryVO vo);
+	// 2-3. 소분류 등록
+	public Integer writeSmall(CategoryVO vo);
 
 	// 3. 카테고리 수정
 	public Integer update(CategoryVO vo);

@@ -21,10 +21,9 @@ public interface GoodsService {
 	
 	// 상품 정보 보기
 	public GoodsVO view(Long goods_no);
-	
 	// 상품 사이즈 리스트
 	public List<GoodsSizeVO> sizeList(Long goods_no);
-	// 상품 색상 리스트
+	// 상품 컬러 리스트
 	public List<GoodsColorVO> colorList(Long goods_no);
 	// 상품 이미지 리스트
 	public List<GoodsImageVO> imageList(Long goods_no);
@@ -40,7 +39,6 @@ public interface GoodsService {
 			List<String> color_names);
 	// 상품 삭제
 	public Integer delete(GoodsVO vo);
-
 	
 	// 상품이미지 추가
 	// 상품이미지 변경

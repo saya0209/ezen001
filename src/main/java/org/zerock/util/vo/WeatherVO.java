@@ -7,8 +7,9 @@ public class WeatherVO {
 
 	private String forecastDate;
 	private String forecastTime;
-	private String forecastWeather;
-	private String forecastTemperature;
-	private String forecastHumidity;
+	private String forecastWeather;  // 날씨
+	private String forecastTemperature; // 습도
+	private String forecastHumidity;  // 지역
 	private String forecastRegion;
+	
 }

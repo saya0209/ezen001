@@ -2,80 +2,81 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.zerock.notice.mapper.NoticeMapper">
-  
+  <mapper namespace="org.zerock.notice.mapper.NoticeMapper">
   <!-- 1-1. getTotalRow -->
   <select id="getTotalRow" resultType="Long">
-    select count(*) from notice
-    <include refid="period"></include>
+  select count(*) from notice
+  <include refid="period"></include>
   </select>
-  
   <!-- 1-2. list -->
   <select id="list" resultType="org.zerock.notice.vo.NoticeVO">
-    select
-      notice_no, title, startDate, endDate, writeDate
-    from
-    (
-      select
-        rownum rnum, notice_no, title, startDate, endDate, writeDate
-      from
-      (
-        select
-          notice_no, title, startDate, endDate, writeDate
-        from
-          notice
-        <include refid="period"></include>
-        order by notice_no desc
-      )
-    )
-    where rnum between #{startRow} and #{endRow} 
+  select
+  	no, title, startDate, endDate, writeDate
+  from
+  (
+	  select
+	  	rownum rnum, no, title, startDate, endDate, writeDate
+	  from
+		  (
+		  select
+		  	no, title, startDate, endDate, writeDate
+		  from
+		  	notice
+		  <include refid="period"></include>
+		  order by no desc
+		  )
+  )
+  where rnum between #{startRow} and  #{endRow} 
   </select>
   
   <!-- 공지기간에 따른 처리 -->
   <sql id="period">
-    <trim prefix="where" prefixOverrides="and">
-      <if test="period.equals('pre')">
-        and trunc(sysdate) between trunc(startDate) and trunc(endDate)
-      </if>
-      <if test="period.equals('old')">
-        <![CDATA[and trunc(sysdate) > trunc(endDate)]]>
-      </if>
-      <if test="period.equals('res')">
-        and trunc(sysdate) &lt; trunc(startDate) 
-      </if>
-    </trim>
+  	<trim prefix="where" prefixOverrides="and">
+  		<if test="period.equals('pre')">
+  			and trunc(sysdate) between trunc(startDate) and trunc(endDate)
+  		</if>
+  		<if test="period.equals('old')">
+  			<![CDATA[and trunc(sysdate) > trunc(endDate)]]>
+  		</if>
+  		<if test="period.equals('res')">
+  			and trunc(sysdate) &lt; trunc(startDate) 
+  		</if>
+  	</trim>
   </sql>
-  
+<!--	<![CDATA[trunc(sysdate) < trunc(startDate)]]> 
+  			or &lt;(<) 사용	-->
+  		
   <!-- 2. view -->
   <select id="view" resultType="org.zerock.notice.vo.NoticeVO">
-    select notice_no, title, content, startDate, endDate, writeDate, updateDate, image
-    from notice where notice_no = #{notice_no}
+  select no, title, content, startDate, endDate, writeDate, updateDate
+  from notice where no = #{no}
   </select>
-  
   <!-- 3. write -->
   <insert id="write">
-    <selectKey keyProperty="notice_no" resultType="Long" order="BEFORE">
-      select notice_seq.nextval from dual
-    </selectKey>
-    insert into notice(notice_no, title, content, startDate, endDate, writeDate, image)
-    values(#{notice_no}, #{title}, #{content}, #{startDate}, #{endDate}, sysdate, #{image})
+  	<selectKey keyProperty="no" resultType="Long" order="BEFORE">
+  	select notice_seq.nextval from dual
+  	</selectKey>
+  	insert into notice(no, title, content, startDate, endDate)
+  	values(#{no}, #{title}, #{content}, #{startDate}, #{endDate})
   </insert>
-  
   <!-- 4. update -->
   <update id="update">
-    update notice set
-      title = #{title}, content = #{content},
-      startDate = #{startDate}, endDate = #{endDate},
-      updateDate = sysdate,
-      image = #{image}
-    where
-      notice_no = #{notice_no}
+  	update notice set
+	  	title = #{title}, content = #{content},
+	  	startDate = #{startDate}, endDate = #{endDate}
+	 where
+	 	no = #{no}
   </update>
-  
   <!-- 5. delete -->
   <delete id="delete">
-    delete from notice
-    where notice_no = #{notice_no}
+  	delete from notice
+  	where no = #{no}
   </delete>
 
-</mapper>
+  </mapper>
+  
+  
+  
+  
+  
+  

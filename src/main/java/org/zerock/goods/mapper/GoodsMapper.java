@@ -7,6 +7,7 @@ import org.springframework.stereotype.Repository;
 import org.zerock.category.vo.CategoryVO;
 import org.zerock.goods.vo.GoodsColorVO;
 import org.zerock.goods.vo.GoodsImageVO;
+import org.zerock.goods.vo.GoodsPriceVO;
 import org.zerock.goods.vo.GoodsSearchVO;
 import org.zerock.goods.vo.GoodsSizeVO;
 import org.zerock.goods.vo.GoodsVO;
@@ -26,19 +27,18 @@ public interface GoodsMapper {
 	public Long getTotalRow(
 			@Param("pageObject") PageObject pageObject,
 			@Param("goodsSearchVO") GoodsSearchVO goodsSearchVO);
-	// 상품 사이즈 리스트
-	public List<GoodsSizeVO> sizeList(Long goods_no);
-	// 상품 색상 리스트
-	public List<GoodsColorVO> colorList(Long goods_no);
-	// 상품 이미지 리스트
-	public List<GoodsImageVO> imageList(Long goods_no);
-	
 	
 	// 대분류/중분류 리스트 가져오기
 	public List<CategoryVO> getCategory(@Param("cate_code1") Integer cate_code1);
 	
 	// 상품 상세보기
 	public GoodsVO view(@Param("goods_no") Long goods_no);
+	// 상품 사이즈 리스트
+	public List<GoodsSizeVO> sizeList(@Param("goods_no") Long goods_no);
+	// 상품 컬러 리스트
+	public List<GoodsColorVO> colorList(@Param("goods_no") Long goods_no);
+	// 상품 이미지 리스트
+	public List<GoodsImageVO> imageList(@Param("goods_no") Long goods_no);
 	
 	// 상품 등록
 	// 1. goods 테이블에 상품등록 (필수)
@@ -53,22 +53,20 @@ public interface GoodsMapper {
 	//public Integer writeColor(GoodsColorVO vo);
 	public Integer writeColor(List<GoodsColorVO> list);
 	
-	// 상품 정보 수정
+	
+	// 상품정보수정
 	public Integer update(GoodsVO vo);
-	// 상품 가격 수정
+	// 상품가격수정
 	public Integer updatePrice(GoodsVO vo);
-	// 상품 사이즈 삭제
+	// 상품사이즈삭제
 	public Integer deleteSize(Long goods_no);
-	// 상품 이미지 삭제
-	public Integer deleteImage(String fileName);
-	// 상품 색상 삭제
+	// 상품컬러삭제
 	public Integer deleteColor(Long goods_no);
-	// 상품 사이즈 수정
-	public Integer updateSize(Long goods_no);
-	// 상품 색상 수정
-	public Integer updateColor(Long goods_no);
-	// 상품 이미지 수정
-	public Integer updateImage(String fileName);
+	// 상품이미지삭제
+	public Integer deleteImage(String image_name);
 	
 	
 }
+
+
+

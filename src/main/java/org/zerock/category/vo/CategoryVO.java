@@ -7,5 +7,6 @@ public class CategoryVO {
 
 	private Integer cate_code1;
 	private Integer cate_code2;
+	private Integer cate_code3;
 	private String cate_name;
 }

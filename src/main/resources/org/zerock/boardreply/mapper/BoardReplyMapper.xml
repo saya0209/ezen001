@@ -11,13 +11,13 @@
   	</select>
   	<!-- 일반 게시판 댓글 리스트 쿼리 -->
   	<select id="list" resultType="org.zerock.boardreply.vo.BoardReplyVO">
-  		select rno, no, content, id, nicname, writeDate
+  		select rno, no, content, id, name, writeDate
   		from
   		(
-	  		select rownum rnum, rno, no, content, id, nicname, writeDate
+	  		select rownum rnum, rno, no, content, id, name, writeDate
 	  		from
 	  		(
-			  	select b.rno, b.no, b.content, b.id, m.nicname, b.writeDate
+			  	select b.rno, b.no, b.content, b.id, m.name, b.writeDate
 			  	from board_reply b, member m
 			  	where
 			  		(no = #{no}) <!-- 일반조건 -->

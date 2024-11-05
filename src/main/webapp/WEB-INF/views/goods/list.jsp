@@ -234,9 +234,6 @@ $(function(){
 					    	<div>
 					    		할인가 : <fmt:formatNumber value="${vo.sale_price }" /> 원
 					    	</div>
-					    	<div>
-					    		적립율 : ${vo.saved_rate } 
-					    	</div>
 						</p>
 					  </div>
 					</div><!-- end of card -->

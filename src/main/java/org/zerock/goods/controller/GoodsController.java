@@ -1,7 +1,9 @@
 package org.zerock.goods.controller;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -11,6 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
@@ -96,6 +99,7 @@ public class GoodsController {
 	public String view(
 			Long goods_no,
 			PageObject pageObject,
+			// @ModelAttribute()를 선언하면 선언된 객체를 model에 담는다. -> JSP전달
 			@ModelAttribute(name="goodsSearchVO") GoodsSearchVO goodsSearchVO,
 			Model model
 			) {
@@ -110,8 +114,10 @@ public class GoodsController {
 		model.addAttribute("imageList", service.imageList(goods_no));
 		
 		// JSP EL객체
-		
-		
+		// ${goodsSearchVO.cate_code1}
+		// => goodsSearchVO.getCate_code1();
+		// ${goodsSearchVO.searchQuery}
+		// => goodsSearchVO.getSearchQuery();
 	
 		return "goods/view";
 	}
@@ -150,53 +156,54 @@ public class GoodsController {
 	// 상품 등록 처리
 	@PostMapping("/write.do")
 	public String write(
-			GoodsVO vo,
-			// 대표이미지
-			MultipartFile imageMain,
-			// 추가이미지
-			@RequestParam("imageFiles") ArrayList<MultipartFile> imageFiles,
-			// 옵션 - 사이즈, 색상
-			@RequestParam("size_names") ArrayList<String> size_names,
-			@RequestParam("color_names") ArrayList<String> color_names,
-			HttpServletRequest request,
-			RedirectAttributes rttr
-			) throws Exception {
-		
-		log.info("============write.do=================");
-		log.info(vo);
-		log.info("대표이미지 : " + imageMain.getOriginalFilename());
-		log.info("<<추가이미지>>");
-		for (MultipartFile file : imageFiles) {
-			log.info(file.getOriginalFilename());
-		}
-		log.info("size : " + size_names);
-		log.info("color : " + color_names);
-		log.info("=====================================");
-		
-		// 추가이미지, size, color를 담을 리스트들을 만든다.
-		
-		vo.setImage_name(FileUtil.upload(path, imageMain, request));
-		
-		List<String> imageFileNames = new ArrayList<String>();
-		for (MultipartFile file : imageFiles) {
-			imageFileNames.add(FileUtil.upload(path, file, request));
-		}
-		vo.setSale_price(vo.sale_price());
-		Integer result = service.write(vo, imageFileNames, size_names, color_names);
-		log.info(result);
-		
-		rttr.addFlashAttribute("msg", "상품이 등록되었습니다.");
-		
-		return "redirect:list.do";
+	        GoodsVO vo,
+	        MultipartFile imageMain,
+	        @RequestParam("imageFiles") ArrayList<MultipartFile> imageFiles,
+	        @RequestParam("size_names") ArrayList<String> size_names,
+	        @RequestParam("color_names") ArrayList<String> color_names,
+	        HttpServletRequest request,
+	        RedirectAttributes rttr
+	) throws Exception {
+	    
+	    log.info("============write.do=================");
+	    log.info(vo);
+	    log.info("대표이미지 : " + imageMain.getOriginalFilename());
+	    log.info("<<추가이미지>>");
+	    for (MultipartFile file : imageFiles) {
+	        log.info(file.getOriginalFilename());
+	    }
+	    log.info("size : " + size_names);
+	    log.info("color : " + color_names);
+	    log.info("=====================================");
+	    
+	    // 대표 이미지 처리
+	    vo.setImage_name(FileUtil.upload(path, imageMain, request));
+	    
+	    List<String> imageFileNames = new ArrayList<String>();
+	    for (MultipartFile file : imageFiles) {
+	        imageFileNames.add(FileUtil.upload(path, file, request));
+	    }
+	    
+	    // 할인가격 세팅 시 DISCOUNT_RATE를 사용하지 않도록 수정
+	    // vo.setSale_price(vo.sale_price()); // 이 줄은 필요 없다면 삭제
+	    
+	    // 상품 등록 처리
+	    Integer result = service.write(vo, imageFileNames, size_names, color_names);
+	    
+	    rttr.addFlashAttribute("msg", "상품이 등록되었습니다.");
+	    
+	    return "redirect:list.do";
 	}
-
+	
 	// 상품 수정 폼
 	@GetMapping("/updateForm.do")
 	public String updateForm(
-			Model model, 
-			Long goods_no, 
+			Long goods_no,
 			@ModelAttribute(name="pageObject") PageObject pageObject,
-			@ModelAttribute(name="goodsSearchVO") GoodsSearchVO goodsSearchVO) {
+			// @ModelAttribute()를 선언하면 선언된 객체를 model에 담는다. -> JSP전달
+			@ModelAttribute(name="goodsSearchVO") GoodsSearchVO goodsSearchVO,
+			Model model
+			) {
 		List<CategoryVO> listBig = new ArrayList<CategoryVO>();
 		List<CategoryVO> listMid = new ArrayList<CategoryVO>();
 		
@@ -205,7 +212,7 @@ public class GoodsController {
 		listMid = service.listCategory(listBig.get(0).getCate_code1());
 		
 		// 상품의 상세정보 가져오기 (상품정보 + 가격정보)
-		model.addAttribute("vo", service.view(goods_no));
+		model.addAttribute("goodsVO", service.view(goods_no));
 		// 사이즈 정보 리스트
 		model.addAttribute("sizeList", service.sizeList(goods_no));
 		// 색상 정보 리스트
@@ -216,54 +223,47 @@ public class GoodsController {
 		model.addAttribute("listMid", listMid);
 		
 		return "goods/update";
-		
 	}
 	
 	// 상품 수정 처리
 	@PostMapping("/update.do")
 	public String update(
-			GoodsVO vo,
-			ArrayList<String> size_names,
-			ArrayList<String> color_names,
-			GoodsImageVO imageVO,
-			GoodsSearchVO searchVO,
-			PageObject pageObject, 
-			RedirectAttributes rttr) {
-		
-		
-		log.info("update.do =================");
-		// 상품 정보 업데이트
-		vo.setSale_price(vo.sale_price());
-		service.update(vo, size_names, color_names);
-	    // 사이즈 정보 업데이트 => 기존정보 삭제 => 추가
-	    // 색상 정보 업데이트 => 기존정보 삭제 => 추가
-
-	    // 리다이렉트 시 수정된 상품 번호와 페이지 정보를 전달
-		return "redirect:view.do";
+	        @ModelAttribute(name = "goodsVO") GoodsVO goodsVO,
+	        @RequestParam("size_names") ArrayList<String> size_names,
+	        @RequestParam("color_names") ArrayList<String> color_names,
+	        PageObject pageObject,
+	        RedirectAttributes rttr) throws Exception {
+	    
+	    log.info("update.do===========");
+	    log.info(goodsVO);
+	    
+	    // 상품 사이즈 및 색상 수정 시 DISCOUNT_RATE와 관련된 부분 제거
+	    log.info("size_names : " + size_names);
+	    log.info("color_names : " + color_names);
+	    
+	    // 할인가격 세팅 시 DISCOUNT_RATE를 사용하지 않도록 수정
+	    // goodsVO.setSale_price(goodsVO.sale_price()); // 이 줄은 필요 없다면 삭제
+	    
+	    service.update(goodsVO, size_names, color_names);
+	    
+	    return "redirect:view.do?goods_no=" + goodsVO.getGoods_no() +
+	            "&" + pageObject.getPageQuery();
 	}
+	
 	// 이미지 수정 처리
 	@PostMapping("/updateImage.do")
 	public String updateImage(
-			@RequestParam("goods_no") Long goodsNo,
-	        @RequestParam("imageList") List<MultipartFile> imageList, 
-	        RedirectAttributes rttr) {
-		
-		
+			) {
 		return "redirect:update.do?goods_no=";
-
 	}
+	
 	// 이미지 삭제 처리
 	@PostMapping("/deleteImage.do")
 	public String deleteImage(
-			@RequestParam("goods_no") Long goodsNo,
-			@RequestParam("imageList") List<MultipartFile> imageList, 
-			RedirectAttributes rttr) {
-		
-		
+			) {
 		return "redirect:update.do?goods_no=";
-		
 	}
-
+	
 
 }
 

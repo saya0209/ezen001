@@ -244,11 +244,6 @@ $(function(){
 						name="discount_rate" value="0">
 				</div>
 				<div class="form-group">
-					<label for="saved_rate">적립율</label>
-					<input class="form-control" id="saved_rate"
-						name="saved_rate" value="0">
-				</div>
-				<div class="form-group">
 					<label for="delivery_charge">배송료</label>
 					<input class="form-control" id="delivery_charge"
 						name="delivery_charge" value="0">

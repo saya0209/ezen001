@@ -37,129 +37,152 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
 
-<style type="text/css">
-/* 기본 텍스트 색상 */
-body {
-    color: #002244;
-}
+	<style type="text/css">
+		/* 기본 텍스트 색상 */
+		body {
+		    color: #002244;
+		}
+		
+		/* 네비게이션 바 */
+		.navbar {
+		    background-color: #004080 !important;
+		}
+		.nav-link {
+		    color: #004080 !important; /* 텍스트 색을 흰색으로 */
+		}
+		
+		.nav-link:hover {
+		    text-decoration: underline; /* 호버 시 밑줄 추가 */
+		}
+		
+		/* "전체카테고리" 버튼 색상 */
+		.category-button {
+		    color: #fff;
+		    cursor: pointer;
+		    padding: 10px 15px;
+		}
+		.category-button:hover {
+		    color: #b3cde0;
+		}
+		/* 푸터 스타일 */
+		.footer {
+		    background-color: #002244;
+		    color: #d9e6f2;
+		    padding: 20px;
+		    text-align: center;
+		    position: fixed; /* 화면에 고정 */
+		    bottom: 0; /* 화면의 아래쪽에 위치 */
+		    left: 0;
+		    width: 100%; /* 화면 너비를 꽉 채움 */
+		}
+		
+		.footer a {
+		    color: #d9e6f2;
+		    text-decoration: none;
+		}
+		
+		.footer a:hover {
+		    color: #b3cde0;
+		}
 
-/* 네비게이션 바 */
-.navbar {
-    background-color: #004080 !important;
-}
-.navbar-brand, .nav-link {
-    color: #d9e6f2 !important;
-}
-.nav-link:hover {
-    color: #b3cde0 !important;
-}
+        /* 상단 로고 및 사용자 메뉴 */
+        .header-top {
+		    display: flex;
+		    padding: 10px 20px;
+		    background-color: #fff; /* 흰색 배경 */
+		    border-bottom: 1px solid #ddd;
+		    justify-content: center; /* 요소들을 중앙으로 정렬 */
+		    align-items: center; /* 세로 중앙 정렬 */
+		}
+		
+		.header-logo {
+		    display: flex; /* flexbox 적용 */
+		    justify-content: center; /* 수평 중앙 정렬 */
+		    align-items: center; /* 수직 중앙 정렬 */
+		    flex-grow: 1; /* 로고가 공간을 차지하도록 설정 */
+		}
+		
+		.header-logo img {
+		    max-width: 220px;
+		    height: auto; /* 이미지의 비율을 유지하면서 크기를 조절 */
+		}
 
-/* "전체카테고리" 버튼 색상 */
-.category-button {
-    color: #ffffff;
-    cursor: pointer;
-    padding: 10px 15px;
-}
-.category-button:hover {
-    color: #d9e6f2;
-}
+        /* 사용자 메뉴 스타일 */
+        .user-menu {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end; /* 오른쪽 정렬 추가 */	
+        }
 
-/* 사이드바 */
-.sidebar {
-    display: none;
-    position: absolute;
-    top: 60px;
-    left: 0; /* 왼쪽 정렬 */
-    background-color: #002244;
-    padding: 20px;
-    width: 250px;
-    color: white;
-}
-.sidebar a {
-    color: #d9e6f2;
-    display: block;
-    padding: 10px;
-    text-align: left; /* 왼쪽 정렬 */
-    text-decoration: none;
-}
-.sidebar a:hover {
-    background-color: #004080;
-}
+        .user-menu .nav-item {
+            margin-left: 15px;
+        }
 
+        .user-menu a {
+            color: #b3cde0;
+            font-size: 14px;
+            text-decoration: none;
+        }
+        .user-menu a:hover {
+            color: #6db33f;
+        }
 
-/* 로그인/회원가입 */
-.header-top {
-    display: flex;
-    justify-content: space-between; 
-    align-items: center; 
-    padding: 10px; 
-}
+        /* 카테고리 메뉴 스타일 */
+		.category-menu {
+		    display: flex;
+		    align-items: center;
+		    justify-content: space-between; /* 왼쪽과 중앙 정렬 */
+		    background-color: #6db33f;
+		    padding: 10px 0;
+		    position: relative;
+		}
+		
+		.category-button {
+		    margin-left: 20px; /* 전체카테고리 버튼 왼쪽 여백 */
+		    color: #fff;
+		    font-weight: bold;
+		}
+		
+		.category-center {
+		    flex: 1;
+		    display: flex;
+		    justify-content: center; /* 중앙 정렬 */
+		    gap: 10px; /* 중앙 메뉴 간격 */
+		}
+		
+		.category-center a {
+		    color: #fff;
+		    font-size: 16px;
+		    text-decoration: none;
+		    font-weight: bold;
+		    transition: color 0.3s;
+		}
+		
+		
 
-.header-top .header-logo {
-    flex-grow: 1; 
-}
-
-.header-top .navbar-nav {
-    margin-left: auto; 
-}
-
-.header-top .navbar-nav .nav-link {
-    color: #000000 !important; 
-}
-
-
-
-/* 네비게이션 메뉴 중앙 정렬 */
-.navbar-nav {
-    text-align: center;
-    margin: 0 auto;
-}
-.navbar-nav .nav-item {
-    display: inline-block;
-}
-.navbar-nav .nav-link {
-    display: inline-block;
-    padding: 10px 15px;
-    color: #ffffff;
-}
-
-/* 헤더 로고 크기 */
-.header-logo img {
-    max-width: 100px;
-}
-
-/* 푸터 스타일 */
-.footer {
-    background-color: #002244;
-    color: #d9e6f2;
-    padding: 20px;
-}
-.footer a {
-    color: #d9e6f2;
-    text-decoration: none;
-}
-.footer a:hover {
-    color: #b3cde0;
-}
-
-/* 버튼 */
-.btn-primary {
-    background-color: #005bb5;
-    border-color: #005bb5;
-}
-.btn-primary:hover, .btn-primary:focus {
-    background-color: #004080;
-    border-color: #004080;
-}
-
-/* 모달 창 */
-.modal-header {
-    background-color: #004080;
-    color: #d9e6f2;
-}
-
-
-</style>
+		/* 사이드바 */
+		.sidebar {
+		    display: none;
+		    position: absolute;
+		    top: 253px;
+		    left: 0; /* 왼쪽 정렬 */
+		    background-color: #002244;
+		    padding: 20px;
+		    width: 250px;
+		    color: white;
+		}
+		.sidebar a {
+		    color: #d9e6f2;
+		    display: block;
+		    padding: 10px;
+		    text-align: left; /* 왼쪽 정렬 */
+		    text-decoration: none;
+		}
+		.sidebar a:hover {
+		    background-color: #004080;
+		}
+		
+	</style>
 
 
 
@@ -191,19 +214,10 @@ $(document).ready(function() {
 </head>
 
 <body>
-    <header>
-   		<!-- 상단 로고 및 사용자 메뉴 -->
-   		<div class="header-top d-flex justify-content-between align-items-center p-2">
-            <!-- 로고 -->
-            <div class="header-logo">
-                <a href="/" title="메인으로 이동">
-                    <img src="upload/laptop.jpg" alt="COMMAKASE">
-                </a>
-            </div>
-            <ul class="navbar-nav flex-row ml-auto"> <!-- 오른쪽 정렬을 위해 ml-auto 사용 -->
-		        <c:if test="${empty login}">
-		        <!-- 로그인 하지 않았을 때 -->
-		            <li class="nav-item">
+    	<div class="user-menu">
+			<ul class="navbar-nav d-flex flex-row">
+                <c:if test="${ empty login }">
+                    <li class="nav-item">
 						<a class="nav-link" href="/member/loginForm.do">
 						<i class="fa fa-sign-in"></i> 로그인/회원가입</a>
 					</li>
@@ -215,42 +229,49 @@ $(document).ready(function() {
 <!-- 							<a class="nav-link" href="/member/searchID.do"> -->
 <!-- 							<i class="fa fa-search"></i>아이디/비밀번호 찾기</a> -->
 <!-- 						</li> -->
-		        </c:if>
-		        <c:if test="${ !empty login }">
-						<!-- 로그인 했을 때 -->
-						<li class="nav-item">
-							<span class="nav-link">
-								<c:if test="${ empty login.grade_image }">
-									<i class="fa fa-user-circle-o"></i>
-								</c:if>
-								<c:if test="${ !empty login.grade_image }">
-									<img src="${login.grade_image }" class="round-circle"
-									style="width:30px; height:30px">
-								</c:if>
-								${login.id }
-							</span>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="/member/logout.do">
-							<i class="fa fa-sign-out"></i> 로그아웃</a>
-						</li>
-						<c:if test="${login.gradeNo == 9 }">
-							<li class="nav-item">
-								<a class="nav-link" href="/member/list.do">회원리스트 보기</a>
-							</li>
-							<li class="nav-item">
-								<a class="nav-link" href="/category/list.do">카테고리 보기</a>
-							</li>
-						</c:if>
-						<li class="nav-item">
-							<a class="nav-link" href="/member/view.do">마이페이지</a>
-						</li>
-						<li class="nav-item">
-							<a class="nav-link" href="/cart/list/${login.id}">장바구니</a>
-						</li>
-					</c:if>
-		    </ul>
+                </c:if>
+                <c:if test="${ !empty login }">
+                    <li class="nav-item">
+                        <span class="nav-link">
+                            <c:if test="${ empty login.photo }">
+                                <i class="fa fa-user-circle-o"></i>
+                            </c:if>
+                            <c:if test="${ !empty login.photo }">
+                                <img src="${login.photo }" class="round-circle" style="width:30px; height:30px">
+                            </c:if>
+                            ${login.id }
+                        </span>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/member/logout.do">
+                        <i class="fa fa-sign-out"></i> 로그아웃</a>
+                    </li>
+                    <c:if test="${login.gradeNo == 9 }">
+                        <li class="nav-item">
+                            <a class="nav-link" href="/member/list.do">회원리스트보기</a>
+                        </li>
+                    </c:if>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/member/view.do">내정보보기</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/cart/list.do">장바구니</a>
+                    </li>
+                </c:if>
+            </ul>
+          </div>
+        
+        <!-- 상단 로고 및 사용자 메뉴 -->
+   		<div class="header-top d-flex justify-content-between align-items-center p-2">
+            <!-- 로고 -->
+            <div class="header-logo">
+                <a href="/" title="메인으로 이동">
+                    <img src="/images/logo.png" alt="COMMAKASE">
+                </a>
+            </div>
         </div>
+      
+      	
       
 		 <!-- 카테고리 메뉴 -->      
          <nav class="navbar navbar-expand-md navbar-dark">
@@ -285,7 +306,6 @@ $(document).ready(function() {
             <a href="#">노트북</a>
             <a href="#">QNA게시판</a>
         </div>
-    </header>
 
     <article>
         <decorator:body />
@@ -323,3 +343,6 @@ $(document).ready(function() {
     </c:if>
 </body>
 </html>
+
+
+

@@ -62,26 +62,42 @@
 		    padding: 10px 15px;
 		}
 		.category-button:hover {
-		    color: #b3cde0;
+		    color: #fff;
+		    
 		}
+		
+		.category-center {
+		    flex: 1;
+		    display: flex;
+		    justify-content: center; /* 중앙 정렬 */
+		    gap: 10px; /* 중앙 메뉴 간격 */
+		}
+		
+		.category-center a {
+		    color: #fff;
+		    font-size: 16px;
+		    text-decoration: none;
+		    font-weight: bold;
+		    transition: color 0.3s;
+		}
+		
 		/* 푸터 스타일 */
-		.footer {
+		footer {
 		    background-color: #002244;
 		    color: #d9e6f2;
 		    padding: 20px;
 		    text-align: center;
-		    position: fixed; /* 화면에 고정 */
-		    bottom: 0; /* 화면의 아래쪽에 위치 */
-		    left: 0;
+/* 		    bottom: 0; /* 화면의 아래쪽에 위치 */ */
+/* 		    left: 0; */
 		    width: 100%; /* 화면 너비를 꽉 채움 */
 		}
 		
-		.footer a {
+		footer a {
 		    color: #d9e6f2;
 		    text-decoration: none;
 		}
 		
-		.footer a:hover {
+		footer a:hover {
 		    color: #b3cde0;
 		}
 
@@ -119,7 +135,7 @@
         }
 
         .user-menu a {
-            color: #b3cde0;
+            color: #fff;
             font-size: 14px;
             text-decoration: none;
         }
@@ -131,40 +147,18 @@
 		.category-menu {
 		    display: flex;
 		    align-items: center;
-		    justify-content: space-between; /* 왼쪽과 중앙 정렬 */
-		    background-color: #6db33f;
+		    justify-content: space-between; /* 왼쪽과 중앙3 정렬 */
+		    background-color: #fff;
 		    padding: 10px 0;
 		    position: relative;
 		}
-		
-		.category-button {
-		    margin-left: 20px; /* 전체카테고리 버튼 왼쪽 여백 */
-		    color: #fff;
-		    font-weight: bold;
-		}
-		
-		.category-center {
-		    flex: 1;
-		    display: flex;
-		    justify-content: center; /* 중앙 정렬 */
-		    gap: 10px; /* 중앙 메뉴 간격 */
-		}
-		
-		.category-center a {
-		    color: #fff;
-		    font-size: 16px;
-		    text-decoration: none;
-		    font-weight: bold;
-		    transition: color 0.3s;
-		}
-		
-		
+
 
 		/* 사이드바 */
 		.sidebar {
 		    display: none;
 		    position: absolute;
-		    top: 253px;
+		    top: 255px;
 		    left: 0; /* 왼쪽 정렬 */
 		    background-color: #002244;
 		    padding: 20px;
@@ -175,7 +169,7 @@
 		    color: #d9e6f2;
 		    display: block;
 		    padding: 10px;
-		    text-align: left; /* 왼쪽 정렬 */
+		    text-align: left; /* 왼쪽 정렬1 */
 		    text-decoration: none;
 		}
 		.sidebar a:hover {
@@ -219,12 +213,12 @@ $(document).ready(function() {
                 <c:if test="${ empty login }">
                     <li class="nav-item">
 						<a class="nav-link" href="/member/loginForm.do">
-						<i class="fa fa-sign-in"></i> 로그인/회원가입</a>
+						<i class="fa fa-sign-in"></i> 로그인</a>
 					</li>
-<!-- 						<li class="nav-item"> -->
-<!-- 							<a class="nav-link" href="/member/writeForm.do"> -->
-<!-- 							<i class="fa fa-address-card-o"></i>회원가입</a> -->
-<!-- 						</li> -->
+						<li class="nav-item">
+							<a class="nav-link" href="/member/writeForm.do">
+							<i class="fa fa-address-card-o"></i> 회원가입</a>
+						</li>
 <!-- 						<li class="nav-item"> -->
 <!-- 							<a class="nav-link" href="/member/searchID.do"> -->
 <!-- 							<i class="fa fa-search"></i>아이디/비밀번호 찾기</a> -->
@@ -255,7 +249,7 @@ $(document).ready(function() {
                         <a class="nav-link" href="/member/view.do">내정보보기</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/cart/list/${login.id}">장바구니</a>
+                        <a class="nav-link" href="/cart/list/${login.id }">장바구니</a>
                     </li>
                 </c:if>
             </ul>
@@ -311,38 +305,47 @@ $(document).ready(function() {
         <decorator:body />
     </article>
 
-    <footer class="footer text-center">
+    <footer class="container-fluid text-center">
         <div>이 홈페이지의 저작권 © COMMAKASE에 있습니다.</div>
         <div>
             <a href="#" class="text-light">개인정보 처리방침</a> | <a href="#" class="text-light">이용약관</a>
         </div>
     </footer>
 
-    <!-- Session Message Modal -->
-    <div class="modal fade" id="msgModal">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header bg-primary text-white">
-                    <h5 class="modal-title">처리 결과 모달 창</h5>
-                    <button type="button" class="close" data-dismiss="modal">&times;</button>
-                </div>
-                <div class="modal-body">${msg}</div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <c:if test="${!empty msg}">
-        <script type="text/javascript">
-            $(function() {
-                $("#msgModal").modal("show");
-            });
-        </script>
-    </c:if>
+    <!-- The Modal -->
+	  <div class="modal fade" id="msgModal">
+	    <div class="modal-dialog">
+	      <div class="modal-content">
+	      
+	        <!-- Modal Header -->
+	        <div class="modal-header">
+	          <h4 class="modal-title">처리 결과 모달 창</h4>
+	          <button type="button" class="close" data-dismiss="modal">&times;</button>
+	        </div>
+	        
+	        <!-- Modal body -->
+	        <div class="modal-body">
+	          ${msg}
+	        </div>
+	        
+	        <!-- Modal footer -->
+	        <div class="modal-footer">
+	          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
+	        </div>
+	        
+	      </div>
+	    </div>
+	  </div>
+  
+	<!-- session 담은 msg를 보여주는 모달창 -->
+	<c:if test="${!empty msg}">
+		<!-- 모달을 보이게하는 javascript -->
+		<script type="text/javascript">
+			$(function() {
+				$("#msgModal").modal("show");
+				
+			})
+		</script>
+	</c:if>
 </body>
 </html>
-
-
-

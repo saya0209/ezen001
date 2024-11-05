@@ -19,7 +19,7 @@ public class LoginVO {
 	   //grade table
 	   private Integer gradeNo;
 	   private String gradeName;
-	   private String photo;
+	   private String grade_image;
 	   
 	
 	

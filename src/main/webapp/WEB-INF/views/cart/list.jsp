@@ -291,7 +291,6 @@
                                 </c:forEach>
                             </tbody>
                         </table>
-
                     </c:otherwise>
                 </c:choose>
             </div>

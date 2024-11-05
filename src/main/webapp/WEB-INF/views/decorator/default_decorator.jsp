@@ -233,11 +233,11 @@ $(document).ready(function() {
                 <c:if test="${ !empty login }">
                     <li class="nav-item">
                         <span class="nav-link">
-                            <c:if test="${ empty login.photo }">
+                            <c:if test="${ empty login.grade_image }">
                                 <i class="fa fa-user-circle-o"></i>
                             </c:if>
-                            <c:if test="${ !empty login.photo }">
-                                <img src="${login.photo }" class="round-circle" style="width:30px; height:30px">
+                            <c:if test="${ !empty login.grade_image }">
+                                <img src="${login.grade_image }" class="round-circle" style="width:30px; height:30px">
                             </c:if>
                             ${login.id }
                         </span>
@@ -255,7 +255,7 @@ $(document).ready(function() {
                         <a class="nav-link" href="/member/view.do">내정보보기</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/cart/list.do">장바구니</a>
+                        <a class="nav-link" href="/cart/list/${login.id}">장바구니</a>
                     </li>
                 </c:if>
             </ul>

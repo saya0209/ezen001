@@ -53,14 +53,19 @@
                                 </tr>
                             </thead>
                             <tbody>
+                            <c:set var="totalAmount" value="0" />
                                 <c:forEach var="item" items="${cartItems}">
-                                    <tr>
-                                        <td><img src="${pageContext.request.contextPath}/upload/image/${item.image_name}" alt="${item.goods_name}" class="product-image"/></td>
-                                        <td>${item.goods_name}</td>
-                                        <td>${item.quantity} 개</td>
-                                        <td><fmt:formatNumber value="${item.goods_total_price}" pattern="#,###"/> 원</td>
-                                    </tr>
-                                </c:forEach>
+								    <c:if test="${item.selected != 0}">
+								        <tr>
+								            <td><img src="${pageContext.request.contextPath}/upload/image/${item.image_name}" alt="${item.goods_name}" class="product-image"/></td>
+								            <td>${item.goods_name}</td>
+								            <td>${item.quantity} 개</td>
+								            <td><fmt:formatNumber value="${item.goods_total_price}" pattern="#,###"/> 원</td>
+								        </tr>
+								        <c:set var="totalAmount" value="${totalAmount + item.goods_total_price}" />
+								    </c:if>
+								</c:forEach>
+
                             </tbody>
                         </table>
                     </c:otherwise>

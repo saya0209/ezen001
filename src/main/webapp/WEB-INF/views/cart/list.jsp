@@ -300,12 +300,6 @@
 				    <form id="paymentForm" class="float-right" method="post">
 					    <input type="hidden" name="id" value="${id}">
 					    <input type="button" value="결제하기" class="btn btn-success" onclick="submitPaymentForm()">
-					    <c:forEach var="item" items="${cartItems}">
-					        <input type="hidden" name="goods_no" value="${item.goods_no}">
-					        <input type="hidden" name="quantity-${item.goods_no}" value="${item.quantity}">
-					        <input type="hidden" name="price-${item.goods_no}" value="${item.price}">
-					        <input type="hidden" name="delivery_charge-${item.goods_no}" value="${item.delivery_charge}">
-					    </c:forEach>
 					</form>
 			    </div>
 			</div>

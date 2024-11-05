@@ -31,4 +31,8 @@ public interface CartMapper {
 
 
 
+	void deleteSelectedItems(String id);
+
+
+
 }

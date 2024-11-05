@@ -87,9 +87,13 @@
 		    color: #d9e6f2;
 		    padding: 20px;
 		    text-align: center;
-/* 		    bottom: 0; /* 화면의 아래쪽에 위치 */ */
-/* 		    left: 0; */
+		    position: fixed;
+ 		    bottom: 0; /* 화면의 아래쪽에 위치 */ 
+ 		    left: 0;
 		    width: 100%; /* 화면 너비를 꽉 채움 */
+		}
+		body {
+			padding-bottom: 300px;
 		}
 		
 		footer a {

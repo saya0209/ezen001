@@ -13,5 +13,7 @@ public interface CartService {
 	Long calculateTotalAmount(List<CartItemVO> cartItems);
 
 	void updateSelection(Long goodsNo, int selected, String id);
+
+	void removeSelectedItems(String id);
 	
 }

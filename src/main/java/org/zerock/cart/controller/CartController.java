@@ -83,14 +83,11 @@ public class CartController {
     public String paymentPageForm(@RequestParam("id") String id, 
                               Model model) {
         List<CartItemVO> cartItems = service.cartList(id);
-        Long totalAmount = service.calculateTotalAmount(cartItems);
 
         log.info("paymentPageForm() 호출 - id: " + id);
-        log.info("paymentPage() 호출 - totalAmount: " + totalAmount);
         // 결제에 필요한 데이터 추가
         model.addAttribute("id", id);
         model.addAttribute("cartItems", cartItems);
-        model.addAttribute("totalAmount", totalAmount);
 
         return "cart/payment"; // 결제 페이지로 이동
     }
@@ -101,6 +98,8 @@ public class CartController {
     public String completePayment(@PathVariable("id") String id, Model model) {
         log.info("completePayment() 호출 - id: " + id);
         String orderNumber = "ORD-" + id + "-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+
+        service.removeSelectedItems(id);
 
         // 필요한 경우 결제 완료에 필요한 정보 추가
         model.addAttribute("id", id);

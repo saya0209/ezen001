@@ -44,4 +44,11 @@
         FROM cart
         WHERE goods_no = #{goods_no}
     </select>
+    
+    <!-- 결제완료시 선택된 상품 삭제처리 -->
+    <delete id="deleteSelectedItems" parameterType="String">
+	    DELETE FROM cart
+	    WHERE id = #{id} AND selected != 0
+	</delete>
+    
 </mapper>

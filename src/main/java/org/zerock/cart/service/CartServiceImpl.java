@@ -91,6 +91,12 @@ public class CartServiceImpl implements CartService {
         mapper.updateGoodsTotalPrice(item); // DB에 총 가격 업데이트
     }
 
+	@Override
+	public void removeSelectedItems(String id) {
+		// TODO Auto-generated method stub
+		mapper.deleteSelectedItems(id);
+	}
+
 	
 
 

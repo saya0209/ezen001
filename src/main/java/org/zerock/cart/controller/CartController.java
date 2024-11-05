@@ -77,7 +77,7 @@ public class CartController {
         }
     }
     
-    
+    // cd /c/Users/EZEN/git/commakase/ex00
     // 결제화면
     @PostMapping("/paymentForm.do")
     public String paymentPageForm(@RequestParam("id") String id, 

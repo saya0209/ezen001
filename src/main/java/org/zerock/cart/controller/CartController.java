@@ -34,16 +34,7 @@ public class CartController {
         log.info("list() 실행 =====");
         log.info("list()가 불러온 id: " + id);
         
-        // id를 Long으로 변환 (필요한 경우)
-//        Long idLong = null;
-//        try {
-//            idLong = Long.parseLong(id);
-//        } catch (NumberFormatException e) {
-//            log.error("Invalid id format: " + id);
-//            // 오류 처리 로직 추가 (예: 에러 페이지로 리다이렉트)
-//        }
-
-        // 리다이렉트할 URL을 생성 (idLong이 null이 아닐 때만)
+        // 리다이렉트할 URL을 생성 (id가 null이 아닐 때만)
         return id != null ? "redirect:/cart/list/" + id : "redirect:/error"; // 에러 페이지로 리다이렉트하는 로직 추가 가능
     }
     

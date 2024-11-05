@@ -57,8 +57,9 @@
 	        // 가격 계산
 	        var delivery_charge = parseInt(document.getElementById('delivery_charge-' + goods_no).value); // 배송비 가져오기
 	        var price = parseInt(document.getElementById('price-' + goods_no).value); // 상품 가격
+	        var discount = parseInt(document.getElementById('discount-' + goods_no).value); // 상품 할인가
 	        var totalCell = document.getElementById('total-' + goods_no); // 총 가격 셀
-	        var total = newValue * price + delivery_charge; // 총 가격 계산
+	        var total = (newValue * (price-discount)) + delivery_charge; // 총 가격 계산
 	        totalCell.innerHTML = new Intl.NumberFormat().format(total) + ' 원'; // 총 가격 업데이트
 	        // 전체 결제 금액 업데이트
 	        updateTotalAmount();
@@ -272,6 +273,7 @@
                                         </td>
                                         <!-- 상품 총 가격  -->
                                         <td>
+                                            <input type="hidden" id="discount-${item.goods_no}" value="${item.discount}"/> <!-- 상품 할인가 -->
                                             <input type="hidden" id="price-${item.goods_no}" value="${item.price}"/> <!-- 상품 가격 -->
                                             <span id="total-${item.goods_no}" class="item-total">
                                             	<c:set var="goods_total_price" value="${(item.price-item.discount) * item.quantity + item.delivery_charge}" />

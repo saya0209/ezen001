@@ -1,4 +1,4 @@
--- ¡Ú¡Ú¡Ú¡Ú¡Ú¡Ú NOTICE (SEQ O) (DROP, CREATE, INSERT, ¿¹½Ã) ¡Ú¡Ú¡Ú¡Ú¡Ú¡Ú ----------------------------------------------------------
+-- â˜…â˜…â˜…â˜…â˜…â˜… NOTICE (SEQ O) (DROP, CREATE, INSERT, ì˜ˆì‹œ) â˜…â˜…â˜…â˜…â˜…â˜… ----------------------------------------------------------
 drop table notice CASCADE CONSTRAINTS PURGE;
 drop SEQUENCE notice_seq;
 
@@ -11,27 +11,27 @@ CREATE TABLE notice (
     startDate DATE DEFAULT sysDate,
     endDate DATE DEFAULT sysDate,
     updateDate DATE DEFAULT sysDate,
-    image VARCHAR2(2000)
+    files VARCHAR2(2000)
 );
 
 CREATE SEQUENCE notice_seq;
 
--- ÇöÀç °øÁö
-INSERT INTO notice (notice_no, writer_id, title, content, startDate, endDate, image) 
-VALUES (notice_seq.NEXTVAL, 'admin', '½ÅÁ¦Ç° ±×·¡ÇÈ Ä«µå ÀÔ°í ¾È³»', 'ÃÖ½Å ±×·¡ÇÈ Ä«µå°¡ ÀÔ°íµÇ¾ú½À´Ï´Ù! ºü¸¥ ±¸¸Å¸¦ ±ÇÀåÇÕ´Ï´Ù.', 
+-- í˜„ìž¬ ê³µì§€
+INSERT INTO notice (notice_no, writer_id, title, content, startDate, endDate, files) 
+VALUES (notice_seq.NEXTVAL, 'admin', 'ì‹ ì œí’ˆ ê·¸ëž˜í”½ ì¹´ë“œ ìž…ê³  ì•ˆë‚´', 'ìµœì‹  ê·¸ëž˜í”½ ì¹´ë“œê°€ ìž…ê³ ë˜ì—ˆìŠµë‹ˆë‹¤! ë¹ ë¥¸ êµ¬ë§¤ë¥¼ ê¶Œìž¥í•©ë‹ˆë‹¤.', 
 TO_DATE('2024-10-01', 'YYYY-MM-DD'), TO_DATE('2024-12-31', 'YYYY-MM-DD'), 'new_gpu.jpg');
 
--- Áö³­ °øÁö
-INSERT INTO notice (notice_no, writer_id, title, content, startDate, endDate, image) 
-VALUES (notice_seq.NEXTVAL, 'admin', '¿©¸§ ¸ÂÀÌ Äð·¯ ÇÒÀÎ Çà»ç', 'CPU ¹× ÄÉÀÌ½º Äð·¯ ÇÒÀÎ ÀÌº¥Æ®°¡ Á¾·áµÇ¾ú½À´Ï´Ù.', 
+-- ì§€ë‚œ ê³µì§€
+INSERT INTO notice (notice_no, writer_id, title, content, startDate, endDate, files) 
+VALUES (notice_seq.NEXTVAL, 'admin', 'ì—¬ë¦„ ë§žì´ ì¿¨ëŸ¬ í• ì¸ í–‰ì‚¬', 'CPU ë° ì¼€ì´ìŠ¤ ì¿¨ëŸ¬ í• ì¸ ì´ë²¤íŠ¸ê°€ ì¢…ë£Œë˜ì—ˆìŠµë‹ˆë‹¤.', 
 TO_DATE('2024-06-01', 'YYYY-MM-DD'), TO_DATE('2024-08-31', 'YYYY-MM-DD'), 'summer_cooler_sale.jpg');
 
--- ¿¹Á¤ °øÁö
-INSERT INTO notice (notice_no, writer_id, title, content, startDate, endDate, image) 
-VALUES (notice_seq.NEXTVAL, 'admin', 'ºí·¢ ÇÁ¶óÀÌµ¥ÀÌ Æ¯°¡ Çà»ç', 'RAM°ú SSD Æ¯°¡ Çà»ç°¡ ¿¹Á¤µÇ¾î ÀÖ½À´Ï´Ù. ³õÄ¡Áö ¸¶¼¼¿ä!', 
+-- ì˜ˆì • ê³µì§€
+INSERT INTO notice (notice_no, writer_id, title, content, startDate, endDate, files) 
+VALUES (notice_seq.NEXTVAL, 'admin', 'ë¸”ëž™ í”„ë¼ì´ë°ì´ íŠ¹ê°€ í–‰ì‚¬', 'RAMê³¼ SSD íŠ¹ê°€ í–‰ì‚¬ê°€ ì˜ˆì •ë˜ì–´ ìžˆìŠµë‹ˆë‹¤. ë†“ì¹˜ì§€ ë§ˆì„¸ìš”!', 
 TO_DATE('2024-11-20', 'YYYY-MM-DD'), TO_DATE('2024-11-30', 'YYYY-MM-DD'), 'black_friday_sale.jpg');
 
--- ¡Ú¡Ú¡Ú COMMUNITY, COMMUNITY_REPLY (SEQ O) (DROP, CREATE, INSERT, ¿¹½Ã) ----------------------------------------------------------
+-- â˜…â˜…â˜… COMMUNITY, COMMUNITY_REPLY (SEQ O) (DROP, CREATE, INSERT, ì˜ˆì‹œ) ----------------------------------------------------------
 DROP TABLE community CASCADE CONSTRAINTS PURGE;
 DROP SEQUENCE community_seq;
 DROP TABLE community_reply CASCADE CONSTRAINTS PURGE;
@@ -45,7 +45,7 @@ CREATE TABLE community (
     writeDate DATE DEFAULT Sysdate,
     start_date DATE,
     endDate DATE,
-    hit NUMBER DEFAULT 0, -- º¯°æµÈ ºÎºÐ
+    hit NUMBER DEFAULT 0, -- ë³€ê²½ëœ ë¶€ë¶„
     updateDate DATE,
     image VARCHAR2(2000)
 );
@@ -56,7 +56,7 @@ CREATE TABLE community_reply (
     reply_no NUMBER PRIMARY KEY,  
     post_no NUMBER NOT NULL,
     parent_no NUMBER NULL,   
-    id VARCHAR2(20) REFERENCES member(id) NOT NULL, -- È¸¿ø¸¸ »ç¿ë°¡´É
+    id VARCHAR2(20) REFERENCES member(id) NOT NULL, -- íšŒì›ë§Œ ì‚¬ìš©ê°€ëŠ¥
     content VARCHAR2(600) NOT NULL,
     writeDate DATE DEFAULT sysdate,
     updateDate DATE DEFAULT sysdate,
@@ -67,33 +67,33 @@ CREATE TABLE community_reply (
 
 CREATE SEQUENCE community_reply_seq;
 
--- Ã¹ ¹øÂ° Ä¿¹Â´ÏÆ¼ °Ô½Ã¹°
+-- ì²« ë²ˆì§¸ ì»¤ë®¤ë‹ˆí‹° ê²Œì‹œë¬¼
 INSERT INTO community (community_no, id, title, content, writeDate, start_date, endDate, hit, image) 
-VALUES (community_seq.NEXTVAL, 'admin', 'ÃÖ½Å ±×·¡ÇÈ Ä«µå ÃßÃµ', 
-        '2024³â ÃÖ°íÀÇ ±×·¡ÇÈ Ä«µå ¸®½ºÆ®¸¦ °øÀ¯ÇÕ´Ï´Ù. ¼º´É°ú °¡°Ý´ëºñ ÃÖ°íÀÇ ¼±ÅÃÀº ¹«¾ùÀÏ±î¿ä?', 
+VALUES (community_seq.NEXTVAL, 'admin', 'ìµœì‹  ê·¸ëž˜í”½ ì¹´ë“œ ì¶”ì²œ', 
+        '2024ë…„ ìµœê³ ì˜ ê·¸ëž˜í”½ ì¹´ë“œ ë¦¬ìŠ¤íŠ¸ë¥¼ ê³µìœ í•©ë‹ˆë‹¤. ì„±ëŠ¥ê³¼ ê°€ê²©ëŒ€ë¹„ ìµœê³ ì˜ ì„ íƒì€ ë¬´ì—‡ì¼ê¹Œìš”?', 
         SYSDATE, NULL, NULL, 0, 'graphic_card.jpg');
         
--- µÎ ¹øÂ° Ä¿¹Â´ÏÆ¼ °Ô½Ã¹°
+-- ë‘ ë²ˆì§¸ ì»¤ë®¤ë‹ˆí‹° ê²Œì‹œë¬¼
 INSERT INTO community (community_no, id, title, content, writeDate, start_date, endDate, hit, image) 
-VALUES (community_seq.NEXTVAL, 'admin', 'Á¶¸³ PC ÈÄ±â', 
-        'ÃÖ±Ù¿¡ Á¶¸³ÇÑ PC¿¡ ´ëÇÑ ÈÄ±â¸¦ °øÀ¯ÇÕ´Ï´Ù. »ç¿ë ÈÄ±â¿Í ÆÁÀ» ¾Ë°í ½ÍÀ¸½Å ºÐµéÀº ´ñ±Û ÁÖ¼¼¿ä!', 
+VALUES (community_seq.NEXTVAL, 'admin', 'ì¡°ë¦½ PC í›„ê¸°', 
+        'ìµœê·¼ì— ì¡°ë¦½í•œ PCì— ëŒ€í•œ í›„ê¸°ë¥¼ ê³µìœ í•©ë‹ˆë‹¤. ì‚¬ìš© í›„ê¸°ì™€ íŒì„ ì•Œê³  ì‹¶ìœ¼ì‹  ë¶„ë“¤ì€ ëŒ“ê¸€ ì£¼ì„¸ìš”!', 
         SYSDATE, NULL, NULL, 0, 'pc_build_review.jpg');
 
--- ´ñ±Û µ¥ÀÌÅÍ »ðÀÔ
+-- ëŒ“ê¸€ ë°ì´í„° ì‚½ìž…
 INSERT INTO community_reply(reply_no, post_no, parent_no, id, content, writeDate, updateDate, likeCnt, dislikeCnt, image) 
-VALUES (community_reply_seq.nextval, 1, NULL, 'user1', 'ÀÌ ±×·¡ÇÈ Ä«µåÀÇ ¼º´ÉÀÌ ±Ã±ÝÇÕ´Ï´Ù. ¾î¶² °ÔÀÓ¿¡¼­ Å×½ºÆ®ÇØºÃ³ª¿ä?', sysdate, sysdate, 0, 0, NULL);
+VALUES (community_reply_seq.nextval, 1, NULL, 'user1', 'ì´ ê·¸ëž˜í”½ ì¹´ë“œì˜ ì„±ëŠ¥ì´ ê¶ê¸ˆí•©ë‹ˆë‹¤. ì–´ë–¤ ê²Œìž„ì—ì„œ í…ŒìŠ¤íŠ¸í•´ë´¤ë‚˜ìš”?', sysdate, sysdate, 0, 0, NULL);
 
 INSERT INTO community_reply(reply_no, post_no, parent_no, id, content, writeDate, updateDate, likeCnt, dislikeCnt, image) 
-VALUES (community_reply_seq.nextval, 1, NULL, 'user2', 'ÃÖ°íÀÇ CPU ÃßÃµ ºÎÅ¹µå¸³´Ï´Ù. °¡¼ººñ ÁÁÀº Á¦Ç°ÀÌ ÇÊ¿äÇØ¿ä.', sysdate, sysdate, 0, 0, NULL);
+VALUES (community_reply_seq.nextval, 1, NULL, 'user2', 'ìµœê³ ì˜ CPU ì¶”ì²œ ë¶€íƒë“œë¦½ë‹ˆë‹¤. ê°€ì„±ë¹„ ì¢‹ì€ ì œí’ˆì´ í•„ìš”í•´ìš”.', sysdate, sysdate, 0, 0, NULL);
 
--- ´ë´ñ±Û µ¥ÀÌÅÍ »ðÀÔ
+-- ëŒ€ëŒ“ê¸€ ë°ì´í„° ì‚½ìž…
 INSERT INTO community_reply(reply_no, post_no, parent_no, id, content, writeDate, updateDate, likeCnt, dislikeCnt, image) 
-VALUES (community_reply_seq.nextval, 1, 1, 'user2', 'ÀÌ ±×·¡ÇÈ Ä«µåÀÇ ¼º´ÉÀº Á¤¸» ¶Ù¾î³³´Ï´Ù! ´Ù¾çÇÑ °ÔÀÓ¿¡¼­ ¼º´ÉÀÌ ÁÁ½À´Ï´Ù.', sysdate, sysdate, 0, 0, NULL);
+VALUES (community_reply_seq.nextval, 1, 1, 'user2', 'ì´ ê·¸ëž˜í”½ ì¹´ë“œì˜ ì„±ëŠ¥ì€ ì •ë§ ë›°ì–´ë‚©ë‹ˆë‹¤! ë‹¤ì–‘í•œ ê²Œìž„ì—ì„œ ì„±ëŠ¥ì´ ì¢‹ìŠµë‹ˆë‹¤.', sysdate, sysdate, 0, 0, NULL);
 
 INSERT INTO community_reply(reply_no, post_no, parent_no, id, content, writeDate, updateDate, likeCnt, dislikeCnt, image) 
-VALUES (community_reply_seq.nextval, 1, 2, 'user1', 'CPU´Â ÀÎÅÚ i5°¡ ±¦ÂúÀº °Í °°½À´Ï´Ù. °¡¼ººñ°¡ ÁÁ°í ¼º´Éµµ ¿ì¼öÇØ¿ä.', sysdate, sysdate, 0, 0, NULL);
+VALUES (community_reply_seq.nextval, 1, 2, 'user1', 'CPUëŠ” ì¸í…” i5ê°€ ê´œì°®ì€ ê²ƒ ê°™ìŠµë‹ˆë‹¤. ê°€ì„±ë¹„ê°€ ì¢‹ê³  ì„±ëŠ¥ë„ ìš°ìˆ˜í•´ìš”.', sysdate, sysdate, 0, 0, NULL);
         
--- ¡Ú¡Ú¡Ú¡Ú¡Ú¡Ú ANSWER, QNA (SEQ O) (DROP, CREATE, INSERT, ¿¹½Ã) ¡Ú¡Ú¡Ú¡Ú¡Ú¡Ú ----------------------------------------------------------        
+-- â˜…â˜…â˜…â˜…â˜…â˜… ANSWER, QNA (SEQ O) (DROP, CREATE, INSERT, ì˜ˆì‹œ) â˜…â˜…â˜…â˜…â˜…â˜… ----------------------------------------------------------        
 DROP TABLE answer CASCADE CONSTRAINTS PURGE;
 DROP TABLE qna CASCADE CONSTRAINTS PURGE;
 DROP SEQUENCE answer_seq;
@@ -123,21 +123,21 @@ CREATE TABLE answer (
 CREATE SEQUENCE qna_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE answer_seq START WITH 1 INCREMENT BY 1;
 
--- QnA »ùÇÃ µ¥ÀÌÅÍ 
+-- QnA ìƒ˜í”Œ ë°ì´í„° 
 INSERT INTO qna (qna_no, id, title, content, writeDate, category)
-VALUES (1, 'test1', '¹è¼ÛÀº ¾î¶»°Ô ÇÏ³ª¿ä?', '¹è¼Û °ü·Ã Áú¹®ÀÔ´Ï´Ù. ¾ðÁ¦ ¹ÞÀ» ¼ö ÀÖ³ª¿ä?', sysdate, '¹è¼Û');
+VALUES (1, 'test1', 'ë°°ì†¡ì€ ì–´ë–»ê²Œ í•˜ë‚˜ìš”?', 'ë°°ì†¡ ê´€ë ¨ ì§ˆë¬¸ìž…ë‹ˆë‹¤. ì–¸ì œ ë°›ì„ ìˆ˜ ìžˆë‚˜ìš”?', sysdate, 'ë°°ì†¡');
 
 INSERT INTO qna (qna_no, id, title, content, writeDate, category)
-VALUES (2, 'test1', 'È¯ºÒ Á¤Ã¥Àº ¹«¾ùÀÎ°¡¿ä?', 'È¯ºÒ ÀýÂ÷¿Í ¼Ò¿ä ½Ã°£¿¡ ´ëÇØ ¾Ë°í ½Í½À´Ï´Ù.', sysdate, 'È¯ºÒ');
+VALUES (2, 'test1', 'í™˜ë¶ˆ ì •ì±…ì€ ë¬´ì—‡ì¸ê°€ìš”?', 'í™˜ë¶ˆ ì ˆì°¨ì™€ ì†Œìš” ì‹œê°„ì— ëŒ€í•´ ì•Œê³  ì‹¶ìŠµë‹ˆë‹¤.', sysdate, 'í™˜ë¶ˆ');
 
--- Answer »ùÇÃ µ¥ÀÌÅÍ
+-- Answer ìƒ˜í”Œ ë°ì´í„°
 INSERT INTO answer (answer_no, id, answer_title, answer_content, answerDate, refNo, ordNo, levNo, parentNo)
-VALUES (1, 'admin', '¹è¼Û ¾È³»', '¹è¼ÛÀº 3ÀÏ ÀÌ³»¿¡ °¡´ÉÇÕ´Ï´Ù.', sysdate, NULL, 1, 0, 1);
+VALUES (1, 'admin', 'ë°°ì†¡ ì•ˆë‚´', 'ë°°ì†¡ì€ 3ì¼ ì´ë‚´ì— ê°€ëŠ¥í•©ë‹ˆë‹¤.', sysdate, NULL, 1, 0, 1);
 
 INSERT INTO answer (answer_no, id, answer_title, answer_content, answerDate, refNo, ordNo, levNo, parentNo)
-VALUES (2, 'admin', 'È¯ºÒ ¾È³»', 'È¯ºÒÀº ¿äÃ» ÈÄ 5ÀÏ ÀÌ³»¿¡ Ã³¸®µË´Ï´Ù.', sysdate, NULL, 1, 0, 2);
+VALUES (2, 'admin', 'í™˜ë¶ˆ ì•ˆë‚´', 'í™˜ë¶ˆì€ ìš”ì²­ í›„ 5ì¼ ì´ë‚´ì— ì²˜ë¦¬ë©ë‹ˆë‹¤.', sysdate, NULL, 1, 0, 2);
 
--- ¡Ú¡Ú¡Ú¡Ú¡Ú¡Ú PRODUCT, GOODS_IMAGE, GOODS_PRICE (SEQ O) (DROP, CREATE, INSERT, ¿¹½Ã) ¡Ú¡Ú¡Ú¡Ú¡Ú¡Ú ----------------------------------------------------------  
+-- â˜…â˜…â˜…â˜…â˜…â˜… PRODUCT, GOODS_IMAGE, GOODS_PRICE (SEQ O) (DROP, CREATE, INSERT, ì˜ˆì‹œ) â˜…â˜…â˜…â˜…â˜…â˜… ----------------------------------------------------------  
 
 DROP TABLE products CASCADE CONSTRAINTS PURGE;
 DROP TABLE goods_images CASCADE CONSTRAINTS PURGE;
@@ -169,31 +169,31 @@ CREATE TABLE goods_price (
     sale_start_date DATE NOT NULL,
     sale_end_date DATE NOT NULL,
     goods_no NUMBER,
-    FOREIGN KEY (goods_no) REFERENCES products(goods_no)  -- products Å×ÀÌºí°úÀÇ ¿Ü·¡ Å° °ü°è ¼³Á¤
+    FOREIGN KEY (goods_no) REFERENCES products(goods_no)  -- products í…Œì´ë¸”ê³¼ì˜ ì™¸ëž˜ í‚¤ ê´€ê³„ ì„¤ì •
 );
 
 CREATE TABLE goods_images (
     goods_image_no NUMBER PRIMARY KEY,
     image_name VARCHAR2(300),
     goods_no NUMBER,
-    FOREIGN KEY (goods_no) REFERENCES products(goods_no)  -- products Å×ÀÌºí°úÀÇ ¿Ü·¡ Å° °ü°è ¼³Á¤
+    FOREIGN KEY (goods_no) REFERENCES products(goods_no)  -- products í…Œì´ë¸”ê³¼ì˜ ì™¸ëž˜ í‚¤ ê´€ê³„ ì„¤ì •
 );
 
 CREATE SEQUENCE products_SEQ;
 CREATE SEQUENCE goods_images_SEQ;
 CREATE SEQUENCE goods_price_SEQ;
 
--- »ùÇÃ µ¥ÀÌÅÍ ÀÔ·Â (PRODUCT)
+-- ìƒ˜í”Œ ë°ì´í„° ìž…ë ¥ (PRODUCT)
 INSERT INTO products (goods_no, goods_name, cate_code1, cate_code2, cate_code3, cate_name, image_name, content, company, product_date) 
-VALUES (1, '¿¹½Ã »óÇ° 1', 101, 202, 303, 'Ä«Å×°í¸® ÀÌ¸§', 'image1.jpg', '»óÇ° ¼³¸íÀÔ´Ï´Ù.', 'Á¦Á¶»ç¸í', SYSDATE);
+VALUES (1, 'ì˜ˆì‹œ ìƒí’ˆ 1', 101, 202, 303, 'ì¹´í…Œê³ ë¦¬ ì´ë¦„', 'image1.jpg', 'ìƒí’ˆ ì„¤ëª…ìž…ë‹ˆë‹¤.', 'ì œì¡°ì‚¬ëª…', SYSDATE);
 
 INSERT INTO products (goods_no, goods_name, cate_code1, cate_code2, cate_code3, cate_name, image_name, content, company, product_date) 
-VALUES (2, '¿¹½Ã »óÇ° 2', 101, 202, 304, 'Ä«Å×°í¸® ÀÌ¸§', 'image2.jpg', '»óÇ° ¼³¸íÀÔ´Ï´Ù.', 'Á¦Á¶»ç¸í', SYSDATE);
+VALUES (2, 'ì˜ˆì‹œ ìƒí’ˆ 2', 101, 202, 304, 'ì¹´í…Œê³ ë¦¬ ì´ë¦„', 'image2.jpg', 'ìƒí’ˆ ì„¤ëª…ìž…ë‹ˆë‹¤.', 'ì œì¡°ì‚¬ëª…', SYSDATE);
 
 INSERT INTO products (goods_no, goods_name, cate_code1, cate_code2, cate_code3, cate_name, image_name, content, company, product_date) 
-VALUES (3, '¿¹½Ã »óÇ° 3', 101, 203, 305, 'Ä«Å×°í¸® ÀÌ¸§', 'image3.jpg', '»óÇ° ¼³¸íÀÔ´Ï´Ù.', 'Á¦Á¶»ç¸í', SYSDATE);
+VALUES (3, 'ì˜ˆì‹œ ìƒí’ˆ 3', 101, 203, 305, 'ì¹´í…Œê³ ë¦¬ ì´ë¦„', 'image3.jpg', 'ìƒí’ˆ ì„¤ëª…ìž…ë‹ˆë‹¤.', 'ì œì¡°ì‚¬ëª…', SYSDATE);
 
--- »ùÇÃ µ¥ÀÌÅÍ ÀÔ·Â (GOODS_PRICE)
+-- ìƒ˜í”Œ ë°ì´í„° ìž…ë ¥ (GOODS_PRICE)
 INSERT INTO goods_price (goods_price_no, price, discount, sale_price, delivery_charge, sale_start_date, sale_end_date, goods_no) 
 VALUES (1, 100000, 10000, 90000, 3000, TO_DATE('2024-10-01', 'YYYY-MM-DD'), TO_DATE('2024-10-31', 'YYYY-MM-DD'), 1);
 
@@ -203,7 +203,7 @@ VALUES (2, 150000, 15000, 135000, 3000, TO_DATE('2024-11-01', 'YYYY-MM-DD'), TO_
 INSERT INTO goods_price (goods_price_no, price, discount, sale_price, delivery_charge, sale_start_date, sale_end_date, goods_no) 
 VALUES (3, 200000, 20000, 180000, 3000, TO_DATE('2024-12-01', 'YYYY-MM-DD'), TO_DATE('2024-12-31', 'YYYY-MM-DD'), 3);
 
--- »ùÇÃ µ¥ÀÌÅÍ ÀÔ·Â (GOODS_IMAGE)
+-- ìƒ˜í”Œ ë°ì´í„° ìž…ë ¥ (GOODS_IMAGE)
 INSERT INTO goods_images (goods_image_no, image_name, goods_no) 
 VALUES (1, 'image1.jpg', 1);
 
@@ -213,7 +213,7 @@ VALUES (2, 'image2.jpg', 2);
 INSERT INTO goods_images (goods_image_no, image_name, goods_no) 
 VALUES (3, 'image3.jpg', 3);
 
--- ¡Ú¡Ú¡Ú¡Ú¡Ú¡Ú CATEGORY, COMPONENT (SEQ X) (DROP, CREATE, INSERT, ¿¹½Ã) ¡Ú¡Ú¡Ú¡Ú¡Ú¡Ú ---------------------------------------------------------- 
+-- â˜…â˜…â˜…â˜…â˜…â˜… CATEGORY, COMPONENT (SEQ X) (DROP, CREATE, INSERT, ì˜ˆì‹œ) â˜…â˜…â˜…â˜…â˜…â˜… ---------------------------------------------------------- 
 
 DROP TABLE category CASCADE CONSTRAINTS PURGE;
 DROP TABLE component CASCADE CONSTRAINTS PURGE;
@@ -233,22 +233,22 @@ CREATE TABLE component (
     PRIMARY KEY (cate_code1, cate_code2)
 );
 
--- »ùÇÃ µ¥ÀÌÅÍ »ðÀÔ (CATEGORY)
+-- ìƒ˜í”Œ ë°ì´í„° ì‚½ìž… (CATEGORY)
 INSERT INTO category (cate_code1, cate_code2, cate_code3, cate_name) 
-VALUES (1, 1, 1, 'ÄÄÇ»ÅÍ ÁÖ¿ä ºÎÇ°');
+VALUES (1, 1, 1, 'ì»´í“¨í„° ì£¼ìš” ë¶€í’ˆ');
 
 INSERT INTO category (cate_code1, cate_code2, cate_code3, cate_name) 
-VALUES (1, 2, 1, 'ÁÖº¯±â±â');
+VALUES (1, 2, 1, 'ì£¼ë³€ê¸°ê¸°');
 
 
--- »ùÇÃ µ¥ÀÌÅÍ »ðÀÔ (COMPONENT)
+-- ìƒ˜í”Œ ë°ì´í„° ì‚½ìž… (COMPONENT)
 INSERT INTO component (cate_code1, cate_code2, cate_name) 
 VALUES (1, 1, 'CPU');
 
 INSERT INTO component (cate_code1, cate_code2, cate_name) 
-VALUES (1, 2, '±×·¡ÇÈ Ä«µå');
+VALUES (1, 2, 'ê·¸ëž˜í”½ ì¹´ë“œ');
 
--- ¡Ú¡Ú¡Ú¡Ú¡Ú¡Ú GOODS_REPLY, CART, PAYMENT (SEQ O) (DROP, CREATE, INSERT) ¡Ú¡Ú¡Ú¡Ú¡Ú¡Ú ----------------------------------------------------------
+-- â˜…â˜…â˜…â˜…â˜…â˜… GOODS_REPLY, CART, PAYMENT (SEQ O) (DROP, CREATE, INSERT) â˜…â˜…â˜…â˜…â˜…â˜… ----------------------------------------------------------
 
 drop table goods_reply CASCADE CONSTRAINTS;
 drop table cart CASCADE CONSTRAINTS;
@@ -258,8 +258,8 @@ DROP SEQUENCE goods_reply_seq;
 DROP SEQUENCE cart_seq;
 DROP SEQUENCE payment_seq;
 
--- 2. °´Ã¼ »ý¼º
-    -- 2-1. ¸®ºä
+-- 2. ê°ì²´ ìƒì„±
+    -- 2-1. ë¦¬ë·°
     CREATE TABLE goods_reply (
     ID VARCHAR2(30),
     PW VARCHAR2(60),
@@ -273,7 +273,7 @@ DROP SEQUENCE payment_seq;
     goods_name VARCHAR2(300)
 );
 
-    -- 2-1. Àå¹Ù±¸´Ï
+    -- 2-1. ìž¥ë°”êµ¬ë‹ˆ
     CREATE TABLE cart (
         id VARCHAR2(50) not null,
         goods_no NUMBER NOT NULL,
@@ -292,7 +292,7 @@ DROP SEQUENCE payment_seq;
         selected NUMBER(1) DEFAULT 0 NOT NULL -- 0: false, 1: true    
         );
         
-    -- 2-1. °áÁ¦
+    -- 2-1. ê²°ì œ
     CREATE TABLE payment (  
         goods_no NUMBER NOT NULL,
         goods_name VARCHAR2(300) NOT NULL,
@@ -314,51 +314,51 @@ CREATE SEQUENCE goods_reply_seq;
 CREATE SEQUENCE cart_seq;
 CREATE SEQUENCE payment_seq;
 
--- »ùÇÃµ¥ÀÌÅÍ Ãß°¡
-     -- »ùÇÃ µ¥ÀÌÅÍ 1
+-- ìƒ˜í”Œë°ì´í„° ì¶”ê°€
+     -- ìƒ˜í”Œ ë°ì´í„° 1
     INSERT INTO cart (id, goods_no, goods_name, image_name, price, quantity, goods_total_price, 
                    selected_goods_price, delivery_charge, cart_no, discount, total_discount, 
                    totalAmount, selected, item_no)
-    VALUES (1, 1001, '½º¸¶Æ®Æù', 'smartphone.jpg', 500000, 1, 500000, 
+    VALUES (1, 1001, 'ìŠ¤ë§ˆíŠ¸í°', 'smartphone.jpg', 500000, 1, 500000, 
         0, 3000, 1, 0, 0, 503000, 0, cart_seq.NEXTVAL);
 
-    -- »ùÇÃ µ¥ÀÌÅÍ 2
+    -- ìƒ˜í”Œ ë°ì´í„° 2
     INSERT INTO cart (id, goods_no, goods_name, image_name, price, quantity, goods_total_price, 
                    selected_goods_price, delivery_charge, cart_no, discount, total_discount, 
                    totalAmount, selected, item_no)
-    VALUES (1, 1002, '³ëÆ®ºÏ', 'laptop.jpg', 1200000, 1, 1200000, 
+    VALUES (1, 1002, 'ë…¸íŠ¸ë¶', 'laptop.jpg', 1200000, 1, 1200000, 
         0, 5000, 1, 100000, 0, 1100000, 1, cart_seq.NEXTVAL);
 
-    -- »ùÇÃ µ¥ÀÌÅÍ 3
+    -- ìƒ˜í”Œ ë°ì´í„° 3
     INSERT INTO cart (id, goods_no, goods_name, image_name, price, quantity, goods_total_price, 
                    selected_goods_price, delivery_charge, cart_no, discount, total_discount, 
                    totalAmount, selected, item_no)
-    VALUES (1, 1003, 'ÇìµåÆù', 'headphones.jpg', 150000, 2, 300000, 
+    VALUES (1, 1003, 'í—¤ë“œí°', 'headphones.jpg', 150000, 2, 300000, 
         0, 0, 1, 0, 0, 300000, 0, cart_seq.NEXTVAL);
         
-         -- »ùÇÃ µ¥ÀÌÅÍ 1
+         -- ìƒ˜í”Œ ë°ì´í„° 1
     INSERT INTO cart (id, goods_no, goods_name, image_name, price, quantity, goods_total_price, 
                    selected_goods_price, delivery_charge, cart_no, discount, total_discount, 
                    totalAmount, selected, item_no)
-    VALUES (2, 1001, '½º¸¶Æ®Æù', 'smartphone.jpg', 500000, 1, 500000, 
+    VALUES (2, 1001, 'ìŠ¤ë§ˆíŠ¸í°', 'smartphone.jpg', 500000, 1, 500000, 
         0, 3000, 1, 0, 0, 503000, 0, cart_seq.NEXTVAL);
 
-    -- »ùÇÃ µ¥ÀÌÅÍ 2
+    -- ìƒ˜í”Œ ë°ì´í„° 2
     INSERT INTO cart (id, goods_no, goods_name, image_name, price, quantity, goods_total_price, 
                    selected_goods_price, delivery_charge, cart_no, discount, total_discount, 
                    totalAmount, selected, item_no)
-    VALUES (2, 1002, '³ëÆ®ºÏ', 'laptop.jpg', 1200000, 1, 1200000, 
+    VALUES (2, 1002, 'ë…¸íŠ¸ë¶', 'laptop.jpg', 1200000, 1, 1200000, 
         0, 5000, 1, 100000, 0, 1100000, 1, cart_seq.NEXTVAL);
 
-    -- »ùÇÃ µ¥ÀÌÅÍ 3
+    -- ìƒ˜í”Œ ë°ì´í„° 3
     INSERT INTO cart (id, goods_no, goods_name, image_name, price, quantity, goods_total_price, 
                    selected_goods_price, delivery_charge, cart_no, discount, total_discount, 
                    totalAmount, selected, item_no)
-    VALUES (2, 1003, 'ÇìµåÆù', 'headphones.jpg', 150000, 2, 300000, 
+    VALUES (2, 1003, 'í—¤ë“œí°', 'headphones.jpg', 150000, 2, 300000, 
         0, 0, 1, 0, 0, 300000, 0, cart_seq.NEXTVAL);
 commit;
 
--- ¡Ú¡Ú¡Ú¡Ú¡Ú¡Ú MEMBER, GRADE (SEQ O) (DROP, CREATE, INSERT, ¿¹½Ã) ¡Ú¡Ú¡Ú¡Ú¡Ú¡Ú ----------------------------------------------------------
+-- â˜…â˜…â˜…â˜…â˜…â˜… MEMBER, GRADE (SEQ O) (DROP, CREATE, INSERT, ì˜ˆì‹œ) â˜…â˜…â˜…â˜…â˜…â˜… ----------------------------------------------------------
 drop table member cascade constraints purge;
 drop table grade cascade constraints purge;
 
@@ -369,8 +369,8 @@ create table grade (
 
 create table member(
     gradeno  number(1) default 1 references grade(gradeNo),
-    gradeName varchar2(21) default 'ÀÏ¹ÝÈ¸¿ø' references grade(gradeName),
-    status  varchar2(6) default 'Á¤»ó',
+    gradeName varchar2(21) default 'ì¼ë°˜íšŒì›' references grade(gradeName),
+    status  varchar2(6) default 'ì •ìƒ',
     id varchar2(20) primary key,
     pw varchar2(20) not null,
     nicname varchar2(30) not null,
@@ -382,14 +382,14 @@ create table member(
     grade_image  varchar2(100)
 );
 
-insert into grade values (1, 'ÀÏ¹ÝÈ¸¿ø');
-insert into grade values (9, '°ü¸®ÀÚ');
+insert into grade values (1, 'ì¼ë°˜íšŒì›');
+insert into grade values (9, 'ê´€ë¦¬ìž');
 commit;
 
-insert into member (id, pw, nicname, email, address, gradeNo) values('admin','admin','±è°ü¸®','mukgabi@naver.com','¼­¿ï °­³²±¸ µµ»ê´ë·Î 10±æ 4, »õºû³ª¶ó¾ÆÆÄÆ® 109µ¿ 2202È£',9);
-insert into member (id, pw, nicname, email, address, gradeNo) values('test1','test1','È«±æµ¿','test1@naver.com','°æ±â ½ÃÈï½Ã ±¤¸í12±æ 3, ÆÄ¶õ»ö ´ë¹® ¾Õ',1);
-insert into member (id, pw, nicname, email, address, gradeNo) values('user1','user1','±èÀ¯Àú','user1@gmail.com','¼­¿ï ³ë¿ø±¸ Ã¢¼®·Î±æ 2-1, 201È£',1);
-insert into member (id, pw, nicname, email, address, gradeNo) values('user2','user2','¹ÚÀ¯Àú','user2@gmail.com','°­¿ø µ¿ÇØ½Ã ³«¼ö´ë·Î 38, ³«¼öÈú½ºÅ×ÀÌÆ® 312µ¿ 101È£',1);
+insert into member (id, pw, nicname, email, address, gradeNo) values('admin','admin','ê¹€ê´€ë¦¬','mukgabi@naver.com','ì„œìš¸ ê°•ë‚¨êµ¬ ë„ì‚°ëŒ€ë¡œ 10ê¸¸ 4, ìƒˆë¹›ë‚˜ë¼ì•„íŒŒíŠ¸ 109ë™ 2202í˜¸',9);
+insert into member (id, pw, nicname, email, address, gradeNo) values('test1','test1','í™ê¸¸ë™','test1@naver.com','ê²½ê¸° ì‹œí¥ì‹œ ê´‘ëª…12ê¸¸ 3, íŒŒëž€ìƒ‰ ëŒ€ë¬¸ ì•ž',1);
+insert into member (id, pw, nicname, email, address, gradeNo) values('user1','user1','ê¹€ìœ ì €','user1@gmail.com','ì„œìš¸ ë…¸ì›êµ¬ ì°½ì„ë¡œê¸¸ 2-1, 201í˜¸',1);
+insert into member (id, pw, nicname, email, address, gradeNo) values('user2','user2','ë°•ìœ ì €','user2@gmail.com','ê°•ì› ë™í•´ì‹œ ë‚™ìˆ˜ëŒ€ë¡œ 38, ë‚™ìˆ˜ížìŠ¤í…Œì´íŠ¸ 312ë™ 101í˜¸',1);
 commit;
 
 SELECT goods_no, COUNT(*) FROM cart GROUP BY goods_no HAVING COUNT(*) > 1;

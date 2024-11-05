@@ -1,16 +1,21 @@
 package org.zerock.member.controller;
 
+import java.util.List;
+
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.member.service.MemberService;
 import org.zerock.member.vo.LoginVO;
+import org.zerock.util.page.PageObject;
 
 import lombok.extern.log4j.Log4j;
 
@@ -52,7 +57,7 @@ public class MemberController {
 			loginVO.getNicname() + "님은 " + 
 			loginVO.getGradeName() + "(으)로 로그인 되었습니다.");
 		
-		session.setAttribute("id", loginVO.getId());
+		
 		return "redirect:/main/main.do";
 	}
 	
@@ -68,6 +73,21 @@ public class MemberController {
 		
 		
 		return "redirect:/main/main.do";
+	}
+	
+	// 회원 목록 조회		
+	@GetMapping("/list.do")
+	public String list(Model model, HttpServletRequest request) {
+		log.info("list.do ======");
+		
+		// 페이지 처리를 위한 객체생성
+		PageObject pageObject = PageObject.getInstance(request);
+		
+		// 처리된 데이터를 Model에 저장해서 jsp로 넘긴다.
+		model.addAttribute("list", service.list(pageObject));
+		model.addAttribute("pageObject", pageObject);
+		
+		return "member/list";
 	}
 	
 }

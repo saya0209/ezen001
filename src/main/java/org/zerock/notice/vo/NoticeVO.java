@@ -5,6 +5,7 @@ import java.util.Date;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
+import oracle.net.aso.p;
 
 @Data
 public class NoticeVO {
@@ -21,5 +22,5 @@ public class NoticeVO {
 	private Date endDate;
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date updateDate;
-	private String image;
+	private String files;
 }

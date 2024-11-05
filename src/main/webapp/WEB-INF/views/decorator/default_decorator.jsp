@@ -220,11 +220,11 @@ $(document).ready(function() {
 						<!-- 로그인 했을 때 -->
 						<li class="nav-item">
 							<span class="nav-link">
-								<c:if test="${ empty login.photo }">
+								<c:if test="${ empty login.grade_image }">
 									<i class="fa fa-user-circle-o"></i>
 								</c:if>
-								<c:if test="${ !empty login.photo }">
-									<img src="${login.photo }" class="round-circle"
+								<c:if test="${ !empty login.grade_image }">
+									<img src="${login.grade_image }" class="round-circle"
 									style="width:30px; height:30px">
 								</c:if>
 								${login.id }

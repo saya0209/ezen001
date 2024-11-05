@@ -20,7 +20,7 @@
 	        <p>주문 번호 : ${orderNumber}</p>
 		  </div>
 		  <div class="card-footer">
-	        <a href="${pageContext.request.contextPath}/cart/list/${id}" class="btn btn-primary">장바구니로 돌아가기</a>
+	        <a href="/main/main.do" class="btn btn-primary">메인으로 돌아가기</a>
 		  </div>
 		</div>
         

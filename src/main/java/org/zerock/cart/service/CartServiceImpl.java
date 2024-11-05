@@ -39,7 +39,7 @@ public class CartServiceImpl implements CartService {
 	    
 	    if (item != null) {
 	        // 새로운 총 가격 계산
-	        Long goods_total_price = item.getPrice() * quantity + item.getDelivery_charge(); // 총 가격 계산
+	        Long goods_total_price = (item.getPrice()-item.getDiscount()) * quantity + item.getDelivery_charge(); // 총 가격 계산
 	        
 	        // 수량 업데이트
 	        item.setQuantity(quantity);
@@ -84,7 +84,7 @@ public class CartServiceImpl implements CartService {
         
 
         // 총 가격 계산
-        Long goods_Tprice = item.getPrice() * quantity + item.getDelivery_charge();
+        Long goods_Tprice = (item.getPrice()-item.getDiscount()) * quantity + item.getDelivery_charge();
 
         // 총 가격 업데이트
         item.setGoods_total_price(goods_Tprice); // 총 가격을 CartItemVO에 업데이트

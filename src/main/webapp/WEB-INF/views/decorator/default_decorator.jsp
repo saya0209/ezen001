@@ -197,7 +197,7 @@ $(document).ready(function() {
             <!-- 로고 -->
             <div class="header-logo">
                 <a href="/" title="메인으로 이동">
-                    <img src="로고 이미지 경로" alt="COMMAKASE">
+                    <img src="upload/laptop.jpg" alt="COMMAKASE">
                 </a>
             </div>
             <ul class="navbar-nav flex-row ml-auto"> <!-- 오른쪽 정렬을 위해 ml-auto 사용 -->

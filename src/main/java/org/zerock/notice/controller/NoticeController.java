@@ -97,7 +97,7 @@ public class NoticeController {
 			rttr.addFlashAttribute("msg",
 					"공지사항이 수정되지 않았습니다.");
 			
-			return "redirect:/notice/view.do?no=" + vo.getNo();
+			return "redirect:/notice/view.do?no=" + vo.getNotice_no();
 		}
 	}
 	
@@ -122,12 +122,6 @@ public class NoticeController {
 		
 	}
 }
-
-
-
-
-
-
 
 
 

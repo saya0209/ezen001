@@ -246,7 +246,7 @@ $(document).ready(function() {
 							<a class="nav-link" href="/member/view.do">마이페이지</a>
 						</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/cart/list.do">장바구니</a>
+							<a class="nav-link" href="/cart/list/${login.id}">장바구니</a>
 						</li>
 					</c:if>
 		    </ul>

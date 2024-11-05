@@ -52,7 +52,7 @@ public class MemberController {
 			loginVO.getNicname() + "님은 " + 
 			loginVO.getGradeName() + "(으)로 로그인 되었습니다.");
 		
-		
+		session.setAttribute("id", loginVO.getId());
 		return "redirect:/main/main.do";
 	}
 	

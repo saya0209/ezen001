@@ -15,4 +15,24 @@
 		(m.gradeNo = g.gradeNo)
 </select>
 
+<!-- list -->
+  <select id="list" resultType="org.zerock.member.vo.LoginVO">
+  <!-- 아이디, 회원등급, 회원 상태 [조회] [강퇴/재가입] -->
+  select
+  	id, gradeName, status
+  from
+  (
+	  select
+	    rownum rnum, id, gradeName, status
+	  from
+		  (
+		  select
+		  	id, gradeName, status
+		  from
+		  	member
+			)
+  )
+  where rnum between #{startRow} and  #{endRow}  
+  </select>
+
 </mapper>

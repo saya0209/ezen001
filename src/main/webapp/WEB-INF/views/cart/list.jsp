@@ -204,6 +204,16 @@
             updateSelection(goods_no, selected); // 서버에 선택 여부 전달
             updateTotalAmount(); // 체크박스 클릭 시 총 결제 금액 업데이트
         }
+        
+        // 리스트 전체 선택
+        function toggleSelectAll(selectAllCheckbox) {
+            var checkboxes = document.querySelectorAll('input[type="checkbox"].form-check-input');
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = selectAllCheckbox.checked;
+                handleCheckboxClick(checkbox, checkbox.value); // 선택 상태 업데이트
+            });
+            updateTotalAmount(); // 전체 결제 금액 업데이트
+        }
    
     </script>
 </head>
@@ -215,6 +225,7 @@
             </div>
             <div class="card-body">
                 <p>User ID: ${id}</p> <!-- id를 User ID로 사용 -->
+                <span><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)">전체 선택</span>
                 <c:choose>
                     <c:when test="${empty cartItems}">
                         <p>장바구니에 담긴 상품이 없습니다.</p>
@@ -269,7 +280,7 @@
                                         <td><fmt:formatNumber value="${item.discount}" pattern="#,###"/> 원</td> <!-- 상품 할인가 -->
                                         <!-- 배송비  -->
                                         <td>${item.delivery_charge}
-                                            <input type="hidden" id="delivery_charge-${item.goods_no}" value="${item.delivery_charge}">										
+                                            <input type="hidden" id="delivery_charge-${item.goods_no}" value="${item.delivery_charge}" > 원									
                                         </td>
                                         <!-- 상품 총 가격  -->
                                         <td>

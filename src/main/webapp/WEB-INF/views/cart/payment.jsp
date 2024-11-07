@@ -38,9 +38,18 @@
             </div>
             <div class="card-body">
                 <p>사용자 ID: ${id}</p>
+                
+                <c:set var="selectedItemExists" value="false" />
+				<c:forEach var="item" items="${cartItems}">
+					<c:if test="${item.selected != 0}">
+						<c:set var="selectedItemExists" value="true" />
+					</c:if>
+				</c:forEach>
+                
                 <c:choose>
-                    <c:when test="${empty cartItems}">
+                    <c:when test="${not selectedItemExists}">
                         <p>결제할 상품이 없습니다.</p>
+                        <a href="/main/main.do" class="btn btn-primary">메인으로 돌아가기</a>
                     </c:when>
                     <c:otherwise>
                         <table class="table table-bordered">
@@ -53,6 +62,7 @@
                                 </tr>
                             </thead>
                             <tbody>
+                            
                             <c:set var="totalAmount" value="0" />
                                 <c:forEach var="item" items="${cartItems}">
 								    <c:if test="${item.selected != 0}">
@@ -68,9 +78,6 @@
 
                             </tbody>
                         </table>
-                    </c:otherwise>
-                </c:choose>
-
                 <!-- 결제 정보 입력 폼 -->
                 <form action="${pageContext.request.contextPath}/cart/completePayment/${id}" method="post">
                     <div class="form-group">
@@ -97,6 +104,9 @@
                     <input type="hidden" name="id" value="${id}">
                     <input type="submit" value="결제 확인" class="btn btn-primary float-right mt-3">
                 </form>
+                    </c:otherwise>
+                </c:choose>
+
             </div>
         </div>  
     </div>

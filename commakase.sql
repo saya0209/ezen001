@@ -16,10 +16,7 @@ DROP TABLE cart CASCADE CONSTRAINTS;
 DROP TABLE payment CASCADE CONSTRAINTS;
 DROP TABLE member CASCADE constraints purge;
 DROP TABLE grade CASCADE constraints purge;
-
---goods 
---goods_image
---REPLY
+DROP TABLE goods CASCADE CONSTRAINTS PURGE;
 
 --SELECT table_name 
 --FROM user_tables;
@@ -56,6 +53,20 @@ create table member(
     conDate date default sysDate,
     grade_image  varchar2(100)
 );
+
+--goods 
+CREATE TABLE goods (
+    goods_no NUMBER PRIMARY KEY,    -- 상품 고유 번호
+    goods_name VARCHAR2(255),       -- 상품명
+    company VARCHAR2(255),          -- 제조사
+    price NUMBER,                   -- 가격
+    discount NUMBER,                -- 할인금액
+    pro_code1 NUMBER,          
+    pro_code2 NUMBER,       
+    image_name VARCHAR2(255)        -- 이미지 파일명
+);
+
+
 
 CREATE TABLE notice (
     notice_no NUMBER PRIMARY KEY,
@@ -120,26 +131,24 @@ CREATE TABLE answer (
 CREATE TABLE products (
     goods_no NUMBER PRIMARY KEY,
     goods_name VARCHAR2(300) NOT NULL,
-    cate_code1 NUMBER(3) NOT NULL,
-    cate_code2 NUMBER(3) NOT NULL,
-    cate_name VARCHAR2(30) NOT NULL,
+    pro_code1 NUMBER(3) NOT NULL,
+    pro_code2 NUMBER(3) NOT NULL,
     image_name VARCHAR2(300),
-    content VARCHAR2(2000),
     company VARCHAR2(60) NOT NULL,
-    product_date DATE NOT NULL
+    price NUMBER(10) NOT NULL
 );
 
+-- 3. 상품 가격 테이블 생성
 CREATE TABLE goods_price (
     goods_price_no NUMBER PRIMARY KEY,
     price NUMBER(9),
     discount NUMBER(9),
     sale_price NUMBER(9) NOT NULL,
     delivery_charge NUMBER(6),
-    sale_start_date DATE NOT NULL,
-    sale_end_date DATE NOT NULL,
     goods_no NUMBER,
     FOREIGN KEY (goods_no) REFERENCES products(goods_no)  -- products 테이블과의 외래 키 관계 설정
 );
+
 
 CREATE TABLE goods_images (
     goods_image_no NUMBER PRIMARY KEY,
@@ -208,7 +217,9 @@ CREATE TABLE payment (
     created_at DATE,
     payment_status NUMBER
 );
-  
+
+
+
 -- SEQUENCE 생성
 CREATE SEQUENCE notice_seq;
 CREATE SEQUENCE community_seq;
@@ -289,24 +300,24 @@ INSERT INTO answer (answer_no, id, answer_title, answer_content, answerDate, ref
 VALUES (2, 'admin', '환불 안내', '환불은 요청 후 5일 이내에 처리됩니다.', sysdate, NULL, 1, 0, 2);
 
 -- 샘플 데이터 입력 (PRODUCT)
-INSERT INTO products (goods_no, goods_name, cate_code1, cate_code2, cate_name, image_name, content, company, product_date) 
-VALUES (1, '예시 상품 1', 101, 202, '카테고리 이름', 'image1.jpg', '상품 설명입니다.', '제조사명', SYSDATE);
+INSERT INTO products (goods_no, goods_name, pro_code1, pro_code2, image_name, company, price) 
+VALUES (1, '예시 상품 1', 101, 201, 'image1.jpg','제조사명', 100000);
 
-INSERT INTO products (goods_no, goods_name, cate_code1, cate_code2, cate_name, image_name, content, company, product_date) 
-VALUES (2, '예시 상품 2', 101, 202, '카테고리 이름', 'image2.jpg', '상품 설명입니다.', '제조사명', SYSDATE);
+INSERT INTO products (goods_no, goods_name, pro_code1, pro_code2, image_name, company, price) 
+VALUES (2, '예시 상품 2', 101, 202, 'image2.jpg', '제조사명', 200000);
 
-INSERT INTO products (goods_no, goods_name, cate_code1, cate_code2, cate_name, image_name, content, company, product_date) 
-VALUES (3, '예시 상품 3', 101, 203, '카테고리 이름', 'image3.jpg', '상품 설명입니다.', '제조사명', SYSDATE);
+INSERT INTO products (goods_no, goods_name, pro_code1, pro_code2, image_name, company, price) 
+VALUES (3, '예시 상품 3', 101, 203, 'image3.jpg', '제조사명', 300000);
 
 -- 샘플 데이터 입력 (GOODS_PRICE)
-INSERT INTO goods_price (goods_price_no, price, discount, sale_price, delivery_charge, sale_start_date, sale_end_date, goods_no) 
-VALUES (1, 100000, 10000, 90000, 3000, TO_DATE('2024-10-01', 'YYYY-MM-DD'), TO_DATE('2024-10-31', 'YYYY-MM-DD'), 1);
+INSERT INTO goods_price (goods_price_no, price, discount, sale_price, delivery_charge, goods_no) 
+VALUES (1, 100000, 10000, 90000, 3000, 1);
 
-INSERT INTO goods_price (goods_price_no, price, discount, sale_price, delivery_charge, sale_start_date, sale_end_date, goods_no) 
-VALUES (2, 150000, 15000, 135000, 3000, TO_DATE('2024-11-01', 'YYYY-MM-DD'), TO_DATE('2024-11-30', 'YYYY-MM-DD'), 2);
+INSERT INTO goods_price (goods_price_no, price, discount, sale_price, delivery_charge, goods_no) 
+VALUES (2, 150000, 15000, 135000, 3000, 2);
 
-INSERT INTO goods_price (goods_price_no, price, discount, sale_price, delivery_charge, sale_start_date, sale_end_date, goods_no) 
-VALUES (3, 200000, 20000, 180000, 3000, TO_DATE('2024-12-01', 'YYYY-MM-DD'), TO_DATE('2024-12-31', 'YYYY-MM-DD'), 3);
+INSERT INTO goods_price (goods_price_no, price, discount, sale_price, delivery_charge, goods_no) 
+VALUES (3, 200000, 20000, 180000, 3000, 3);
 
 -- 샘플 데이터 입력 (GOODS_IMAGE)
 INSERT INTO goods_images (goods_image_no, image_name, goods_no) 
@@ -335,13 +346,16 @@ VALUES (1, 2, '그래픽 카드');
 
 -- 샘플 데이터 삽입 (cart :test1)
 INSERT INTO cart (id, goods_no, goods_name, image_name, price, quantity, goods_total_price, selected_goods_price, delivery_charge, cart_no, discount, total_discount, final_price, selected)
-VALUES ('test1', 1001, '스마트폰', 'smartphone.jpg', 500000, 2, 1000000, 1000000, 0, 1, 50000, 50000, 950000, 1);
+VALUES ('test1', 1001, '스마트폰', 'smartphone.jpg', 500000, 2, 1000000, 1000000, 0, 1, 50000, 50000, 950000, 0);
 
 INSERT INTO cart (id, goods_no, goods_name, image_name, price, quantity, goods_total_price, selected_goods_price, delivery_charge, cart_no, discount, total_discount, final_price, selected)
 VALUES ('test1', 1002, '노트북', 'laptop.jpg', 1200000, 1, 1200000, 1200000, 3000, 2, 100000, 100000, 1100000, 0);
 
 INSERT INTO cart (id, goods_no, goods_name, image_name, price, quantity, goods_total_price, selected_goods_price, delivery_charge, cart_no, discount, total_discount, final_price, selected)
-VALUES ('test1', 1003, '헤드폰', 'headphones.jpg', 30000, 3, 90000, 90000, 2000, 3, 0, 0, 92000, 1);
+VALUES ('test1', 1003, '헤드폰', 'headphones.jpg', 30000, 3, 90000, 90000, 2000, 3, 0, 0, 92000, 0);
 
+-- 샘플 데이터 삽입 (goods)
+INSERT INTO goods(goods_no, goods_name, company, price, discount, pro_code1, pro_code2, image_name) 
+VALUES (1, 'computer', 'Hosun', 300000, 90000, '1', '3', 'computer');
 
 commit;

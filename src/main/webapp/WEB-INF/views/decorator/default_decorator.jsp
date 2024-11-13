@@ -250,7 +250,7 @@ $(document).ready(function() {
                         </li>
                     </c:if>
                     <li class="nav-item">
-                        <a class="nav-link" href="/member/view.do">내정보보기</a>
+                        <a class="nav-link" href="/member/mypageMain.do">마이페이지</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="/cart/list/${login.id }">장바구니</a>

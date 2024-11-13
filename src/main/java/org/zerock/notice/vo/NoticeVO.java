@@ -1,11 +1,11 @@
 package org.zerock.notice.vo;
 
 import java.util.Date;
+import java.util.List;
 
 import org.springframework.format.annotation.DateTimeFormat;
 
 import lombok.Data;
-import oracle.net.aso.p;
 
 @Data
 public class NoticeVO {
@@ -23,4 +23,6 @@ public class NoticeVO {
 	@DateTimeFormat(pattern = "yyyy-MM-dd")
 	private Date updateDate;
 	private String files;
+	
+	
 }

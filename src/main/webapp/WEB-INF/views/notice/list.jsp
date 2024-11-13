@@ -1,130 +1,103 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <%@ taglib prefix="pageNav" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
-<html>
+<html lang="ko">
 <head>
 <meta charset="UTF-8">
-<title>공지사항 리스트</title>
+<title>이벤트 리스트</title>
 <jsp:include page="../jsp/webLib.jsp"></jsp:include>
-<style type="text/css">
-.dataRow>.card-header{
-	background: #e0e0e0;
-}
-.dataRow:hover{
-	border-color: orange;
-	cursor: pointer;
-}
-</style>
+
+<!-- CSS -->
+<link href="${path}/resources/css/noticeList.css" rel="stylesheet">
 
 <script type="text/javascript">
-$(function() {
-	// jquery 이벤트 코드는 이안에 작성한다.
-	$(".dataRow").click(function() {
-		// tag에 적힌 data-no="${vo.no}"
-		let no = $(this).data("no");
-		//alert(no);
-		location = "view.do?no=" + no + "&inc=1"
-			+ "&${pageObject.pageQuery}";
-			// pageObject의 getPageQuery()를 가져와서
-			// page, perPageNum, key, word를 붙인다.
-	});
-	
-	// perPageNum 값이 변경되었을 때 이벤트 처리
-	$("#perPageNum").change(function() {
-		//alert("change perPageNum");
-		$("#searchForm").submit();
-	});
-	
-	// 검색 데이터 세팅
-	// key 값이 없으면 '제목' 으로 세팅
-	$("#key").val('${(empty pageObject.key)?"t":pageObject.key}');
-	// perPageNum 세팅
-	// perPageNum 이 없으면 '10' 으로 세팅
-	$("#perPageNum")
-		.val('${(empty pageObject.perPageNum)?"10":pageObject.perPageNum}');
-	
-	
-	
-	
-});
+    $(function() {
+        // 이벤트 클릭 시 상세보기 페이지로 이동
+        $(".dataRow").click(function() {
+            let no = $(this).data("no");
+            location = "view.do?no=" + no + "&inc=1" + "&${pageObject.pageQuery}";
+        });
+       
+        // 페이지당 게시물 수 변경 시
+        $("#perPageNum").change(function() {
+            $("#searchForm").submit();
+        });
+
+        // 검색키워드 및 perPageNum 초기 설정
+        $("#key").val("${(empty pageObject.key)?'t':pageObject.key}")
+        $("#perPageNum").val("${(empty pageObject.perPageNum)?'10':pageObject.perPageNum}")
+    });
 </script>
+
 </head>
 <body>
 <div class="container">
-	<div class="card">
-		<div class="card-header"><h3>공지사항 리스트</h3></div>
-		<div class="card-body">
-			<!-- 검색창 및 perPageNum 설정창 -->
-			<form action="list.do" id="searchForm">
-				<input type="hidden" name="page" value="1"> <!-- 초기값세팅 -->
-				<div class="row">
-					<div class="col-md-8">
-			  			<div class="input-group mt-3 mb-3">
-							<div class="input-group-prepend">
-								<select class="form-control" id="key" name="key">
-									<option value="t">제목</option>
-							        <option value="c">내용</option>
-							        <option value="tc">제목/내용</option>
-								</select>
-							</div>
-				      		<input type="text" class="form-control" placeholder="검색어입력"
-			      				id="word" name="word" value="${pageObject.word }">
-							<div class="input-group-prepend">
-								<button type="submit" class="btn btn-primary">
-									<i class="fa fa-search"></i></button>
-							</div>
-					    </div>
-					</div> <!-- end of class="col-md-8" -->
-					<div class="col-md-4">
-						<div class="input-group mt-3 mb-3">
-						  <div class="input-group-prepend">
-						    <span class="input-group-text">Rows/Page</span>
-						  </div>
-						  <select id="perPageNum" name="perPageNum"
-						   class="form-control">
-						   		<option>5</option>
-						   		<option>10</option>
-						   		<option>15</option>
-						   		<option>20</option>
-						   		<option>25</option>
-						  </select>
-						</div>
-					</div> <!-- end of class="col-md-4" -->
-				</div><!-- end of class="row" -->
-			</form>
-			
-			
-			
-			
-			<!-- 공지사항 리스트 데이터 -->
-			<c:forEach items="${list }" var="vo">
-				<div class="card dataRow" data-no="${vo.no }">
-					<div class="card-header">
-						${vo.no }. ${vo.title } 
-					</div>
-					<div class="card-body">
-						<span class="float-right">
-							게시종료일: <fmt:formatDate value="${vo.endDate }"
-							pattern="yyyy-MM-dd"/>
-						</span>
-						<span>
-							게시시작일: <fmt:formatDate value="${vo.startDate }"
-							pattern="yyyy-MM-dd"/>
-						</span>
-					</div>
-				</div>
-			</c:forEach>
+    <section class="notice">
+        <!-- 페이지 타이틀 -->
+        <div class="page-title">
+            <div class="container">
+                <h3>이벤트</h3>
+            </div>
+        </div>
+   
+        <!-- 검색창 -->
+		<div id="board-search">
+		    <div class="container">
+		        <div class="search-wrap">
+		            <form action="list.do" id="searchForm">
+		                <input id="word" type="search" name="word" placeholder="검색어를 입력해주세요." value="${pageObject.word}">
+		                <button type="submit" class="btn btn-outline-primary">검색</button>
+		            </form>
+			        <c:if test="${login.gradeNo == 9 }">
+			            <!-- 이벤트등록 버튼은 오른쪽 끝으로 배치 -->
+			            <a href="writeForm.do" class="btn btn-outline-primary">이벤트 등록</a>
+			        </c:if>
+		        </div>
+		    </div>
 		</div>
-		<div class="card-footer">
-			<div>
-				<pageNav:pageNav listURI="list.do" pageObject="${pageObject}"></pageNav:pageNav>
-			</div>
-			<a href="writeForm.do" class="btn btn-primary">글등록</a>
-		</div>
-	</div>
+
+   
+        <!-- 이벤트 리스트 테이블 -->
+        <div id="board-list">
+            <div class="container">
+                <div class="row">
+                    <c:forEach items="${list}" var="vo">
+                        <div class="col-md-4 mb-4">
+                            <div class="card dataRow" data-no="${vo.notice_no}">
+					            <!-- 이미지가 없으면 아이콘을 표시 -->
+                                <c:if test="${empty vo.files}">
+                                    <div class="card-img-placeholder">
+                                        <i class="fa fa-bell icon-fa"></i>
+                                        <i class="material-icons">image</i>
+                                    </div>
+                                </c:if>
+                                <c:if test="${not empty vo.files}">
+                                    <img src="${path}/upload/noticeFiles/${vo.files}" class="card-img-top" alt="Notice Image">
+                                </c:if>
+                                <div class="card-body">
+								    <h5 class="card-title">${vo.title}</h5>
+								
+								    <!-- 날짜 출력 부분 -->
+								    <p class="card-text">
+								        <fmt:formatDate value="${vo.startDate}" pattern="yyyy-MM-dd" /> ~
+								        <fmt:formatDate value="${vo.endDate}" pattern="yyyy-MM-dd" />
+								    </p>
+								</div>
+                            </div>
+                        </div>
+                    </c:forEach>
+                </div>
+            </div>
+        </div>
+   
+        <!-- 페이지네이션 -->
+<!--         <div class="page-nav"> -->
+<%--             <pageNav:pageNav listURI="list.do" pageObject="${pageObject}"></pageNav:pageNav> --%>
+<!--         </div> -->
+    </section>
 </div>
 </body>
 </html>

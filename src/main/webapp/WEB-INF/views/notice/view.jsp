@@ -1,124 +1,117 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>공지사항 글보기</title>
-<jsp:include page="../jsp/webLib.jsp"></jsp:include>
-<style type="text/css">
-.dataRow>.card-header{
-	background: #e0e0e0;
-}
+    <meta charset="UTF-8">
+    <title>공지사항 글보기</title>
+    <jsp:include page="../jsp/webLib.jsp"></jsp:include>
 
-</style>
+    <!-- CSS -->
+    <link href="${path}/resources/css/noticeView.css" rel="stylesheet">
+    <link href="${path}/resources/css/msg.css" rel="stylesheet">
 
-<!-- 1. 필요한 전역변수 선언 : 직접코딩 -->
-<script type="text/javascript">
-// 보고 있는 일반 게시판 글번호
-let id = "test1";// id를 하드코딩 - member table에 등록된 id중 - 로그인 id
-let no = ${vo.no};
-let replyPage = 1; // 댓글의 현재 페이지
-console.log("전역변수 no : " + no);
-</script>
+    <!-- JavaScript 전역 변수 설정 -->
+    <script type="text/javascript">
+        let id = "${login.id}"; // 로그인된 사용자 ID
+        let no = ${vo.notice_no}; // 현재 글 번호
+        let replyPage = 1; // 댓글 페이지
+        console.log("전역 변수 - 게시글 번호: " + no);
+    </script>
 
-<!-- 2. 날짜 및 시간 처리함수 선언 -->
-<script type="text/javascript" src="/js/dateTime.js"></script>
+    <!-- 날짜 및 시간 처리 함수 -->
+    <script type="text/javascript" src="${path}/js/dateTime.js"></script>
 
-<script type="text/javascript">
-$(function(){
-	// 글수정버튼(id="updateBtn")을 클릭했을때 
-	$("#updateBtn").click(function() {
-		location = "updateForm.do?no=${vo.no}";
-	});
-	
-	// 글삭제버튼(id="deleteBtn")을 클릭했을때
-	// 모달창의 pw내용을 지운다.
-	$("#deleteBtn").click(function() {
-		$("#pw").val("");
-	});
-	
-	// 리스트버튼(id="listBtn")을 클릭했을때
-	// list.do 로 이동한다.
-	// param. 으로 되어있는 값은 url에서 같이 넘어온 값(적혀있는값) - get
-	$("#listBtn").click(function() {
-		//alert("리스트 버튼 클릭");
-		location = "list.do?page=${param.page}"
-			+ "&perPageNum=${param.perPageNum}"
-			+ "&key=${param.key}"
-			+ "&word=${param.word}";
-	});
-});
-</script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+            // 수정 버튼
+            $("#updateBtn").click(function() {
+                location.href = "updateForm.do?no=${vo.notice_no}";
+            });
+
+         // 삭제 버튼 클릭 시 모달 띄우기
+            $("#deleteBtn").click(function() {
+                $('#deleteModal').modal('show'); // 모달 띄우기
+            });
+
+            // 목록 버튼
+            $("#listBtn").click(function() {
+                location.href = "list.do?page=${param.page}"
+                    + "&perPageNum=${param.perPageNum}"
+                    + "&key=${param.key}"
+                    + "&word=${param.word}";
+            });
+
+        });
+    </script>
 </head>
 <body>
-<div class="container">
-	<div class="card">
-		<div class="card-header"><h3>공지사항 글보기</h3></div>
-		<div class="card-body">
-			<div class="card dataRow" data-no="${vo.no }">
-				<div class="card-header">
-					${vo.no }. ${vo.title }
-				</div>
-				<div class="card-body">
-					<pre>${vo.content }</pre>
-				</div>
-				<div class="card-footer">
-					<span class="float-right">
-						게시종료일: <fmt:formatDate value="${vo.endDate }"
-						pattern="yyyy-MM-dd"/>
-					</span>
-						게시시작일: <fmt:formatDate value="${vo.startDate }"
-						pattern="yyyy-MM-dd"/><br>
-					<span class="float-right">
-						작성일: <fmt:formatDate value="${vo.writeDate }"
-						pattern="yyyy-MM-dd"/>
-					</span>
-						수정일: <fmt:formatDate value="${vo.updateDate }"
-						pattern="yyyy-MM-dd"/>
-				</div>
-			</div>
-		</div>
-		<div class="card-footer">
-			<button class="btn btn-primary" id="updateBtn">수정</button>
-			<button class="btn btn-danger" id="deleteBtn"
-				data-toggle="modal" data-target="#deleteModal">삭제</button>
-			<button class="btn btn-warning" id="listBtn">리스트</button>
-		</div>
-	</div>
-	<!-- 글보기 card가 끝 -->
-	
-	
-	
-	<!-- The Modal -->
-  <div class="modal fade" id="deleteModal">
-    <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-      
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">삭제하시겠습니까?</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
-        </div>
-        <!-- deleto.do 로 이동시 no, pw 가 필요합니다. -->
-        <!-- no : hidden으로, pw: 사용자입력으로 세팅 -->
-        <form action="delete.do" method="get">
-        	<input type="hidden" name="no" value="${vo.no }">
-	        
-	        <!-- Modal footer -->
-	        <div class="modal-footer">
-	          <button class="btn btn-danger">삭제</button>
-	          <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+    <div class="container">
+        <section class="notice-view">
+            <!-- 공지사항 제목 -->
+            <div class="notice-title">
+                <h1>${vo.title}</h1>
+            </div>
+
+            <!-- 날짜 출력 -->
+	        <div class="notice-dates">
+	            <span><fmt:formatDate value="${vo.startDate}" pattern="yyyy-MM-dd" /></span>
+	            <span> ~ </span>
+	            <span><fmt:formatDate value="${vo.endDate}" pattern="yyyy-MM-dd" /></span>
 	        </div>
-        </form>
-      </div>
+
+            <!-- 공지사항 내용 -->
+            <div class="notice-content">
+                <pre>${vo.content}</pre>
+            </div>
+
+            <!-- 파일 섹션 -->
+	        <div class="file-container">
+	            <c:if test="${empty vo.files}">
+	                <p class="no-file">첨부된 파일이 없습니다.</p>
+	            </c:if>
+	            <c:if test="${not empty vo.files}">
+	                <img src="${path}/upload/noticeFiles/${vo.files}" alt="첨부 이미지">
+	            </c:if>
+	        </div>
+
+            <!-- 버튼 섹션 -->
+            <div class="notice-buttons">
+                <button class="btn btn-primary" id="listBtn">목록</button>
+                <c:if test="${login.gradeNo == 9}">
+                    <button class="btn btn-secondary" id="updateBtn">수정</button>
+                    <button class="btn btn-danger" id="deleteBtn" data-toggle="modal" data-target="#deleteModal">삭제</button>
+                </c:if>
+            </div>
+        </section>
+        
+	    <!-- The Modal -->
+		<div class="modal fade" id="deleteModal">
+		    <div class="modal-dialog modal-dialog-centered">
+		        <div class="modal-content">
+		            <form action="delete.do" method="post">
+		                <input type="hidden" name="notice_no" value="${vo.notice_no}">
+		                <div class="modal-body d-flex justify-content-center align-items-center">
+		                    <div class="text-center">
+		                        <!-- 삭제 확인 메시지 (bold) -->
+		                        <p class="delete-message">삭제하시겠습니까?</p>
+		                        <!-- 삭제된 데이터는 되돌릴 수 없다는 메시지 (기본) -->
+		                        <p class="delete-warning">삭제된 데이터는 되돌릴 수 없습니다.</p>
+		                    </div>
+		                </div>
+		                <div class="modal-footer">
+		                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">취소</button>
+		                    <button type="submit" class="btn btn-primary">삭제</button>
+		                </div>
+		            </form>
+		        </div>
+		    </div>
+		</div>
+
     </div>
-  </div>
-	
-	
-	
-	
-</div>
+
 </body>
 </html>

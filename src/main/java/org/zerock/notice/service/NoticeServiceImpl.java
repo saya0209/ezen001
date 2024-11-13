@@ -23,14 +23,16 @@ public class NoticeServiceImpl implements NoticeService {
 	@Override
 	public List<NoticeVO> list(PageObject pageObject) {
 		// TODO Auto-generated method stub
+		log.info("페이지 개체 목록 가져오기 : " + pageObject);
 		pageObject.setTotalRow(mapper.getTotalRow(pageObject));
 		return mapper.list(pageObject);
 	}
 
 	@Override
-	public NoticeVO view(Long no) {
+	public NoticeVO view(Long notice_no) {
 		// TODO Auto-generated method stub
-		return mapper.view(no);
+		log.info("ID와 함께 notice 가져오는 중 : " + notice_no);
+		return mapper.view(notice_no);
 	}
 
 	@Override
@@ -46,9 +48,10 @@ public class NoticeServiceImpl implements NoticeService {
 	}
 
 	@Override
-	public Integer delete(Long no) {
+	public Integer delete(Long notice_no) {
 		// TODO Auto-generated method stub
-		return mapper.delete(no);
+		log.info("삭제할 notice_no: " + notice_no);
+		return mapper.delete(notice_no);
 	}
 
 }

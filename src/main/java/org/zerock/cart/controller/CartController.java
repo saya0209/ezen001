@@ -1,6 +1,7 @@
 package org.zerock.cart.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.zerock.cart.service.CartService;
 import org.zerock.cart.vo.CartItemVO;
+import org.zerock.cart.vo.PaymentItemVO;
+
 import lombok.extern.log4j.Log4j;
 
 @Controller
@@ -77,17 +80,31 @@ public class CartController {
         }
     }
     
-    // 
     // 결제화면
     @PostMapping("/paymentForm.do")
-    public String paymentPageForm(@RequestParam("id") String id, 
-                              Model model) {
+    public String paymentPageForm(@RequestParam("id") String id, Model model) {
         List<CartItemVO> cartItems = service.cartList(id);
+        List<PaymentItemVO> selectedItems = new ArrayList<>();
 
         log.info("paymentPageForm() 호출 - id: " + id);
+
+        // 선택된 상품만 pvo에 추가
+        for (CartItemVO item : cartItems) {
+            if (item.getSelected()==1) { // `selected` 필드가 true인 경우
+                PaymentItemVO pvo = new PaymentItemVO();
+                pvo.setGoods_no(item.getGoods_no());
+                pvo.setGoods_name(item.getGoods_name());
+                pvo.setImage_name(item.getImage_name());
+                pvo.setPrice(item.getPrice());
+                pvo.setQuantity(item.getQuantity());
+                pvo.setGoods_total_price(item.getGoods_total_price());
+                selectedItems.add(pvo);
+            }
+        }
+
         // 결제에 필요한 데이터 추가
         model.addAttribute("id", id);
-        model.addAttribute("cartItems", cartItems);
+        model.addAttribute("cartItems", selectedItems); // 선택된 항목만 전달
 
         return "cart/payment"; // 결제 페이지로 이동
     }

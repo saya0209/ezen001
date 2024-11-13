@@ -225,7 +225,9 @@
             </div>
             <div class="card-body">
                 <p>User ID: ${id}</p> <!-- id를 User ID로 사용 -->
+            	<c:if test="${!empty cartItems}">
                 <span><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)">전체 선택</span>
+                </c:if>
                 <c:choose>
                     <c:when test="${empty cartItems}">
                         <p>장바구니에 담긴 상품이 없습니다.</p>

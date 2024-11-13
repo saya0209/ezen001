@@ -48,7 +48,10 @@
 		    background-color: #004080 !important;
 		}
 		.nav-link {
-		    color: #004080 !important; /* 텍스트 색을 흰색으로 */
+		    color: white !important; /* 텍스트 색을 흰색으로 */
+		}
+		.top-link {
+		    color: #004080 !important; 
 		}
 		
 		.nav-link:hover {
@@ -230,7 +233,7 @@ $(document).ready(function() {
                 </c:if>
                 <c:if test="${ !empty login }">
                     <li class="nav-item">
-                        <span class="nav-link">
+                        <span class="top-link">
                             <c:if test="${ empty login.grade_image }">
                                 <i class="fa fa-user-circle-o"></i>
                             </c:if>
@@ -241,19 +244,19 @@ $(document).ready(function() {
                         </span>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/member/logout.do">
+                        <a class="top-link" href="/member/logout.do">
                         <i class="fa fa-sign-out"></i> 로그아웃</a>
                     </li>
                     <c:if test="${login.gradeNo == 9 }">
                         <li class="nav-item">
-                            <a class="nav-link" href="/member/list.do">회원리스트보기</a>
+                            <a class="top-link" href="/member/list.do">회원리스트보기</a>
                         </li>
                     </c:if>
                     <li class="nav-item">
-                        <a class="nav-link" href="/member/mypageMain.do">마이페이지</a>
+                        <a class="top-link" href="/member/mypageMain.do">마이페이지</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="/cart/list/${login.id }">장바구니</a>
+                        <a class="top-link" href="/cart/list/${login.id }">장바구니</a>
                     </li>
                 </c:if>
             </ul>

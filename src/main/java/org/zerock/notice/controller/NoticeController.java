@@ -65,6 +65,8 @@ public class NoticeController {
         // 처리된 데이터를 Model에 저장해서 jsp로 넘긴다.
         model.addAttribute("list", service.list(pageObject));
         model.addAttribute("pageObject", pageObject);
+        
+        log.info("model : " + model);
        
         return "notice/list";
     }

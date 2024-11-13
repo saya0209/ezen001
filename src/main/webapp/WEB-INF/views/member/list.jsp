@@ -60,6 +60,11 @@ $(function(){
 	$("#perPageNum")
 		.val("${(empty pageObject.perPageNum)?'10':pageObject.perPageNum}");
 	
+	//changeGradeNo, changeStatus 제출
+	$(".btn-success").on("click", function() {
+	    $(this).closest("form").submit();
+	});
+	
 });
 </script>
 
@@ -115,9 +120,9 @@ $(function(){
 	<tr>
 		<!-- th : table head - 테이블의 제목줄에 사용 -->
 		<!-- 리스트 : 사진, 아이디, 이름, 생년월일, 연락처, 등급, 상태 -->
-		<th>사진</th>
+		<th>등급이미지</th>
 		<th>아이디</th>
-		<th>이름</th>
+		<th>닉네임</th>
 		<th>등급</th>
 		<th>상태</th>
 	</tr>
@@ -135,17 +140,18 @@ $(function(){
 				</c:if>
 			</td>
 			<td class="id">${vo.id}</td>
-			<td>${vo.nicname}</td>
+			<td class="nicname">${vo.nicname}</td>
+			
 			<td> <!-- 회원등급 시작 -->
 				<form action="changeGradeNo.do">
 					<input name="id" value="${vo.id }" type="hidden">
 					<div class="input-group mb-3">
 					  <select class="form-control grade" name="gradeNo" data-data="${vo.gradeNo }">
-					    <option value="1" ${(vo.gradeNo==1)?"selected":"" }>일반회원</option>
-					    <option value="9" ${(vo.gradeNo==9)?"selected":"" }>관리자</option>
+						<option value="1" <c:if test="${vo.gradeNo == 1}">selected</c:if>>일반회원</option>
+						<option value="9" <c:if test="${vo.gradeNo == 9}">selected</c:if>>관리자</option>
 					  </select>
 					  <div class="input-group-append">
-					  	<button class="btn btn-success" disabled>변경</button>
+					  	<button class="btn btn-success">변경</button>
 					  </div>
 					</div>
 				</form>
@@ -155,13 +161,13 @@ $(function(){
 					<input name="id" value="${vo.id }" type="hidden">
 					<div class="input-group mb-3">
 					  <select class="form-control status" name="status" data-data="${vo.status }">
-					    <option ${(vo.status == "정상")?"selected":"" }>정상</option>
-					    <option ${(vo.status == "탈퇴")?"selected":"" }>탈퇴</option>
-					    <option ${(vo.status == "휴면")?"selected":"" }>휴면</option>
-					    <option ${(vo.status == "강퇴")?"selected":"" }>강퇴</option>
+						<option value="정상" <c:if test="${vo.status == '정상'}">selected</c:if>>정상</option>
+						<option value="탈퇴" <c:if test="${vo.status == '탈퇴'}">selected</c:if>>탈퇴</option>
+						<option value="휴면" <c:if test="${vo.status == '휴면'}">selected</c:if>>휴면</option>
+						<option value="강퇴" <c:if test="${vo.status == '강퇴'}">selected</c:if>>강퇴</option>
 					  </select>
 					  <div class="input-group-append">
-					  	<button class="btn btn-success" disabled>변경</button>
+					  	<button class="btn btn-success">변경</button>
 					  </div>
 					</div>
 				</form>

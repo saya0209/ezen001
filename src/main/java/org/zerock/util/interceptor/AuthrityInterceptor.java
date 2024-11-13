@@ -29,10 +29,10 @@ public class AuthrityInterceptor extends HandlerInterceptorAdapter {
 		authMap.put("/communityreply/delete.do", 1);			
 					
 		// 로그아웃		
-		authMap.put("/member/logout.do", 1);			
+		//authMap.put("/member/logout.do", 1);			
 					
-		// 관리자 전용 페이지 (관리자 등급 필요)			
-		authMap.put("/admin/memberlist.do", 9);						
+		// 관리자 전용 페이지 (관리자 등급 필요)							
+		authMap.put("/member/list.do", 9);										
 	}				
 					
 	@Override				

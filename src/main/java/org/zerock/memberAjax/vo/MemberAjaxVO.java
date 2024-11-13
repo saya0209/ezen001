@@ -1,8 +1,8 @@
-package org.zerock.member.vo;
+package org.zerock.memberAjax.vo;
 
 import java.util.Date;
 
-public class LoginVO {
+public class MemberAjaxVO {
 
 	   private String status;
 	   private String id;

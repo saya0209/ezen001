@@ -2,7 +2,9 @@ package org.zerock.member.vo;
 
 import java.util.Date;
 
-public class LoginVO {
+import org.springframework.format.annotation.DateTimeFormat;
+
+public class MemberVO {
 
 	   private String status;
 	   private String id;
@@ -11,7 +13,9 @@ public class LoginVO {
 	   private String tel;
 	   private String email;
 	   private String address;
+		@DateTimeFormat(pattern = "yyyy-MM-dd")
 	   private Date regDate;
+		@DateTimeFormat(pattern = "yyyy-MM-dd")
 	   private Date conDate;
 	   //grade table
 	   private Integer gradeNo;

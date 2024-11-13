@@ -7,6 +7,8 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.member.service.MemberService;
 import org.zerock.member.vo.LoginVO;
+import org.zerock.member.vo.MemberVO;
+import org.zerock.notice.vo.NoticeVO;
 import org.zerock.util.page.PageObject;
 
 import lombok.extern.log4j.Log4j;
@@ -57,6 +61,8 @@ public class MemberController {
 			loginVO.getNicname() + "님은 " + 
 			loginVO.getGradeName() + "(으)로 로그인 되었습니다.");
 		
+	    // 로그인 시, 최근 접속일을 현재 시간으로 갱신
+	    service.updateConDate(loginVO.getId());  // 로그인 시 conDate 갱신
 		
 		return "redirect:/main/main.do";
 	}
@@ -75,7 +81,7 @@ public class MemberController {
 		return "redirect:/main/main.do";
 	}
 	
-	// 회원 목록 조회		
+	// 1. 회원 목록 조회		
 	@GetMapping("/list.do")
 	public String list(Model model, HttpServletRequest request) {
 		log.info("list.do ======");
@@ -89,6 +95,166 @@ public class MemberController {
 		
 		return "member/list";
 	}
+	
+	// 2. 공지사항 글보기
+	@GetMapping("/view.do")
+	public String view(Model model, String id) {
+		log.info("view.do ================");
+		model.addAttribute("vo", service.view(id));
+		return "member/view";
+	}
+	// 3-1. 회원가입 폼
+	@GetMapping("/writeForm.do")
+	public String writeForm() {
+		log.info("writeForm.do ==================");
+		return "member/write";
+	}	
+	
+	// 3-2. 회원가입 처리
+	@PostMapping("/write.do")
+	public String write(MemberVO vo, RedirectAttributes rttr) {
+		log.info("write.do =================");
+		
+		service.write(vo);
+		
+		rttr.addFlashAttribute("msg",
+			"회원가입이 완료되었습니다!");
+		
+		return "redirect:/main/main.do";
+	}
+	
+	// 3-3. Id 중복 확인
+	@GetMapping("/checkId")
+    public ResponseEntity<String> checkId(String id) {
+        boolean isDuplicate = service.checkId(id);
+        
+        if (isDuplicate) {
+            return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 ID가 있습니다..");
+        } else {
+            return ResponseEntity.ok("사용 가능한 ID입니다.");
+        }
+    }
+	
+	
+	// 4-1. 내정보 수정 폼
+	@GetMapping("/updateForm.do")
+	public String updateForm(Model model, String id) {
+		log.info("updateForm.do ==================");
+		
+		model.addAttribute("vo", service.view(id));
+		
+		return "member/update";
+	}
+	// 4-2. 내정보 수정 처리
+	@PostMapping("/update.do")
+	public String update(MemberVO vo, RedirectAttributes rttr) {
+		log.info("update.do =================");
+		log.info("gradeNo = "+vo.getGradeNo());
+		log.info("Id = "+vo.getId());
+		
+		Integer result = service.update(vo);
+		
+		if (result == 1) {
+			rttr.addFlashAttribute("msg",
+					"내 정보가 수정되었습니다.");
+
+			if (vo.getGradeNo() == 9) {
+				return "redirect:/member/list.do";
+			}
+				return "redirect:/member/mypageMain.do?id="+vo.getId();
+		}
+		else {
+			rttr.addFlashAttribute("msg",
+					"내 정보가 수정되지 않았습니다.");
+			
+			return "redirect:/member/view.do?id=" + vo.getId();
+		}
+	}
+	
+	// 5. 회원 등급 수정
+	@GetMapping("/changeGradeNo.do")
+	public String changeGradeNo(MemberVO vo, RedirectAttributes rttr) {
+		log.info("changeGradeNo.do =================");
+		log.info("gradeNo = "+vo.getGradeNo());
+		log.info("Id = "+vo.getId());
+		
+		Integer result = service.changeGradeNo(vo);
+		
+		if (result == 1) {
+			rttr.addFlashAttribute("msg",
+					"회원 등급이 수정되었습니다.");
+			return "redirect:/member/list.do";
+
+		}
+		else {
+			rttr.addFlashAttribute("msg",
+					"회원 등급이 수정되지 않았습니다.");
+			
+			return "redirect:/member/list.do";
+		}
+	}
+	
+	
+	// 6. 회원 상태 수정
+	@GetMapping("/changeStatus.do")
+	public String changeStatus(MemberVO vo, RedirectAttributes rttr) {
+		log.info("changeStatus.do =================");
+		log.info("status = "+vo.getStatus());
+		log.info("Id = "+vo.getId());
+		
+		Integer result = service.changeStatus(vo);
+		
+		if (result == 1) {
+			rttr.addFlashAttribute("msg",
+					"회원 상태가 수정되었습니다.");
+			return "redirect:/member/list.do";
+
+		}
+		else {
+			rttr.addFlashAttribute("msg",
+					"회원 상태가 수정되지 않았습니다.");
+			
+			return "redirect:/member/list.do";
+		}
+	}
+	
+	// 7. 회원 정보 사진 바꾸기 (등급이미지 바꾸기?)
+	// 8. 마이페이지 메인
+	@GetMapping("/mypageMain.do")
+	public String mypageForm(Model model, String id) {
+		log.info("========= mypageMain.do ============");
+		if (id != null && !id.equals("")) {
+			model.addAttribute("id", id);
+		}
+		log.info("----------------");
+		return "member/mypageMain";
+	}
+	
+	// 9. 회원 탈퇴
+	@PostMapping("/delete.do")
+	public String delete(HttpSession session, MemberVO vo, RedirectAttributes rttr) {
+		log.info("delete.do ==================");
+		
+		Integer result = service.delete(vo);
+		
+		if (result == 1) {
+			session.removeAttribute("login");
+			rttr.addFlashAttribute("msg",
+					"회원 탈퇴가 완료되었습니다.");
+			return "redirect:/main/main.do";
+		}
+		else {
+			rttr.addFlashAttribute("msg",
+					"회원 탈퇴가 완료되지 않았습니다.");
+			
+			return "redirect:/member/mypageMain.do?id="+vo.getId();
+		}
+		
+	}	
+	// 10. 마이페이지 - 주문내역 보기 - MemberAjaxController.java	
+	// 11. 마이페이지 - 장바구니 보기 - MemberAjaxController.java	
+	// 12. 마이페이지 회원정보 보기 - MemberAjaxController.java	
+	
 	
 }
 

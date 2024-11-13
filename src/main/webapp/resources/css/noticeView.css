@@ -1,0 +1,94 @@
+@charset "UTF-8";
+
+/* noticeView.css */
+
+/* 전체 레이아웃 */
+body {
+    background-color: #f8f9fa;
+    font-family: 'Arial', sans-serif;
+}
+
+.container {
+    max-width: 800px;
+    margin: 30px auto;
+    padding: 20px;
+    background: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+/* 타이틀 스타일 */
+.notice-title h1 {
+    font-size: 1.75rem;
+    color: #333;
+    text-align: center;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+/* 날짜 섹션 */
+.notice-dates {
+    text-align: center;
+    color: #666;
+    font-size: 0.9rem;
+    margin-bottom: 15px;
+}
+
+/* 내용 섹션 */
+.notice-content {
+    font-size: 1rem;
+    color: #333;
+    padding: 20px;
+    background: #f9f9f9;
+    border-radius: 4px;
+    line-height: 1.6;
+    white-space: pre-line;
+    margin-bottom: 20px;
+}
+
+/* 파일 섹션 */
+.file-container {
+    text-align: center;
+    background: #fafafa;
+    border: 1px solid #e0e0e0;
+    border-radius: 5px;
+    padding: 15px;
+    margin-bottom: 20px;
+}
+
+.file-container img {
+    border-radius: 5px;
+    cursor: pointer;
+    max-width: 100%;
+    height: auto;
+    transition: transform 0.3s ease;
+}
+
+
+.no-file {
+    font-size: 1rem;
+    color: #999;
+}
+
+/* 버튼 섹션 */
+.notice-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.notice-buttons .btn {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+    border-radius: 4px;
+}
+
+/* 모달 스타일 */
+.modal-content {
+    border-radius: 6px;
+}
+
+.modal-header, .modal-footer {
+    border: none;
+}

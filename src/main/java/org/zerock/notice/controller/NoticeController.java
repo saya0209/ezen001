@@ -66,7 +66,6 @@ public class NoticeController {
         model.addAttribute("list", service.list(pageObject));
         model.addAttribute("pageObject", pageObject);
         
-        log.info("model : " + model);
        
         return "notice/list";
     }

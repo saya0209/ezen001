@@ -131,48 +131,6 @@
                      "&goods_total_price=" + encodeURIComponent(goods_total_price) +
                      "&id=" + encodeURIComponent('${id}'));
         }
-        
-//         // 결제 페이지
-//         function submitPaymentForm() {
-// 		    var paymentData = {
-// 		        id: document.querySelector('input[name="id"]').value, // id 값을 가져옵니다.
-// 		        items: [] // 결제할 상품 목록을 저장할 배열
-// 		    };
-		
-// 		    var checkboxes = document.querySelectorAll('input[type="checkbox"].form-check-input:checked');
-		
-// 		    checkboxes.forEach(function(checkbox) {
-// 		        var goods_no = checkbox.value;
-// 		        var quantity = document.getElementById('quantity-'+goods_no).value;
-// 		        var price = document.getElementById('price-'+goods_no).value;
-// 		        var delivery_charge = document.getElementById('delivery_charge-'+goods_no).value;
-		
-// 		        paymentData.items.push({
-// 		            goods_no: goods_no,
-// 		            quantity: quantity,
-// 		            price: price,
-// 		            delivery_charge: delivery_charge
-// 		        });
-// 		    });
-		    
-// 		    // AJAX 요청으로 전송
-// 		    var xhr = new XMLHttpRequest();
-// 		    xhr.open("POST", "${pageContext.request.contextPath}/cart/paymentForm.do", true);
-// 		    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-// 		    xhr.onreadystatechange = function() {
-// 		        if (xhr.readyState === XMLHttpRequest.DONE) {
-// 		            if (xhr.status === 200) {
-// 		                // 성공적으로 처리된 경우
-// 		                console.log("결제 정보 전송 성공");
-// 		                // 결제 페이지로 리다이렉트
-// 		                window.location.href = "${pageContext.request.contextPath}/cart/paymentForm.do?id=" + paymentData.id; // id를 포함하여 리다이렉트
-// 		            } else {
-// 		                console.error("결제 정보 전송 실패: " + xhr.status);
-// 		            }
-// 		        }
-// 		    };
-// 		    xhr.send(JSON.stringify(paymentData)); // JSON 형태로 데이터 전송
-// 		}
 
 		function submitPaymentForm() {
             document.getElementById("paymentForm").action = `${pageContext.request.contextPath}/cart/paymentForm.do`; // POST 요청을 보낼 URL
@@ -309,11 +267,16 @@
             </div>
             <div class="card-footer">
             	<div class="total-section">
+            	<c:if test="${!empty cartItems}">
                 	총 결제 금액: <strong id="finalTotal"><fmt:formatNumber value="${totalAmount}" pattern="#,###"/> 원</strong>
 				    <form id="paymentForm" class="float-right" method="post">
 					    <input type="hidden" name="id" value="${id}">
-					    <input type="button" value="결제하기" class="btn btn-success" onclick="submitPaymentForm()">
+					    <input type="button" value="결제하기" class="btn btn-success" onclick="submitPaymentForm()">                
 					</form>
+                </c:if>
+                <c:if test="${empty cartItems}">
+                	<a href="/main/main.do" class="btn btn-primary">메인으로 돌아가기</a>
+                </c:if>
 			    </div>
 			</div>
         </div>

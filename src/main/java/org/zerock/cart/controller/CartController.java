@@ -142,7 +142,6 @@ public class CartController {
                 totalAmount += item.getGoods_total_price();
             }
         }
-
         // HistoryVO 생성 후 DB에 저장
         HistoryVO history = new HistoryVO();
         history.setOrderNumber(orderNumber);

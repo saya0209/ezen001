@@ -219,11 +219,11 @@ $(document).ready(function() {
 			<ul class="navbar-nav d-flex flex-row">
                 <c:if test="${ empty login }">
                     <li class="nav-item">
-						<a class="nav-link" href="/member/loginForm.do">
+						<a class="top-link" href="/member/loginForm.do">
 						<i class="fa fa-sign-in"></i> 로그인</a>
 					</li>
 						<li class="nav-item">
-							<a class="nav-link" href="/member/writeForm.do">
+							<a class="top-link" href="/member/writeForm.do">
 							<i class="fa fa-address-card-o"></i> 회원가입</a>
 						</li>
 <!-- 						<li class="nav-item"> -->

@@ -96,7 +96,6 @@
                         <label for="email">이메일:</label>
                         <input type="email" id="email" name="email" class="form-control" placeholder="이메일을 입력하세요" required>
                     </div>
-                    
                     <!-- 총 결제 금액 표시 및 결제 버튼 -->
                     <div class="total-section">
                         총 결제 금액: <strong id="final-total"><fmt:formatNumber value="${totalAmount}" pattern="#,###"/> 원</strong>

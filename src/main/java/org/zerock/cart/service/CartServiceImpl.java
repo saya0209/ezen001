@@ -10,6 +10,8 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Service;
 import org.zerock.cart.mapper.CartMapper;
 import org.zerock.cart.vo.CartItemVO;
+import org.zerock.cart.vo.HistoryVO;
+import org.zerock.cart.vo.PaymentDetailVO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -97,7 +99,30 @@ public class CartServiceImpl implements CartService {
 		mapper.deleteSelectedItems(id);
 	}
 
-	
+	@Override
+    public void savePaymentHistory(HistoryVO history, List<PaymentDetailVO> details) {
+        // 결제 내역 저장
+        mapper.insertHistory(history);
+        
+        // 결제 상세 정보 저장
+        for (PaymentDetailVO detail : details) {
+            mapper.insertPaymentDetail(detail);
+        }
+    }
+
+	public List<HistoryVO> getPaymentHistory(String id) {
+        return mapper.selectHistoryByUserId(id);
+    }
+
+    public List<PaymentDetailVO> getPaymentDetails(String orderNumber) {
+        return mapper.selectPaymentDetailsByOrderNumber(orderNumber);
+    }
+    
+    @Override
+    public HistoryVO getHistoryByOrderNumber(String orderNumber) {
+        return mapper.getHistoryByOrderNumber(orderNumber);
+    }
+
 
 
 }

@@ -1,5 +1,7 @@
 package org.zerock.member.controller;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -12,8 +14,11 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import org.zerock.member.service.MemberService;
 import org.zerock.member.vo.LoginVO;
@@ -96,7 +101,7 @@ public class MemberController {
 		return "member/list";
 	}
 	
-	// 2. 공지사항 글보기
+	// 2. 멤버목록 글보기
 	@GetMapping("/view.do")
 	public String view(Model model, String id) {
 		log.info("view.do ================");
@@ -124,16 +129,26 @@ public class MemberController {
 	}
 	
 	// 3-3. Id 중복 확인
-	@GetMapping("/checkId")
-    public ResponseEntity<String> checkId(String id) {
-        boolean isDuplicate = service.checkId(id);
-        
-        if (isDuplicate) {
-            return ResponseEntity.status(HttpStatus.CONFLICT).body("중복된 ID가 있습니다..");
-        } else {
-            return ResponseEntity.ok("사용 가능한 ID입니다.");
-        }
-    }
+	@PostMapping("/ConfirmId")
+	@ResponseBody
+	public ResponseEntity<Boolean> confirmId(String id) {
+		log.info("ConfirmId.........");
+		log.info("id : " + id);
+		boolean result = true;
+		
+		if(id.trim().isEmpty()) {
+			log.info("id : " + id);
+			result = false;
+		} else {
+			if (service.selectId(id)) {
+				result = false;
+			} else {
+				result = true;
+			}
+		}
+		
+		return new ResponseEntity<>(result, HttpStatus.OK);
+	}
 	
 	
 	// 4-1. 내정보 수정 폼
@@ -218,7 +233,53 @@ public class MemberController {
 		}
 	}
 	
-	// 7. 회원 정보 사진 바꾸기 (등급이미지 바꾸기?)
+	// 7. 회원 정보 사진 바꾸기
+	@PostMapping("/changePhoto.do")
+	public String changePhoto(@ModelAttribute MemberVO vo, HttpServletRequest request, RedirectAttributes rttr) {
+	    log.info("changePhoto.do ==============");
+	    
+	    // 업로드된 파일을 가져오기
+	    MultipartFile imageFile = vo.getImageFile();
+	    
+	    if (imageFile != null && !imageFile.isEmpty()) {
+	        try {
+	            // 파일 이름 가져오기
+	            String fileName = imageFile.getOriginalFilename();
+	            
+	            // 웹 애플리케이션의 실제 경로로 저장할 경로 설정
+	            String savePath = "/resources/images/" + fileName;
+	            String realPath = request.getServletContext().getRealPath(savePath); // 실제 서버 경로
+	            
+	            // 파일 저장
+	            imageFile.transferTo(new File(realPath));
+	            
+	            // 저장된 파일 경로를 vo.grade_image에 설정
+	            vo.setGrade_image(savePath);
+	            
+	    	    log.info("fileName = " + imageFile.getOriginalFilename());
+	    	    log.info("savePath = " + "/resources/images/" + imageFile.getOriginalFilename());
+	    	    log.info("grade_image = " + vo.getGrade_image());
+	            
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            rttr.addFlashAttribute("msg", "파일 업로드 실패");
+	            return "redirect:/member/view.do?id=" + vo.getId();
+	        }
+	    }
+	    
+	    // 서비스 메서드를 통해 이미지 경로 업데이트
+	    Integer result = service.changePhoto(vo);
+
+	    
+	    if (result == 1) {
+	        rttr.addFlashAttribute("msg", "회원 이미지가 수정되었습니다.");
+	    } else {
+	        rttr.addFlashAttribute("msg", "회원 이미지가 수정되지 않았습니다.");
+	    }
+	    
+	    return "redirect:/member/view.do?id=" + vo.getId();
+	}
+	
 	// 8. 마이페이지 메인
 	@GetMapping("/mypageMain.do")
 	public String mypageForm(Model model, String id) {

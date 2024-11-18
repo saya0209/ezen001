@@ -78,9 +78,15 @@ public class MemberServiceImpl implements MemberService {
 	}
 
 	@Override
-	public boolean checkId(String id) {
+	public boolean selectId(String id) {
 		// TODO Auto-generated method stub
-		return mapper.checkId(id) > 0;
+		return mapper.selectId(id);
+	}
+
+	@Override
+	public Integer changePhoto(MemberVO vo) {
+		// TODO Auto-generated method stub
+		return mapper.changePhoto(vo);
 	}
 
 

@@ -3,6 +3,7 @@ package org.zerock.member.vo;
 import java.util.Date;
 
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 public class MemberVO {
 
@@ -21,6 +22,7 @@ public class MemberVO {
 	   private Integer gradeNo;
 	   private String gradeName;
 	   private String grade_image;
+	   private MultipartFile imageFile;
 	   
 	//getter and setter 
 	   
@@ -95,6 +97,12 @@ public class MemberVO {
 	}
 	public void setGrade_image(String grade_image) {
 		this.grade_image = grade_image;
+	}
+	public MultipartFile getImageFile() {
+		return imageFile;
+	}
+	public void setImageFile(MultipartFile imageFile) {
+		this.imageFile = imageFile;
 	}
 	
 }

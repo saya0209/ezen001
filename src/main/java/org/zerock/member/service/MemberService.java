@@ -30,6 +30,8 @@ public interface MemberService {
 
 	public Integer updateConDate(String id);
 
-	public boolean checkId(String id);
+	public boolean selectId(String id);
+
+	public Integer changePhoto(MemberVO vo);
 
 }

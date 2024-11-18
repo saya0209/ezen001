@@ -17,56 +17,6 @@
 $(function() {
 	console.log("jquery loading......");
 	
-	let now = new Date();
-	let startYear = now.getFullYear();
-	let yearRange = (startYear - 100) + ":" + (startYear);
-	
-	// 날짜입력 설정 - datepicker
-	$(".datepicker").datepicker({
-		// 입력란의 데이터 포맷
-		dateFormat: "yy-mm-dd",
-		// 월 선택 입력 추가
-		changeMonth: true,
-		// 년 선택 입력 추가
-		changeYear: true,
-		// 월 선택 입력 (기본은 영어->한글로 변경)
-		monthNamesShort: ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
-		// 달력의 요일 표시 (기본은 영어->한글로)
-		dayNamesMin: ["일","월","화","수","목","금","토"],
-		// 선택할 수 있는 년도의 범위
-		yearRange: yearRange,
-	});
-	
-	$("#id").keyup(function() {
-		console.log("id keyup event----");
-		let id = $("#id").val();
-		if(id.length < 3) {
-			$("#checkIdDiv").removeClass("alert-success alert-danger")
-				.addClass("alert-danger");
-			// 글자를 바꾸자
-			$("#checkIdDiv").text("아이디는 필수입력입니다. 3자이상 입력하세요");
-		}
-		else {
-			// 중복id체크
-			// 서버에가서 데이터 확인하고 결과를 jsp로 가져온다.
-			// #checkIdDiv 안에 넣을 문구를 가져와서 넣는다.
-			// ajax, load()함수이용
-			$("#checkIdDiv").load("/ajax/checkId.do?id=" + id, 
-				function(result) {
-					// id가 중복이면 alert을 분홍색배경으로
-					// id가 중복되지 않으면 alert을 녹색배경으로
-					if (result.indexOf("중복") >= 0) {
-						$("#checkIdDiv").removeClass("alert-success alert-danger")
-							.addClass("alert-danger");
-					}
-					else {
-						$("#checkIdDiv").removeClass("alert-success alert-danger")
-							.addClass("alert-success");
-					}
-			});//end of $("#checkIdDiv").load()
-		}// end of if~else
-	});// end of $("#id").keyup()
-	
 	// 비밀번호와 비밀번호 확인 이벤트
 	$("#pw, #pw2").keyup(function(){
 		let pw = $("#pw").val();

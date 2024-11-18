@@ -5,66 +5,46 @@
 <head>
 <meta charset="UTF-8">
 <title>회원가입 폼</title>
-	<!-- datepicker -->
-	<link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css">
 	<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 	<script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
 
-<!-- 2. 라이브러리 등록확인 -->
 <script type="text/javascript">
 //페이지가 로딩후 세팅한다.
 //$(document).ready(function(){~~});
 $(function() {
 	console.log("jquery loading......");
-	
-	let now = new Date();
-	let startYear = now.getFullYear();
-	let yearRange = (startYear - 100) + ":" + (startYear);
-	
-	// 날짜입력 설정 - datepicker
-	$(".datepicker").datepicker({
-		// 입력란의 데이터 포맷
-		dateFormat: "yy-mm-dd",
-		// 월 선택 입력 추가
-		changeMonth: true,
-		// 년 선택 입력 추가
-		changeYear: true,
-		// 월 선택 입력 (기본은 영어->한글로 변경)
-		monthNamesShort: ["1월","2월","3월","4월","5월","6월","7월","8월","9월","10월","11월","12월"],
-		// 달력의 요일 표시 (기본은 영어->한글로)
-		dayNamesMin: ["일","월","화","수","목","금","토"],
-		// 선택할 수 있는 년도의 범위
-		yearRange: yearRange,
-	});
-	
+		
 	$("#id").keyup(function() {
 		console.log("id keyup event----");
-		let id = $("#id").val();
+		var id = $("#id").val();
 		if(id.length < 3) {
 			$("#checkId").removeClass("alert-success alert-danger")
 				.addClass("alert-danger");
 			// 글자 변경
-			$("#checkId").text("아이디는 필수입력입니다. 3자이상 입력하세요");
+			$("#checkId").text("아이디는 필수 입력입니다. 3자이상 입력하세요");
 		}
-		else {
-			// 중복id체크
-			// 서버에가서 데이터 확인하고 결과를 jsp로 가져온다.
-			// #checkId 안에 넣을 문구를 가져와서 넣는다.
-			// ajax, load()함수이용
-			$("#checkId").load("/member/checkId.do?id=" + id, 
-				function(result) {
-					// id가 중복이면 alert을 분홍색배경으로
-					// id가 중복되지 않으면 alert을 녹색배경으로
-					console.log("result = "+result);
-					if (result.indexOf("중복") >= 0) {
-						$("#checkId").removeClass("alert-success alert-danger")
-							.addClass("alert-danger");
-					}
-					else {
-						$("#checkId").removeClass("alert-success alert-danger")
-							.addClass("alert-success");
-					}
-			});//end of $("#checkId").load()
+		else{
+			$.ajax({
+        		url : './ConfirmId',
+        		data : {
+        			id : id
+        		},
+        		type : 'POST',
+        		dataType : 'json',
+        		success : function(result) {
+        			if (result == true) {
+        				$("#checkId").removeClass("alert-success alert-danger")
+        				.addClass("alert-success");
+        				// 글자 변경
+        				$("#checkId").text("(중복검사 실행) 사용 가능한 아이디입니다.");
+        			} else{
+          				$("#checkId").removeClass("alert-success alert-danger")
+        				.addClass("alert-danger");
+        				// 글자 변경
+        				$("#checkId").text("(중복검사 실행) 중복된 아이디입니다.");
+        			}
+        		}
+        	}); //End Ajax
 		}// end of if~else
 	});// end of $("#id").keyup()
 	
@@ -136,7 +116,7 @@ $(function() {
 	    <input type="text" class="form-control" maxlength="20"
 	    	pattern="^[a-zA-Z][a-zA-Z0-9]{2,19}$" required
 	    	placeholder="맨앞글자는 영문자 뒤에는 영문자 또는 숫자 입력, 3~20자"
-	    	id="id" name="id">
+	    	id="id" name="id" autofocus>
 	  </div>
 <!-- 아이디 중복 체크 -->	  
 	  <div id="checkId" class="alert alert-danger">

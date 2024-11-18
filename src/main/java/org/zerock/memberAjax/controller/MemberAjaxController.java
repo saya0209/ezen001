@@ -12,7 +12,9 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.zerock.cart.vo.HistoryVO;
 import org.zerock.member.service.MemberService;
 import org.zerock.member.vo.LoginVO;
 import org.zerock.member.vo.MemberVO;
@@ -31,26 +33,38 @@ public class MemberAjaxController {
 	@Qualifier("memberAjaxServiceImpl")
 	private MemberAjaxService service;
 	
-	// 9. 마이페이지 - 주문내역 보기
+	// 10. 마이페이지 - 주문내역 보기
 	@GetMapping("/mypageMenu1.do")
-	public String mypageMenu1() {
+	public String mypageMenu1(Model model, @RequestParam("id") String id) {
 		log.info("========= mypageMenu1.do ============");
+		log.info("★★★★★★★★★★★★★★★★★id = "+id);
+        List<HistoryVO> paymentHistory = service.getPaymentHistory(id);
+        
+        model.addAttribute("paymentHistory", paymentHistory);
+		model.addAttribute("id", id);
+		log.info("★★★★★★★★★★★★★★★★★History Data: " + service.getPaymentHistory(id));
 		return "memberAjax/mypageMenu1";
 	}
 	
-	// 10. 마이페이지 - 장바구니 보기
+	
+	// 9. 마이페이지 - 장바구니 보기
 	@GetMapping("/mypageMenu2.do")
-	public String mypageMenu2() {
+	public String mypageMenu2(Model model, @RequestParam("id") String id) {
 		log.info("========= mypageMenu2.do ============");
+		log.info("★★★★★★★★★★★★★★★★★id = "+id);
+		model.addAttribute("cartItems", service.viewCart(id));
+		model.addAttribute("id", id);
+		log.info("★★★★★★★★★★★★★★★★★Cart Data: " + service.viewCart(id));
 		return "memberAjax/mypageMenu2";
 	}
+	
 	
 	// 11. 마이페이지 회원정보 보기
 	@GetMapping("/mypageMenu3.do")
 	public String mypageMenu3(Model model, String id) {
 		log.info("========= mypageMenu3.do ============");
 		log.info("id = "+id);
-		model.addAttribute("vo", service.view(id));
+		model.addAttribute("vo", service.viewMember(id));
 		return "memberAjax/mypageMenu3";
 	}
 	

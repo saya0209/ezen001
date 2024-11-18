@@ -31,6 +31,8 @@ public interface MemberMapper {
 
 	public Integer updateConDate(String id);
 
-	public int checkId(String id);
+	public boolean selectId(String id);
+
+	public Integer changePhoto(MemberVO vo);
 
 }

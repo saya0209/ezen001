@@ -2,212 +2,156 @@
 <!DOCTYPE mapper
   PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
   "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-  <mapper namespace="org.zerock.goods.mapper.GoodsMapper">
-  	<!-- 상품 리스트 -->
-  	<select id="list" resultType="org.zerock.goods.vo.GoodsVO">
-  		select
-	  		goods_no, goods_name, price, discount,
-	  		sale_price, image_name
-  		from
-  		(
-	  		select
-	  			rownum rnum, goods_no, goods_name, price, discount,
-	  			sale_price, image_name
-	  		from
-		  	(
-		  		select
-		  			g.goods_no, g.goods_name, p.price, p.discount,
-		  			p.sale_price, g.image_name
-		  		from
-		  			goods g, goods_price p
-		  		where
-		  		(
-		  			<!-- 검색조건 -->
-		  			<include refid="search" />
-		  			<!-- 일반조건 -->
-		  			<!-- 현재 판매되고 있는 상품 -->
-		  			<![CDATA[
-		  			sale_start_date <= sysDate and
-		  			trunc(sysDate) <= sale_end_date
-		  			]]>
-		  		)
-		  		and
-		  		(
-		  			<!-- 조인 조건 -->
-		  			g.goods_no = p.goods_no
-		  		)
-		  	)
-	  	)
-	  	where rnum between #{pageObject.startRow} and #{pageObject.endRow}
-  	</select>
-  	
-  	<!-- 페이지 처리를 위한 getTotalRow -->
-  	<select id="getTotalRow" resultType="Long">
-  		select count(*)
-  		from goods g, goods_price p
-  		where
-  		(
-  			<!-- 검색조건 -->
- 			<include refid="search" />
-		  	<!-- 일반조건 -->
-		  	<![CDATA[
-		  	sale_start_date <= sysDate and
-		  	trunc(sysDate) <= sale_end_date
-		  	]]>
-		)
-		and
-		(
-			<!-- 조인 조건 -->
-			g.goods_no = p.goods_no
-		)
-  	</select>
-  	
-  	<!-- 검색 -->
-  	<sql id="search">
-  		<trim prefixOverrides="and" suffix="and">
-  			<!-- 카테고리 대분류, 중분류, 소분류 -->
-	  	 	<if test="goodsSearchVO.cate_code1 != null and goodsSearchVO.cate_code1 != 0">
-	  			and g.cate_code1 = #{goodsSearchVO.cate_code1}
-	  			<if test="goodsSearchVO.cate_code2 != null and goodsSearchVO.cate_code2 != 0">
-	  				and g.cate_code2 = #{goodsSearchVO.cate_code2}
-	  				<if test="goodsSearchVO.cate_code3 != null and goodsSearchVO.cate_code3 != 0">
-	  					and g.cate_code3 = #{goodsSearchVO.cate_code3}
-	  				</if>
-	  			</if>
-			</if>
-			<!-- 제품명 -->
-			<if test="goodsSearchVO.goods_name != null and goodsSearchVO.goods_name != ''">
-				and g.goods_name like '%' || #{goodsSearchVO.goods_name} || '%'
-			</if>
-			<!-- 최소가격 -->
-			<if test="goodsSearchVO.min_price != null and goodsSearchVO.min_price != 0">
-				<![CDATA[
-				and p.sale_price >= #{goodsSearchVO.min_price}
-				]]>
-			</if>
-			<!-- 최대가격 -->
-			<if test="goodsSearchVO.max_price != null and goodsSearchVO.max_price != 0">
-				<![CDATA[
-				and p.sale_price <= #{goodsSearchVO.max_price}
-				]]>
-			</if>
-		</trim>
-  	</sql>
-  	
-  	<!-- 대분류/중분류/소분류 가져오기 -->
-  	<select id="getCategory" resultType="org.zerock.category.vo.CategoryVO">
-  		select
-  			cate_code1, cate_code2, cate_code3, cate_name
-  		from
-  			category
-  		where
-  			<!-- 대분류 조건 -->
-  			<if test="cate_code1 == 0">
-  				cate_code2 = 0 and cate_code3 = 0
-  			</if>
-  			<!-- 중분류 조건 -->
-  			<if test="cate_code1 > 0 and cate_code2 == 0">
-  				cate_code1 = #{cate_code1} and cate_code2 = 0
-  			</if>
-  			<!-- 소분류 조건 -->
-  			<if test="cate_code1 > 0 and cate_code2 > 0">
-  				cate_code1 = #{cate_code1} and cate_code2 = #{cate_code2} and cate_code3 != 0
-  			</if>
-  	</select>
-  	
-  	<!-- 상품 상세 보기 -->
-  	<select id="view" resultType="org.zerock.goods.vo.GoodsVO">
-  		select
-			g.goods_no, g.goods_name, g.cate_code1, 
-			g.cate_code2, g.cate_code3, g.image_name, c.cate_name,
-			g.content, g.company, g.product_date,
-			p.price, p.discount,
-			p.sale_price, p.delivery_charge, 
-			p.sale_start_date, p.sale_end_date,
-			p.goods_price_no
-		from goods g, goods_price p, category c
-  		where
-  			(g.goods_no = #{goods_no})
-  			<![CDATA[
-		  	and ( 
-		  	sale_start_date <= sysDate and
-		  	trunc(sysDate) <= sale_end_date
-		  	)
-		  	]]>
-  			and (g.goods_no = p.goods_no)
-  			and (g.cate_code1 = c.cate_code1 and g.cate_code2 = c.cate_code2 and g.cate_code3 = c.cate_code3)
-  	</select>
-  	
-  	<!-- 1. 상품 등록 -->
-  	<insert id="write">
-  		<selectKey keyProperty="goods_no" resultType="Long" order="BEFORE">
-  			select goods_seq.nextval from dual
-  		</selectKey>
-  		insert into goods
-  			(goods_no, goods_name,
-  			cate_code1, cate_code2, cate_code3, image_name,
-  			content, company, product_date)
-  		values
-	  		(#{goods_no}, #{goods_name}, #{cate_code1},
-	  		#{cate_code2}, #{cate_code3}, #{image_name}, #{content},
-	  		#{company}, #{product_date,jdbcType=DATE})
-  	</insert>
+<mapper namespace="org.zerock.goods.mapper.GoodsMapper">
 
-	<!-- 가격 정보 등록 -->
-	<insert id="writePrice">
-		insert into goods_price
-			(goods_price_no, price, discount,
-			 sale_price, delivery_charge
-			<if test="sale_start_date != null">
-			, sale_start_date
-			</if>
-			<if test="sale_end_date != null">
-			, sale_end_date
-			</if>
-			, goods_no)
-		values
-			(goods_price_seq.nextval, #{price},
-			#{discount,jdbcType=INTEGER},
-			#{sale_price},
-			#{delivery_charge,jdbcType=INTEGER}
-			<if test="sale_start_date != null">
-				, #{sale_start_date,jdbcType=DATE}
-			</if>
-			<if test="sale_end_date != null">
-				, #{sale_end_date,jdbcType=DATE}
-			</if>	
-			, #{goods_no})
-	</insert>
+	<!-- 상품 체크 (기존 상품이 있는지 확인) -->
+    <select id="GoodsCheck" parameterType="map" resultType="org.zerock.goods.vo.GoodsVO">
+        select g.goods_no,
+               g.cpu_id,
+               g.memory_id,
+               g.graphic_card_id,
+               g.total_price,
+               c.cpu_name,           <!-- CPU 이름 -->
+               m.memory_name,     <!-- 메모리 이름 -->
+               gc.graphic_card_name <!-- 그래픽 카드 이름 -->
+        from goods g
+        join cpu c ON g.cpu_id = c.cpu_id
+        join memory m ON g.memory_id = m.memory_id
+        join graphic_card GC ON g.graphic_card_id = gc.graphic_card_id
+        where g.cpu_id = #{cpu_id}
+          and g.memory_id = #{memory_id}
+          and g.graphic_card_id = #{graphic_Card_id}
+    </select>
 
-	<!-- 상품 수정 -->
-	<update id="update">
-		update goods set
-			cate_code1 = #{cate_code1}, cate_code2 = #{cate_code2}, cate_code3 = #{cate_code3},
-			goods_name = #{goods_name}, company = #{company},
-			content = #{content}, product_date = #{product_date}
-		where 
-			goods_no = #{goods_no}
-	</update>
+    <!-- 상품 등록 -->
+    <insert id="insertGoods" parameterType="org.zerock.goods.vo.GoodsVO">
+        insert into goods (goods_no, cpu_id, memory_id, graphic_Card_id, cpu_name, memory_name, graphic_Card_name, total_price, image_main)
+        values (goods_seq.NEXTVAL, #{cpu_id}, #{memory_id}, #{graphic_Card_id},
+        (SELECT cpu_name FROM cpu WHERE cpu_id = #{cpu_id}),
+        (SELECT memory_name FROM memory WHERE memory_id = #{memory_id}), 
+        (SELECT graphic_Card_name FROM graphic_Card WHERE graphic_Card_id = #{graphic_Card_id}),
+        (
+            select cpu_price from cpu where cpu_id = #{cpu_id}
+        ) + (
+            select memory_price from memory where memory_id = #{memory_id}
+        ) + (
+            select graphic_Card_price from graphic_Card where graphic_Card_id = #{graphic_Card_id}
+        ),
+        #{image_main}
+        )
+    </insert>
 
-	<!-- 상품 가격 수정 -->
-	<update id="updatePrice">
-		update goods_price set
-			price = #{price}, discount = #{discount},
-			sale_price = #{sale_price},
-			delivery_charge = #{delivery_charge},
-			sale_start_date = #{sale_start_date},
-			sale_end_date = #{sale_end_date}
-		where
-			goods_no = #{goods_no} and goods_price_no = #{goods_price_no}
-	</update>
+    <!-- 상품 리스트 조회 (페이징 처리 포함) -->
+    <select id="list" resultType="org.zerock.goods.vo.GoodsVO">
+        select g.goods_no,
+               g.cpu_id,
+               g.memory_id,
+               g.graphic_card_id,
+               g.total_price,
+               c.cpu_name,           <!-- CPU 이름 -->
+               m.memory_name,     <!-- 메모리 이름 -->
+               gc.graphic_card_name, <!-- 그래픽 카드 이름 -->
+               g.image_main
+        from goods g
+        join cpu c ON g.cpu_id = c.cpu_id
+        join memory m ON g.memory_id = m.memory_id
+        join graphic_card GC ON g.graphic_card_id = gc.graphic_card_id
+        <where>
+            <!-- 페이징 처리: 시작 행과 끝 행 계산 -->
+            <if test="pageObject.startRow != null and pageObject.endRow != null">
+                and ROWNUM between #{pageObject.startRow} and #{pageObject.endRow}
+            </if>
+        </where>
+        order BY g.goods_no DESC  <!-- 최신 상품 순으로 정렬 -->
+    </select>
+
+    <!-- 전체 상품 개수 조회 (페이징을 위한) -->
+    <select id="getTotalCount" resultType="int">
+        select COUNT(*) 
+        from goods g
+        join cpu c ON g.cpu_id = c.cpu_id
+        join memory m ON g.memory_id = m.memory_id
+        join graphic_card gc ON g.graphic_card_id = gc.graphic_card_id
+    </select>
+
+
+    <!-- 상품 상세 조회 -->
+    <select id="view" resultType="org.zerock.goods.vo.GoodsVO">
+        SELECT 
+        g.goods_no,
+        g.cpu_id,
+        g.memory_id,
+        g.graphic_card_id,
+        g.cpu_name,
+        g.memory_name,
+        g.graphic_card_name,
+        g.total_price,
+        g.image_main,
+        c.cpu_price,
+        m.memory_price,
+        gr.graphic_Card_price
+    FROM goods g, cpu c, memory m, graphic_card gr
+    WHERE g.goods_no = #{goods_no}
+    	and g.cpu_id = c.cpu_id
+    	and g.memory_id = m.memory_id
+    	and g.graphic_card_id = gr.graphic_card_id
+    </select>
+
+	<select id="getcpu_id" resultType="org.zerock.goods.vo.Cpu">
+	    SELECT cpu_id, cpu_name, cpu_price 
+	    FROM cpu
+	</select>
 	
-	<!-- 상품 추가 이미지 삭제 -->
-	<delete id="deleteImage">
-		delete from goods_image
-		where image_name = #{image_name}
-	</delete>
+	<select id="getmemory_id" resultType="org.zerock.goods.vo.Memory">
+	    SELECT memory_id, memory_name, memory_price 
+	    FROM memory
+	</select>
+	
+	<select id="getgraphic_Card_id" resultType="org.zerock.goods.vo.Graphic_Card">
+	    SELECT graphic_card_id, graphic_card_name, graphic_card_price 
+	    FROM graphic_card
+	</select>
+
+    <!-- CPU 리스트 조회 -->
+    <select id="getCpuList" resultType="org.zerock.goods.vo.Cpu">
+        select cpu_id, cpu_name, cpu_price
+        from cpu
+    </select>
+
+    <!-- Memory 리스트 조회 -->
+    <select id="getMemoryList" resultType="org.zerock.goods.vo.Memory">
+        select memory_id, memory_name, memory_price
+        from memory
+    </select>
+
+    <!-- Graphic Card 리스트 조회 -->
+    <select id="getGraphic_CardList" resultType="org.zerock.goods.vo.Graphic_Card">
+        select graphic_card_id, graphic_card_name, graphic_card_price
+        from graphic_card
+    </select>
+    
+    <select id="getcpu_name" parameterType="int" resultType="String">
+	    select cpu_name from cpu where cpu_id = #{cpu_id}
+	</select>
+	
+	<select id="getmemory_name" parameterType="int" resultType="String">
+	    select memory_name from memory where memory_id = #{memory_id}
+	</select>
+	
+	<select id="getgraphic_Card_name" parameterType="int" resultType="String">
+	    select graphic_Card_name from graphic_card where graphic_card_id = #{graphic_Card_id}
+	</select>
+	
+	<!--  상품 이미지 리스트  -->
+	<select id="image_main" resultType="org.zerock.goods.vo.GoodsImageVO"> 
+		select goods_image_no, image_name, goods_no from goods_image where goods_no = #{goods_no} 
+	</select>
+
+    <!-- 삭제 -->
+    <delete id="delete">
+        delete from goods
+        where goods_no = #{goods_no}
+    </delete>
+
+
 </mapper>
-  
-  
-  
-  

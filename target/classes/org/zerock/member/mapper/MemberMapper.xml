@@ -61,7 +61,7 @@
   </insert>  
   
 <!-- ID 중복 체크 -->
-	<select id="checkId" parameterType="String" resultType="int">
+	<select id="selectId" resultType="boolean">
 	    SELECT COUNT(*) FROM member WHERE id = #{id}
 	</select>  
   
@@ -89,6 +89,15 @@
   <!-- status -->
   	update member set
 	  	status = #{status}
+	 where
+	 	id = #{id}
+  </update> 
+  
+<!-- changePhoto -->  
+  <update id="changePhoto">
+  <!-- grade_image -->
+  	update member set
+	  	grade_image = #{grade_image, jdbcType=VARCHAR}
 	 where
 	 	id = #{id}
   </update> 

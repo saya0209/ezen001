@@ -66,23 +66,71 @@ insert into member (id, pw, nicname, email, address, gradeNo) values('user1','us
 insert into member (id, pw, nicname, email, address, gradeNo) values('user2','user2','박유저','user2@gmail.com','강원 동해시 낙수대로 38, 낙수힐스테이트 312동 101호',1);
 
 
--- goods
+
+-- 기존 테이블 삭제
+DROP TABLE cpu CASCADE CONSTRAINTS PURGE;
+DROP TABLE memory CASCADE CONSTRAINTS PURGE;
+DROP TABLE graphic_card CASCADE CONSTRAINTS PURGE;
 DROP TABLE goods CASCADE CONSTRAINTS PURGE;
 
-CREATE TABLE goods (
-    goods_no NUMBER PRIMARY KEY,    -- 상품 고유 번호
-    goods_name VARCHAR2(255),       -- 상품명
-    company VARCHAR2(255),          -- 제조사
-    price NUMBER,                   -- 가격
-    discount NUMBER,                -- 할인금액
-    pro_code1 NUMBER,          
-    pro_code2 NUMBER,       
-    image_name VARCHAR2(255)        -- 이미지 파일명
+-- 시퀀스 삭제
+DROP SEQUENCE goods_SEQ;
+
+-- CPU 테이블 생성
+CREATE TABLE cpu (
+    cpu_id NUMBER PRIMARY KEY,       -- CPU 고유번호
+    cpu_name VARCHAR2(100) UNIQUE,   -- CPU 이름 (예: 'Intel i3', 'Intel i5', 'Intel i7')
+    cpu_price NUMBER(9)              -- CPU 가격
 );
 
--- 샘플 데이터 삽입 (goods)
-INSERT INTO goods(goods_no, goods_name, company, price, discount, pro_code1, pro_code2, image_name) 
-VALUES (1, 'computer', 'Hosun', 300000, 90000, '1', '3', 'computer');
+-- Memory 테이블 생성
+CREATE TABLE memory (
+    memory_id NUMBER PRIMARY KEY,    -- 메모리 고유번호
+    memory_name VARCHAR2(100) UNIQUE, -- 메모리 크기 (예: '4GB', '8GB', '12GB')
+    memory_price NUMBER(9)           -- 메모리 가격
+);
+
+-- 그래픽카드 테이블 생성
+CREATE TABLE graphic_card (
+    graphic_card_id NUMBER PRIMARY KEY,       -- 그래픽카드 고유번호
+    graphic_card_name VARCHAR2(100) UNIQUE,   -- 그래픽카드 이름 (예: 'GTX1060', 'GTX2060', 'GTX3060')
+    graphic_card_price NUMBER(9)              -- 그래픽카드 가격
+);
+
+-- Goods 테이블 생성
+CREATE TABLE goods (
+    goods_no NUMBER PRIMARY KEY,         -- 상품 고유번호        
+    cpu_id NUMBER,                        -- CPU 번호 (foreign key)
+    memory_id NUMBER,                     -- 메모리 번호 (foreign key)
+    graphic_card_id NUMBER,               -- GPU 번호 (foreign key)
+    cpu_name VARCHAR2(100),
+    memory_name VARCHAR2(100),
+    graphic_card_name VARCHAR2(100),
+    total_price NUMBER(9),                -- 해당 상품의 부품에 맞춘 가격 (CPU + Memory + GPU 가격 합산)
+    image_main VARCHAR2(255),
+    image_files VARCHAR2(1000),
+    FOREIGN KEY (cpu_id) REFERENCES cpu(cpu_id),                -- CPU 외래 키
+    FOREIGN KEY (memory_id) REFERENCES memory(memory_id),       -- Memory 외래 키
+    FOREIGN KEY (graphic_card_id) REFERENCES graphic_card(graphic_card_id) -- GPU 외래 키
+);
+
+-- 시퀀스 생성
+CREATE SEQUENCE goods_SEQ;
+
+-- 데이터 삽입
+INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (1, 'Intel i3', 100000);
+INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (2, 'Intel i5', 150000);
+INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (3, 'Intel i7', 200000);
+
+INSERT INTO memory (memory_id, memory_name, memory_price) VALUES (1, '4GB', 30000);
+INSERT INTO memory (memory_id, memory_name, memory_price) VALUES (2, '8GB', 60000);
+INSERT INTO memory (memory_id, memory_name, memory_price) VALUES (3, '16GB', 120000);
+
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (1, 'GTX1060', 200000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (2, 'GTX2060', 300000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (3, 'GTX3060', 400000);
+
+
 
 
 -- community
@@ -201,109 +249,6 @@ VALUES (1, 'admin', '배송 안내', '배송은 3일 이내에 가능합니다.', sysdate, NULL,
 INSERT INTO answer (answer_no, id, answer_title, answer_content, answerDate, refNo, ordNo, levNo, parentNo)
 VALUES (2, 'admin', '환불 안내', '환불은 요청 후 5일 이내에 처리됩니다.', sysdate, NULL, 1, 0, 2);
 
--- products
-DROP TABLE products CASCADE CONSTRAINTS PURGE;
-DROP SEQUENCE products_SEQ;
-
-CREATE TABLE products (
-    goods_no NUMBER PRIMARY KEY,
-    goods_name VARCHAR2(300) NOT NULL,
-    pro_code1 NUMBER(3) NOT NULL,
-    pro_code2 NUMBER(3) NOT NULL,
-    image_name VARCHAR2(300),
-    company VARCHAR2(60) NOT NULL,
-    price NUMBER(10) NOT NULL
-);
-CREATE SEQUENCE products_SEQ;
-
--- 샘플 데이터 입력 (PRODUCT)
-INSERT INTO products (goods_no, goods_name, pro_code1, pro_code2, image_name, company, price) 
-VALUES (1, '예시 상품 1', 101, 201, 'image1.jpg','제조사명', 100000);
-
-INSERT INTO products (goods_no, goods_name, pro_code1, pro_code2, image_name, company, price) 
-VALUES (2, '예시 상품 2', 101, 202, 'image2.jpg', '제조사명', 200000);
-
-INSERT INTO products (goods_no, goods_name, pro_code1, pro_code2, image_name, company, price) 
-VALUES (3, '예시 상품 3', 101, 203, 'image3.jpg', '제조사명', 300000);
-
--- goods_price
-DROP TABLE goods_price CASCADE CONSTRAINTS PURGE;
-DROP SEQUENCE goods_price_SEQ;
-
-CREATE TABLE goods_price (
-    goods_price_no NUMBER PRIMARY KEY,
-    price NUMBER(9),
-    discount NUMBER(9),
-    sale_price NUMBER(9) NOT NULL,
-    delivery_charge NUMBER(6),
-    goods_no NUMBER,
-    FOREIGN KEY (goods_no) REFERENCES products(goods_no)  -- products 테이블과의 외래 키 관계 설정
-);
-CREATE SEQUENCE goods_price_SEQ;
-
--- 샘플 데이터 입력 (GOODS_PRICE)
-INSERT INTO goods_price (goods_price_no, price, discount, sale_price, delivery_charge, goods_no) 
-VALUES (1, 100000, 10000, 90000, 3000, 1);
-
-INSERT INTO goods_price (goods_price_no, price, discount, sale_price, delivery_charge, goods_no) 
-VALUES (2, 150000, 15000, 135000, 3000, 2);
-
-INSERT INTO goods_price (goods_price_no, price, discount, sale_price, delivery_charge, goods_no) 
-VALUES (3, 200000, 20000, 180000, 3000, 3);
-
-DROP TABLE goods_images CASCADE CONSTRAINTS PURGE;
-DROP SEQUENCE goods_images_SEQ;
-
--- goods_image
-CREATE TABLE goods_images (
-    goods_image_no NUMBER PRIMARY KEY,
-    image_name VARCHAR2(300),
-    goods_no NUMBER,
-    FOREIGN KEY (goods_no) REFERENCES products(goods_no)  -- products 테이블과의 외래 키 관계 설정
-);
-CREATE SEQUENCE goods_images_SEQ;
-
--- 샘플 데이터 입력 (GOODS_IMAGE)
-INSERT INTO goods_images (goods_image_no, image_name, goods_no) 
-VALUES (1, 'image1.jpg', 1);
-
-INSERT INTO goods_images (goods_image_no, image_name, goods_no) 
-VALUES (2, 'image2.jpg', 2);
-
-INSERT INTO goods_images (goods_image_no, image_name, goods_no) 
-VALUES (3, 'image3.jpg', 3);
-
--- category
-DROP TABLE category CASCADE CONSTRAINTS PURGE;
-
-CREATE TABLE category (
-    cate_code1 NUMBER(3),
-    cate_code2 NUMBER(3),
-    cate_name VARCHAR2(30) NOT NULL,
-    PRIMARY KEY (cate_code1, cate_code2) 
-);
--- 샘플 데이터 삽입 (CATEGORY)
-INSERT INTO category (cate_code1, cate_code2, cate_name) 
-VALUES (1, 1, '컴퓨터 주요 부품');
-
-INSERT INTO category (cate_code1, cate_code2, cate_name) 
-VALUES (1, 2, '주변기기');
-
--- component
-DROP TABLE component CASCADE CONSTRAINTS PURGE;
-
-CREATE TABLE component (
-    cate_code1 NUMBER(3),
-    cate_code2 NUMBER(3),
-    cate_name VARCHAR2(30) NOT NULL,
-    PRIMARY KEY (cate_code1, cate_code2)
-);
--- 샘플 데이터 삽입 (COMPONENT)
-INSERT INTO component (cate_code1, cate_code2, cate_name) 
-VALUES (1, 1, 'CPU');
-
-INSERT INTO component (cate_code1, cate_code2, cate_name) 
-VALUES (1, 2, '그래픽 카드');
 
 DROP TABLE goods_reply CASCADE CONSTRAINTS;
 DROP SEQUENCE goods_reply_seq;

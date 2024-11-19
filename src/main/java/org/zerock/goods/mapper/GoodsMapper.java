@@ -2,71 +2,90 @@ package org.zerock.goods.mapper;
 
 import java.util.List;
 
+
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
-import org.zerock.category.vo.CategoryVO;
-import org.zerock.goods.vo.GoodsColorVO;
+import org.zerock.goods.vo.Cpu;
 import org.zerock.goods.vo.GoodsImageVO;
-import org.zerock.goods.vo.GoodsPriceVO;
-import org.zerock.goods.vo.GoodsSearchVO;
-import org.zerock.goods.vo.GoodsSizeVO;
 import org.zerock.goods.vo.GoodsVO;
+import org.zerock.goods.vo.Graphic_Card;
+import org.zerock.goods.vo.Memory;
 import org.zerock.util.page.PageObject;
 
 @Repository
 public interface GoodsMapper {
 
-	// 상품 리스트
-	// myBatis는 한 개의 객체만 전달할 수 있다.
-	// 두개이상의 객체를 전달하고 싶을 때는 @Param 어노테이션을 사용한다.
-	// @Param 어노테이션을 사용하면 Map으로 묶여서 전달됩니다.
+	// 상품 조회 후 없으면 생성
+	
+	// 동일한 구성의 상품을 조회
+    public GoodsVO GoodsCheck(@Param("cpu_id") int cpu_id, 
+                                    @Param("memory_id") int memory_id, 
+                                    @Param("graphic_Card_id") int graphic_Card_id);
+    
+    // CPU 리스트 조회
+    public List<Cpu> getCpuList();
+
+    // Memory 리스트 조회
+    public List<Memory> getMemoryList();
+
+    // Graphic Card 리스트 조회
+    public List<Graphic_Card> getGraphic_CardList();
+    
+    // 새로운 상품을 삽입
+    public void insertGoods(GoodsVO goods);
+
+    // 부품별 가격 가져오기
+    public Integer getcpu_price(@Param("cpu_id") int cpu_id);
+    public Integer getmemory_price(@Param("memory_id") int memory_id);
+    public Integer getgraphic_Card_price(@Param("graphic_Card_id") int graphic_Card_id);
+    
+    // 각 부품 이름 가져오기
+    public String getcpu_name(int cpu_id); // CPU 이름 조회
+    public String getmemory_name(int memory_id); // 메모리 이름 조회
+    public String getgraphic_Card_name(int graphic_Card_id); // 그래픽카드 이름 조회
+
+	
+    // 상품 리스트 조회
 	public List<GoodsVO> list(
-			@Param("pageObject") PageObject pageObject,
-			@Param("goodsSearchVO") GoodsSearchVO goodsSearchVO);
-	// 상품 리스트 개수
-	public Long getTotalRow(
-			@Param("pageObject") PageObject pageObject,
-			@Param("goodsSearchVO") GoodsSearchVO goodsSearchVO);
+			@Param("pageObject") PageObject pageObject);
 	
-	// 대분류/중분류 리스트 가져오기
-	public List<CategoryVO> getCategory(@Param("cate_code1") Integer cate_code1);
+
+    // 상품 상세 조회
+    public GoodsVO view(@Param("goods_no") Long goods_no);
+    
+    // 상품 등록
+    public Integer write(GoodsVO goodsVO);
+    
+
+    // 상품 수정
+    public Integer update(Long goods_no);
+    
+    
+ // 상품 이미지 리스트
+ 	public List<GoodsImageVO> image_main(@Param("goods_no") Long goods_no);
+
+
+    // 이미지 삭제
+    public Long delete(Long goods_no);
+
+    // 상품 총 개수 (페이징용)
+    int getTotalCount(PageObject pageObject);
+
+	public List<Cpu> getcpu_id();
 	
-	// 상품 상세보기
-	public GoodsVO view(@Param("goods_no") Long goods_no);
-	// 상품 사이즈 리스트
-	public List<GoodsSizeVO> sizeList(@Param("goods_no") Long goods_no);
-	// 상품 컬러 리스트
-	public List<GoodsColorVO> colorList(@Param("goods_no") Long goods_no);
-	// 상품 이미지 리스트
-	public List<GoodsImageVO> imageList(@Param("goods_no") Long goods_no);
+	public List<Memory> getmemory_id();
 	
-	// 상품 등록
-	// 1. goods 테이블에 상품등록 (필수)
-	public Integer write(GoodsVO vo);
-	// goods_price 테이블에 가격정보등록 (필수)
-	public Integer writePrice(GoodsVO vo);
-	// goods_image 테이블에 등록 (선택: imageFileName에 자료가 있으면)
-	public Integer writeImage(GoodsImageVO vo);
-	// goods_size 테이블에 등록 (선택: size_names에 자료가 있으면)
-	public Integer writeSize(GoodsSizeVO vo);
-	// goods_color 테이블에 등록 (선택: color_names에 자료가 있으면)
-	//public Integer writeColor(GoodsColorVO vo);
-	public Integer writeColor(List<GoodsColorVO> list);
+	public List<Graphic_Card> getgraphic_Card_id();
 	
 	
-	// 상품정보수정
-	public Integer update(GoodsVO vo);
-	// 상품가격수정
-	public Integer updatePrice(GoodsVO vo);
-	// 상품사이즈삭제
-	public Integer deleteSize(Long goods_no);
-	// 상품컬러삭제
-	public Integer deleteColor(Long goods_no);
-	// 상품이미지삭제
-	public Integer deleteImage(String image_name);
-	
+	// 상품 수정
+    public Integer update(GoodsVO goods_no);
+
+	public Graphic_Card getGraphic_CardById(int graphic_CardId);
+
+	public Memory getMemoryById(int memoryId);
+
+	public Cpu getCpuById(int cpuId);
+
 	
 }
-
-
-

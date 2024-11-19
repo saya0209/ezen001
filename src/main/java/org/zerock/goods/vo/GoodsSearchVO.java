@@ -10,6 +10,7 @@ public class GoodsSearchVO {
 	private String goods_name; // 상품이름
 	private Integer min_price; // 최저가격
 	private Integer max_price; // 최대가격
+	private String keyword; // 검색어 추가
 	
 	// URL에다 붙일때 사용
 	// 변수가 null이면 null이라는 문자열이 붙게 됩니다. => 처리해주어야한다.
@@ -20,6 +21,7 @@ public class GoodsSearchVO {
 			+ "&goods_name=" + toStr(goods_name) 
 			+ "&min_price=" + toStr(min_price) 
 			+ "&max_price=" + toStr(max_price) 
+			+ "&keyword=" + toStr(keyword) 
 			;
 	}
 	

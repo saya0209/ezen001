@@ -12,8 +12,6 @@ public class GoodsPriceVO {
 	private Integer discount;
 	private Integer sale_price;
 	private Integer delivery_charge;
-	private Date sale_start_date;
-	private Date sale_end_date;
 	private Long goods_no;
 	
 }

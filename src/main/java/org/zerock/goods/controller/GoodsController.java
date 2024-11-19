@@ -1,6 +1,6 @@
 package org.zerock.goods.controller;
 
-import java.util.ArrayList;
+import java.security.Provider.Service;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,263 +13,222 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.stereotype.Repository;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-import org.zerock.category.vo.CategoryVO;
 import org.zerock.goods.service.GoodsService;
-import org.zerock.goods.vo.GoodsColorVO;
-import org.zerock.goods.vo.GoodsImageVO;
-import org.zerock.goods.vo.GoodsSearchVO;
-import org.zerock.goods.vo.GoodsSizeVO;
+import org.zerock.goods.vo.Cpu;
 import org.zerock.goods.vo.GoodsVO;
-import org.zerock.util.file.FileUtil;
+import org.zerock.goods.vo.Graphic_Card;
+import org.zerock.goods.vo.Memory;
 import org.zerock.util.page.PageObject;
 
 import lombok.extern.log4j.Log4j;
 
 @Controller
-@Log4j
 @RequestMapping("/goods")
+@Log4j
 public class GoodsController {
 
-	@Autowired
-	@Qualifier("goodsServiceImpl")
-	private GoodsService service;
-	
-	// 파일이 저장될 경로
-	String path = "/upload/goods";
-	
-	
-	@GetMapping("/list.do")
-	// 검색을 위한 데이터를 별도로 받아서 처리
-	// @ModelAttribute() - 전달받은 데이터를 Model에 담아서 JSP까지 전달합니다.
-	// 1. 변수선언(생성) 2. DB에서 받은 데이터 변수에 저장
-	// 3. 변수에 담긴것을 model로 넘겨서 JSP사용
-	public String list(Model model,
-			@ModelAttribute(name="goodsSearchVO") GoodsSearchVO goodsSearchVO,
-			HttpServletRequest request) {
+    @Autowired
+    @Qualifier("goodsServiceImpl")
+    private GoodsService goodsService;
+
+    
+    // 고객의 부품 선택에 따라 상품을 조회하거나 새로 생성
+    @PostMapping("/checkOrCreate")
+    public GoodsVO checkOrCreateGoods(@RequestParam int cpu_id,
+                                      @RequestParam int memory_id,
+                                      @RequestParam int graphic_Card_id
+                                      ) {
+        // 1. 기존 구성 조회
+        GoodsVO goods = goodsService.GoodsCheck(cpu_id, memory_id, graphic_Card_id);
+
+        // 2. 기존 구성이 없으면 새 구성 생성
+        if (goods == null) {
+            goods = goodsService.insertGoods(cpu_id, memory_id, graphic_Card_id);
+        }
+
+        return goods;
+    }
+    
+    // 상품 리스트 조회
+    @GetMapping("/list.do")
+    public String list(PageObject pageObject, Model model) {
+        List<GoodsVO> goodsList = goodsService.list(pageObject);
+        model.addAttribute("list", goodsList);
+        model.addAttribute("pageObject", pageObject); // 페이지네이션
+        
+        log.info(model);
+        return "goods/list";  // 상품 리스트 JSP로 포워딩
+    }
+
+    // 상품 상세 보기
+    @GetMapping("view.do")
+    public String view(@RequestParam("goods_no") Long goods_no, Model model) {
+        GoodsVO goodsVO = goodsService.view(goods_no);
+        model.addAttribute("goods", goodsVO);
+        return "goods/view";  // 상품 상세보기 JSP로 포워딩
+    }
+    
+    @GetMapping(value = "/cpu_id",
+    		produces = {
+    			MediaType.APPLICATION_JSON_UTF8_VALUE	
+    		}
+    		)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getCpu_id() {
+        List<Cpu> cpu_id = goodsService.getcpu_id();
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("cpu_id", cpu_id);
+        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+    }
+    
+    @GetMapping(value = "/memory_id",
+    		produces = {
+    			MediaType.APPLICATION_JSON_UTF8_VALUE	
+    		}
+    		)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getMemory_id() {
+        List<Memory> memory_id = goodsService.getmemory_id();
+        Map<String, Object> map = new HashMap<String, Object>();
+        map.put("memory_id", memory_id);
+        return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+    }
+    
+    @GetMapping(value = "/graphic_Card_id",
+    		produces = {
+    				MediaType.APPLICATION_JSON_UTF8_VALUE	
+    }
+    		)
+    @ResponseBody
+    public ResponseEntity<Map<String, Object>> getGraphic_Card_id() {
+    	List<Graphic_Card> graphic_Card_id = goodsService.getgraphic_Card_id();
+    	Map<String, Object> map = new HashMap<String, Object>();
+    	map.put("graphic_Card_id", graphic_Card_id);
+    	return new ResponseEntity<Map<String,Object>>(map, HttpStatus.OK);
+    }
+    
+    
+    
+	    // 사양 변경 후 업데이트
+	    @PostMapping("/updateOptions")
+	    public String updateOptions(@RequestParam Long goods_no,
+                                @RequestParam int cpu_id,
+                                @RequestParam int memory_id,
+                                @RequestParam int graphic_Card_id,
+                                Model model) {
+        // 상품 조회
+        GoodsVO goods = goodsService.view(goods_no);
+
+        // 옵션 변경 처리
+        goods.setCpu_id(cpu_id);
+        goods.setMemory_id(memory_id);
+        goods.setGraphic_Card_id(graphic_Card_id);
+
+        // 옵션에 맞는 정보 설정
+        Cpu cpu = goodsService.getcpu_id(cpu_id);
+        Memory memory = goodsService.getmemory_id(memory_id);
+        Graphic_Card graphic_Card = goodsService.getgraphic_Card_id(graphic_Card_id);
+
+        goods.setCpu_name(cpu.getCpu_name());
+        goods.setMemory_name(memory.getMemory_name());
+        goods.setGraphic_Card_name(graphic_Card.getGraphic_Card_name());
+
+        // 변경된 상품 정보 DB 업데이트
+        goodsService.update(goods);
+
+        // 변경된 상품 정보 모델에 추가
+        model.addAttribute("goods", goods);
+        model.addAttribute("cpuList", goodsService.getCpuList());
+        model.addAttribute("memoryList", goodsService.getMemoryList());
+        model.addAttribute("graphicCardList", goodsService.getGraphic_CardList());
+
+        return "goods/view"; // 상품 상세 페이지로 이동
+    }
+    
+
+
+    // 상품 등록 폼
+    @GetMapping("/writeForm.do")
+    public String writeForm(Model model) {
+        model.addAttribute("cpuList", goodsService.getcpu_id());
+        model.addAttribute("memoryList", goodsService.getmemory_id());
+        model.addAttribute("graphic_CardList", goodsService.getgraphic_Card_id());
+        return "goods/write";
+    }
+
+    // 상품 등록 처리
+    @PostMapping("/write.do")
+    public String write(@RequestParam("cpu_id") int cpu_id,
+                        @RequestParam("memory_id") int memory_id,
+                        @RequestParam("graphic_Card_id") int graphic_Card_id,
+                        @RequestParam("image_main") MultipartFile image_main,		
+                        @RequestParam(value = "image_files", required = false) MultipartFile[] image_files,
+                        HttpServletRequest request) {
+
+        GoodsVO goods = new GoodsVO();
+        goods.setCpu_id(cpu_id);
+        goods.setMemory_id(memory_id);
+        goods.setGraphic_Card_id(graphic_Card_id);
+
+        // 대표 이미지 처리
+        String mainImagePath = goodsService.uploadImage(image_main, request);
+        goods.setImage_main(mainImagePath);
+
+        // 추가 이미지 처리
+        if (image_files != null) {
+            String[] imagePaths = goodsService.uploadImages(image_files);
+            goods.setImage_files(imagePaths);
+            
+        }  
+        goodsService.registerGoods(goods);
+
+        return "redirect:/goods/list.do";  // 등록 후 리스트 페이지로 리다이렉트
+    }   
+
+
+
+    // 상품 삭제 처리
+    @GetMapping("/delete.do")
+	public String delete(Long goods_no, RedirectAttributes rttr) {
+		log.info("delete.do ==================");
 		
-		PageObject pageObject = PageObject.getInstance(request);
-		List<CategoryVO> listBig = new ArrayList<CategoryVO>();
+		log.info("goods_no : " + goods_no);
+		Long result = goodsService.delete(goods_no);
 		
-		String perPageNum = request.getParameter("perPageNum");
-		
-		if (perPageNum == null) {
-			pageObject.setPerPageNum(8);
+		log.info("result : " + result);
+		if (result == 1) {
+			rttr.addFlashAttribute("msg",
+					"공지사항이 삭제되었습니다.");
+			return "redirect:list.do";
 		}
 		else {
-			pageObject.setPerPageNum(Integer.parseInt(perPageNum));
+			rttr.addFlashAttribute("msg",
+					"공지사항이 삭제되지 않았습니다.");
+			
+			return "redirect:/notice/view.do?no=" + goods_no;
 		}
 		
-		List<GoodsVO> list = new ArrayList<GoodsVO>();
+	}
 
-		listBig = service.listCategory(0);
-		list = service.list(pageObject, goodsSearchVO);
+    // 이미지 수정 처리
+    @PostMapping("/updateImage.do")
+    public String updateImage(@RequestParam("goods_no") Long goods_no) {
+        // 이미지 수정 로직을 처리한 후, 수정된 상품 페이지로 리다이렉트
+        return "redirect:/goods/updateForm.do?goods_no=" + goods_no;
+    }
 
-		log.info(list);
-		log.info("goodsSearchVO = " + goodsSearchVO);
-		if (goodsSearchVO.getCate_code1() != null && goodsSearchVO.getCate_code1() != 0) {
-			log.info("goodsSearchVO.cate_code1 = " + goodsSearchVO.getCate_code1());
-			List<CategoryVO> listMid = new ArrayList<CategoryVO>();
-			listMid = service.listCategory(goodsSearchVO.getCate_code1());
-			model.addAttribute("listMid", listMid);
-		}
-		
-		
-		
-		model.addAttribute("list", list);
-		model.addAttribute("listBig", listBig);
-		model.addAttribute("pageObject", pageObject);
-		//model.addAttribute("goodsSearchVO", goodsSearchVO)
-		
-		return "goods/list";
-	}
-	
-	// 상품 상세 보기
-	// @Controller(컨트롤러)에서는 리턴할때 jsp로 이동하거나 다른uri로 이동
-	@GetMapping("/view.do")
-	public String view(
-			Long goods_no,
-			PageObject pageObject,
-			// @ModelAttribute()를 선언하면 선언된 객체를 model에 담는다. -> JSP전달
-			@ModelAttribute(name="goodsSearchVO") GoodsSearchVO goodsSearchVO,
-			Model model
-			) {
-
-		// 상품의 상세정보 가져오기 (상품정보 + 가격정보)
-		model.addAttribute("vo", service.view(goods_no));
-		// 사이즈 정보 리스트
-		model.addAttribute("sizeList", service.sizeList(goods_no));
-		// 색상 정보 리스트
-		model.addAttribute("colorList", service.colorList(goods_no));
-		// 추가 이미지 정보 리스트
-		model.addAttribute("imageList", service.imageList(goods_no));
-		
-		// JSP EL객체
-		// ${goodsSearchVO.cate_code1}
-		// => goodsSearchVO.getCate_code1();
-		// ${goodsSearchVO.searchQuery}
-		// => goodsSearchVO.getSearchQuery();
-	
-		return "goods/view";
-	}
-	
-	
-	// 상품 등록 폼
-	@GetMapping("/writeForm.do")
-	public String writeForm(Model model) {
-		
-		List<CategoryVO> listBig = new ArrayList<CategoryVO>();
-		List<CategoryVO> listMid = new ArrayList<CategoryVO>();
-		
-		listBig = service.listCategory(0);
-		// 대분류 첫번째에 있는 중분류를 가져온다.
-		listMid = service.listCategory(listBig.get(0).getCate_code1());
-		
-		model.addAttribute("listBig", listBig);
-		model.addAttribute("listMid", listMid);
-		
-		return "goods/write";
-	}
-	
-	// 중분류 가져오기 
-	@GetMapping(value = "/getCategory.do",
-			produces = MediaType.APPLICATION_JSON_UTF8_VALUE)
-	@ResponseBody
-	public ResponseEntity<List<CategoryVO>> getCategory(Integer cate_code1) {
-		
-		List<CategoryVO> listMid = new ArrayList<CategoryVO>();
-		
-		listMid = service.listCategory(cate_code1);
-		
-		return new ResponseEntity<List<CategoryVO>>(listMid, HttpStatus.OK);
-	}
-	
-	// 상품 등록 처리
-	@PostMapping("/write.do")
-	public String write(
-	        GoodsVO vo,
-	        MultipartFile imageMain,
-	        @RequestParam("imageFiles") ArrayList<MultipartFile> imageFiles,
-	        @RequestParam("size_names") ArrayList<String> size_names,
-	        @RequestParam("color_names") ArrayList<String> color_names,
-	        HttpServletRequest request,
-	        RedirectAttributes rttr
-	) throws Exception {
-	    
-	    log.info("============write.do=================");
-	    log.info(vo);
-	    log.info("대표이미지 : " + imageMain.getOriginalFilename());
-	    log.info("<<추가이미지>>");
-	    for (MultipartFile file : imageFiles) {
-	        log.info(file.getOriginalFilename());
-	    }
-	    log.info("size : " + size_names);
-	    log.info("color : " + color_names);
-	    log.info("=====================================");
-	    
-	    // 대표 이미지 처리
-	    vo.setImage_name(FileUtil.upload(path, imageMain, request));
-	    
-	    List<String> imageFileNames = new ArrayList<String>();
-	    for (MultipartFile file : imageFiles) {
-	        imageFileNames.add(FileUtil.upload(path, file, request));
-	    }
-	    
-	    // 할인가격 세팅 시 DISCOUNT_RATE를 사용하지 않도록 수정
-	    // vo.setSale_price(vo.sale_price()); // 이 줄은 필요 없다면 삭제
-	    
-	    // 상품 등록 처리
-	    Integer result = service.write(vo, imageFileNames, size_names, color_names);
-	    
-	    rttr.addFlashAttribute("msg", "상품이 등록되었습니다.");
-	    
-	    return "redirect:list.do";
-	}
-	
-	// 상품 수정 폼
-	@GetMapping("/updateForm.do")
-	public String updateForm(
-			Long goods_no,
-			@ModelAttribute(name="pageObject") PageObject pageObject,
-			// @ModelAttribute()를 선언하면 선언된 객체를 model에 담는다. -> JSP전달
-			@ModelAttribute(name="goodsSearchVO") GoodsSearchVO goodsSearchVO,
-			Model model
-			) {
-		List<CategoryVO> listBig = new ArrayList<CategoryVO>();
-		List<CategoryVO> listMid = new ArrayList<CategoryVO>();
-		
-		listBig = service.listCategory(0);
-		// 대분류 첫번째에 있는 중분류를 가져온다.
-		listMid = service.listCategory(listBig.get(0).getCate_code1());
-		
-		// 상품의 상세정보 가져오기 (상품정보 + 가격정보)
-		model.addAttribute("goodsVO", service.view(goods_no));
-		// 사이즈 정보 리스트
-		model.addAttribute("sizeList", service.sizeList(goods_no));
-		// 색상 정보 리스트
-		model.addAttribute("colorList", service.colorList(goods_no));
-		// 추가 이미지 정보 리스트
-		model.addAttribute("imageList", service.imageList(goods_no));
-		model.addAttribute("listBig", listBig);
-		model.addAttribute("listMid", listMid);
-		
-		return "goods/update";
-	}
-	
-	// 상품 수정 처리
-	@PostMapping("/update.do")
-	public String update(
-	        @ModelAttribute(name = "goodsVO") GoodsVO goodsVO,
-	        @RequestParam("size_names") ArrayList<String> size_names,
-	        @RequestParam("color_names") ArrayList<String> color_names,
-	        PageObject pageObject,
-	        RedirectAttributes rttr) throws Exception {
-	    
-	    log.info("update.do===========");
-	    log.info(goodsVO);
-	    
-	    // 상품 사이즈 및 색상 수정 시 DISCOUNT_RATE와 관련된 부분 제거
-	    log.info("size_names : " + size_names);
-	    log.info("color_names : " + color_names);
-	    
-	    // 할인가격 세팅 시 DISCOUNT_RATE를 사용하지 않도록 수정
-	    // goodsVO.setSale_price(goodsVO.sale_price()); // 이 줄은 필요 없다면 삭제
-	    
-	    service.update(goodsVO, size_names, color_names);
-	    
-	    return "redirect:view.do?goods_no=" + goodsVO.getGoods_no() +
-	            "&" + pageObject.getPageQuery();
-	}
-	
-	// 이미지 수정 처리
-	@PostMapping("/updateImage.do")
-	public String updateImage(
-			) {
-		return "redirect:update.do?goods_no=";
-	}
-	
-	// 이미지 삭제 처리
-	@PostMapping("/deleteImage.do")
-	public String deleteImage(
-			) {
-		return "redirect:update.do?goods_no=";
-	}
-	
-
+    // 이미지 삭제 처리
+    @PostMapping("/deleteImage.do")
+    public String deleteImage(@RequestParam("goods_no") Long goods_no) {
+        // 이미지 삭제 후 상품 수정 페이지로 리다이렉트
+        return "redirect:/goods/updateForm.do?goods_no=" + goods_no;
+    }
 }
-
-
-
-
-
-
-

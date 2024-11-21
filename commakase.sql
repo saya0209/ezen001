@@ -118,26 +118,19 @@ CREATE TABLE goods (
 CREATE SEQUENCE goods_SEQ;
 
 -- 데이터 삽입
-INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (1, 'Intel i3 12100F', 100000);
-INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (2, 'Intel i3 13100F', 110000);
-INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (3, 'Intel i3 14100F', 120000);
-INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (4, 'Intel i5 12400F', 150000);
-INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (5, 'Intel i5 13400F', 200000);
-INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (6, 'Intel i5 14400F', 250000);
-INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (7, 'Intel i7 12700K', 500000);
-INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (8, 'Intel i7 13700K', 600000);
-INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (9, 'Intel i7 14700K', 700000);
+INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (1, 'Intel i3', 100000);
+INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (2, 'Intel i5', 150000);
+INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (3, 'Intel i7', 200000);
 
 INSERT INTO memory (memory_id, memory_name, memory_price) VALUES (1, '4GB', 30000);
 INSERT INTO memory (memory_id, memory_name, memory_price) VALUES (2, '8GB', 60000);
 INSERT INTO memory (memory_id, memory_name, memory_price) VALUES (3, '16GB', 120000);
 
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (1, 'GTX1060', 100000);
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (2, 'GTX1080', 150000);
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (3, 'GTX2060', 300000);
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (4, 'GTX2080', 350000);
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (5, 'GTX3060', 400000);
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (6, 'GTX3080', 1000000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (1, 'GTX1060', 200000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (2, 'GTX2060', 300000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (3, 'GTX3060', 400000);
+
+
 
 
 -- community
@@ -256,23 +249,26 @@ VALUES (1, 'admin', '배송 안내', '배송은 3일 이내에 가능합니다.', sysdate, NULL,
 INSERT INTO answer (answer_no, id, answer_title, answer_content, answerDate, refNo, ordNo, levNo, parentNo)
 VALUES (2, 'admin', '환불 안내', '환불은 요청 후 5일 이내에 처리됩니다.', sysdate, NULL, 1, 0, 2);
 
+-- goods_review
+DROP TABLE goods_review CASCADE CONSTRAINTS;
+DROP SEQUENCE goods_review_seq;
 
-DROP TABLE goods_reply CASCADE CONSTRAINTS;
-DROP SEQUENCE goods_reply_seq;
-
-CREATE TABLE goods_reply (
-    ID VARCHAR2(30),
-    PW VARCHAR2(60),
-    write_date DATE,
+-- 테이블 생성
+CREATE TABLE goods_review (
+    rno NUMBER PRIMARY KEY, -- rno를 기본 키로 설정
+    goods_no NUMBER NOT NULL,
     content VARCHAR2(300),
-    star_point NUMBER(5),
+    id VARCHAR2(50) NOT NULL,
+    nicname VARCHAR2(30) NOT NULL,
+    writeDate DATE DEFAULT SYSDATE,
     image_name VARCHAR2(300),
-    good_point NUMBER(10),
-    reply_no NUMBER PRIMARY KEY,
-    goods_no NUMBER,
-    goods_name VARCHAR2(300)
+    rating NUMBER
 );
-CREATE SEQUENCE goods_reply_seq;
+
+-- 유니크 제약 조건 추가
+ALTER TABLE goods_review ADD CONSTRAINT unique_review UNIQUE (id, goods_no);
+
+CREATE SEQUENCE goods_review_seq;
 
 -- cart
 DROP TABLE cart CASCADE CONSTRAINTS;

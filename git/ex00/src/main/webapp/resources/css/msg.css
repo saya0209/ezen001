@@ -1,0 +1,26 @@
+@charset "UTF-8";
+
+/* 삭제 메시지 스타일 */
+.delete-message {
+    font-size: 18px;
+    font-weight: 600; /* Bold */
+    margin: 0;
+}
+
+/* 삭제 경고 메시지 스타일 */
+.delete-warning {
+    font-size: 14px;
+    font-weight: normal;
+    color: #666;
+    margin: 5px 0 0;
+}
+
+/* 모달 바디 영역 높이 */
+.modal-body {
+    height: 120px;
+}
+
+/* 모달 푸터 버튼들 가운데 정렬 */
+.modal-footer {
+    justify-content: center;
+}

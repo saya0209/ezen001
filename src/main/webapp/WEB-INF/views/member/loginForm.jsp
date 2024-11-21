@@ -26,6 +26,12 @@
             <label for="pw">Password</label>
             <input type="password" class="form-control" name="pw" id="pw" required placeHolder="password 입력">
         </div>
+        
+        <!-- 오류 메시지 출력 영역 -->
+        <div class="form-group" style="color: red; margin-top: 10px;">
+            ${msg} <!-- rttr.addFlashAttribute로 전달된 msg 출력 -->
+        </div>
+        
         <button type="submit" class="btn btn-primary">로그인</button>
         <button type="button" class="btn btn-success" id="writeBtn">회원가입</button>
     </form>

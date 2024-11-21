@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper
+  PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+  "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zerock.memberAjax.mapper.MemberAjaxMapper">
+
+<!-- viewCart -->
+    <select id="viewCart" resultType="org.zerock.cart.vo.CartItemVO">
+        SELECT id, goods_no, goods_name, image_name, price, quantity,
+			 goods_total_price, selected_goods_price, delivery_charge, cart_no,
+			 discount, total_discount, final_price, selected
+        FROM cart
+        WHERE id = #{id, jdbcType=VARCHAR}
+    </select>
+
+  
+<!-- viewMember -->
+  <select id="viewMember" resultType="org.zerock.member.vo.LoginVO">
+  <!-- <select id="viewMember" resultType="org.zerock.memberAjax.vo.MemberAjaxVO"> -->
+  <!-- 아이디, 닉네임, 전번, 이메일, 주소, 가입일, 최근 접속일, 회원 등급, 회원 상태 -->
+  select id, nicname, tel, email, address, regDate, conDate, gradeName, status
+  from 
+  	member
+  where
+  	id = #{id, jdbcType=VARCHAR}
+  </select>
+ 
+</mapper>
+
+<!-- 
+	select m.id, c.goods_no, c.goods_name, c.image_name, c.price,quantity,
+	 c.goods_total_price, c.selected_goods_price, c.delivery_charge, c.cart_no,
+	 c.discount, c.total_discount, c.selected, c.totalAmount, c.purchase_date, c.category
+	 from 
+	 	member m, cart c
+	 where
+			(m.id=#{id})
+			and
+			(m.id = c.id)
+			 -->

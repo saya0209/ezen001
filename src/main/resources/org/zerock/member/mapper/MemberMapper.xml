@@ -45,7 +45,7 @@
   <select id="view" resultType="org.zerock.member.vo.MemberVO">
   <!-- 아이디, 닉네임, 전번, 이메일, 주소, 가입일, 최근 접속일, 회원 등급, 회원 상태 -->
   select m.id, m.nicname, m.tel, m.email, m.address, m.regDate, m.conDate, 
-  g.gradeName, m.status, m.gradeNo
+  g.gradeName, m.status, m.gradeNo, m.grade_image
  	from member m, grade g
  	where 
   	(id = #{id, jdbcType=VARCHAR})

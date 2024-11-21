@@ -19,17 +19,15 @@ public class AuthrityInterceptor extends HandlerInterceptorAdapter {
 					
 	// 권한 정보를 등록하는 초기화 블럭				
 	{				
-		// 등급이 1 이상이면 로그인이 필요, 등급이 9이면 관리자 권한 필요			
+		// 등급이 1 이상이면 로그인이 필요, 등급이 9이면 관리자 권한 필요
+		
 		// 댓글 관련 기능 (로그인 권한 필요)			
 		authMap.put("/goodsreply/write.do", 1);			
 		authMap.put("/goodsreply/update.do", 1);			
 		authMap.put("/goodsreply/delete.do", 1);			
 		authMap.put("/communityreply/write.do", 1);			
 		authMap.put("/communityreply/update.do", 1);			
-		authMap.put("/communityreply/delete.do", 1);			
-					
-		// 로그아웃		
-		//authMap.put("/member/logout.do", 1);			
+		authMap.put("/communityreply/delete.do", 1);
 					
 		// 관리자 전용 페이지 (관리자 등급 필요)							
 		authMap.put("/member/list.do", 9);										

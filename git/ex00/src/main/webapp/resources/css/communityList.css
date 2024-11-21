@@ -1,0 +1,143 @@
+@charset "UTF-8";
+
+/* 전체 기본 스타일 */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    color: #333;
+}
+
+.container {
+    max-width: 900px;
+    margin-top: 20px;
+}
+
+.board-title {
+    font-size: 1.8em;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 20px;
+}
+
+/* 검색 폼 */
+.search-form {
+    display: flex;
+    align-items: center;
+}
+
+.search-form input[type="text"] {
+    flex: 1;
+    padding: 8px 10px;
+    border-radius: 4px;
+    border: 1px solid #ced4da;
+}
+
+.search-form button {
+    margin-left: 8px;
+    padding: 8px 12px;
+    border-radius: 4px;
+}
+
+.search-form .btn {
+    background-color: #343a40;
+    color: #fff;
+    border: none;
+}
+
+.search-form .btn:hover {
+    background-color: #495057;
+}
+
+/* 글 작성 버튼 */
+.btn-dark {
+    background-color: #343a40;
+    color: #fff;
+    border: none;
+    padding: 8px 12px;
+    border-radius: 4px;
+    text-decoration: none;
+}
+
+.btn-dark:hover {
+    background-color: #495057;
+}
+
+/* 게시판 테이블 스타일 */
+.board-table {
+    margin-top: 20px;
+    border: 1px solid #dee2e6;
+    background-color: #fff;
+}
+
+.board-table thead {
+    background-color: #e9ecef;
+}
+
+.board-table th, .board-table td {
+    vertical-align: middle;
+    padding: 8px 8px;  /* General padding for all cells */
+    text-align: center;
+}
+
+/* Adjust padding between 작성자, 작성일, 조회수 columns to reduce space */
+.board-table td.text-center:nth-child(2), /* 작성자 */
+.board-table td.text-center:nth-child(3), /* 작성일 */
+.board-table td.text-center:nth-child(4)  /* 조회수 */
+{
+    padding-left: 3px;  /* Reduced left padding */
+    padding-right: 3px; /* Reduced right padding */
+}
+
+/* Title column (첫번째 열) has more space on the left */
+.board-table .post-title {
+    text-align: left;
+    padding-left: 16px; /* Keep more padding on the left for title */
+    padding-right: 12px; /* Optional: adjust right padding */
+}
+
+.board-table th {
+    font-weight: bold;
+    color: #495057;
+}
+
+.board-table .post-title a {
+    color: #007bff;
+    text-decoration: none;
+}
+
+.board-table .post-title a:hover {
+    color: #0056b3;
+    text-decoration: underline;
+}
+
+.board-table .fa {
+    margin-right: 4px;
+}
+
+/* 아이콘 스타일 */
+.fa-thumbs-up,
+.fa-comments,
+.fa-file-image-o {
+    color: #6c757d;
+}
+
+/* 페이지네이션 */
+.pagination-bar {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+}
+
+.pagination .page-link {
+    color: #007bff;
+}
+
+.pagination .page-link:hover {
+    color: #0056b3;
+}
+
+.pagination .page-item.active .page-link {
+    background-color: #007bff;
+    border-color: #007bff;
+    color: #fff;
+}

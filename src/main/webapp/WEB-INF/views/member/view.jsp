@@ -48,7 +48,7 @@ $(function() {
 	<div class="card">
 	  <div class="card-header">
 	  	<div>
-	  		${vo.nicname } (${vo.id }) ${vo.grade_image }
+	  		${vo.nicname } (${vo.id })
 	  	</div>
 		</div>
 	  <div class="card-body" id="infoDiv">
@@ -58,10 +58,10 @@ $(function() {
 	  		</c:if>
 	  		<c:if test="${ !empty vo.grade_image}">
 		  		<div class="card">
-					  <img class="card-img-top" src="${vo.grade_image }" alt="image"
-					  	 style="width:100px; height:100px;">
-							<a href="${vo.grade_image }" class="btn btn-success" download>다운로드</a>
-					</div>
+					<img class="card-img-top" src="${vo.grade_image }" alt="image"
+					     style="width:100px; height:100px; display: block; margin: 0 auto;">
+					<!-- <a href="${login.grade_image }" class="btn btn-success" download>다운로드</a> -->
+				</div>
 	  		</c:if>
 	  		<!-- Button to Open the Modal -->
 				<button type="button" class="btn btn-primary"

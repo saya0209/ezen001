@@ -326,7 +326,7 @@ $(document).ready(function() {
 	      
 	        <!-- Modal Header -->
 	        <div class="modal-header">
-	          <h4 class="modal-title">처리 결과 모달 창</h4>
+	          <h4 class="modal-title">처리 결과</h4>
 	          <button type="button" class="close" data-dismiss="modal">&times;</button>
 	        </div>
 	        

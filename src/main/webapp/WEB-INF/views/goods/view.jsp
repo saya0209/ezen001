@@ -7,6 +7,37 @@
     <meta charset="UTF-8">
     <title>상품 정보</title>
     <style type="text/css">
+	    /* 리뷰 항목 구분 스타일 */
+	.review-item {
+	    border-bottom: 1px solid #ccc; /* 각 리뷰 항목에 구분선 추가 */
+	    padding-bottom: 20px;
+	    margin-bottom: 20px;
+	}
+	
+	.review-container {
+	    background-color: #f9f9f9; /* 배경색 추가 */
+	    padding: 10px;
+	    border-radius: 5px;
+	}
+	
+	/* 헤더 스타일 */
+	.review-item .header {
+	    font-weight: bold;
+	    font-size: 14px;
+	}
+	
+	/* 리뷰 내용 스타일 */
+	.review-item .reviewContent {
+	    font-size: 13px;
+	    color: #333;
+	}
+	
+	/* 평가 스타일 */
+	.review-item .rating {
+	    margin-top: 10px;
+	    font-size: 14px;
+	}
+	    
         body {
             font-family: Arial, sans-serif;
             background-color: #f7f7f7;
@@ -315,8 +346,30 @@
 
 
     </style>
-	<script>
+	<!-- 1. 필요한 전역변수 선언 : 직접코딩 -->
+	<script type="text/javascript">
+	// 보고 있는 일반 게시판 글번호
+	let id = "test1";// id를 하드코딩 - member table에 등록된 id중 - 로그인 id
+	let goods_no = ${goods.goods_no};
+	let replyPage = 1; // 댓글의 현재 페이지
+	console.log("전역변수 goods_no : " + goods_no);
+	</script>
 	
+	<!-- 2. 날짜 및 시간 처리함수 선언 -->
+	<script type="text/javascript" src="/js/dateTime.js"></script>
+	
+	<!-- 댓글 페이지네이션 함수 선언 -->
+	<script type="text/javascript" src="/js/util.js"></script>
+	
+	<!-- 3. 댓글 객체 (replySerive) 를 선언 : Ajax 처리부분 포함 -->
+	<!-- 댓글 처리하는 모든 곳에 사용하는 부분을 코딩 -->
+	<script type="text/javascript" src="/js/review.js"></script>
+
+	<!-- 4. 댓글 객체(reply.js에서 선언한 replyService)를 호출하여 처리 + 이벤트처리 -->
+	<!-- 일반 게시판 댓글에 사용되는 부분을 코딩 -->
+	<script type="text/javascript" src="/js/reviewProcess.js"></script>
+	
+	<script>
 	$(function() {
 	    // 초기 가격 가져오기 (JSP에서 출력된 값을 바탕으로)
 	    let cpu_price = parseInt($("#cpu_name").data('price')) || 0;
@@ -707,7 +760,6 @@ $(function() {
 		            <tr>
 		                <td>CPU</td>
 		                <td class="cpu_name" id="cpu_name" data-price="${goods.cpu_price }">${goods.cpu_name}</td>
-<%-- 		                <td><button onclick="openModal('CPU', ${goods.goodsNo})">사양변경하기</button></td> --%>
 						<td><button id="cpuChangeGoods">사양변경하기</button></td>
 		            </tr>
 		            <tr>
@@ -725,6 +777,10 @@ $(function() {
 		        <div class="card-footer">
 				<button class="btn btn-danger" id="deleteBtn"
 					data-toggle="modal" data-target="#deleteModal">삭제</button>
+			</div>
+			<!-- 리뷰 -->
+			<div>
+				<jsp:include page="goodsReview.jsp"></jsp:include>
 			</div>
         </div>
 	   <!-- 모달 창 -->

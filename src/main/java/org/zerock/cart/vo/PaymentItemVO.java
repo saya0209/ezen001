@@ -17,16 +17,11 @@ public class PaymentItemVO {
     private Long goods_total_price;         // 상품 총 가격 (price * quantity + delivery_charge)
     private Long selected_goods_price; // 선택된 상품 총 가격 (체크된 상품의 총 합계)
     private Long delivery_charge;       // 배송비
-    private Long cart_no;              // 장바구니 번호
     private Long discount;              // 개별 상품의 할인액
-    private Long total_discount;        // 전체 할인가
     private Integer selected;           // 선택 여부 (1: 선택, 0: 미선택)
     private Long totalAmount;           // 최종 가격 (장바구니에 담긴 모든 상품의 총 합계)
     private Date purchase_date;         // 구매 날짜
-    private String category;            // 상품 카테고리
 
-    
-    
 }
 
 

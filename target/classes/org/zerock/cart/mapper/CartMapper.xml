@@ -34,7 +34,7 @@
     <!-- 총 가격 업데이트 -->
     <update id="updateGoodsTotalPrice">
         UPDATE cart
-        SET goods_Tprice = #{goods_Tprice}
+        SET goods_total_price = #{goods_Tprice}
         WHERE goods_no = #{goods_no}
     </update>
 

@@ -25,7 +25,7 @@
 
     <!-- 상품 등록 -->
     <insert id="insertGoods" parameterType="org.zerock.goods.vo.GoodsVO">
-        insert into goods (goods_no, cpu_id, memory_id, graphic_Card_id, cpu_name, memory_name, graphic_Card_name, total_price, image_main)
+        insert into goods (goods_no, cpu_id, memory_id, graphic_Card_id, cpu_name, memory_name, graphic_Card_name, total_price, category, delivery_charge, discount, image_name)
         values (goods_seq.NEXTVAL, #{cpu_id}, #{memory_id}, #{graphic_Card_id},
         (SELECT cpu_name FROM cpu WHERE cpu_id = #{cpu_id}),
         (SELECT memory_name FROM memory WHERE memory_id = #{memory_id}), 
@@ -36,8 +36,8 @@
             select memory_price from memory where memory_id = #{memory_id}
         ) + (
             select graphic_Card_price from graphic_Card where graphic_Card_id = #{graphic_Card_id}
-        ),
-        #{image_main}
+        ), #{category}, #{delivery_charge}, #{discount},
+        #{image_name}
         )
     </insert>
 
@@ -48,10 +48,11 @@
                g.memory_id,
                g.graphic_card_id,
                g.total_price,
+               g.category,
                c.cpu_name,           <!-- CPU 이름 -->
                m.memory_name,     <!-- 메모리 이름 -->
                gc.graphic_card_name, <!-- 그래픽 카드 이름 -->
-               g.image_main
+               g.image_name
         from goods g
         join cpu c ON g.cpu_id = c.cpu_id
         join memory m ON g.memory_id = m.memory_id
@@ -86,7 +87,10 @@
         g.memory_name,
         g.graphic_card_name,
         g.total_price,
-        g.image_main,
+        g.category,
+        g.image_name,
+        g.delivery_charge, 
+        g.discount,
         c.cpu_price,
         m.memory_price,
         gr.graphic_Card_price
@@ -97,6 +101,26 @@
     	and g.graphic_card_id = gr.graphic_card_id
     </select>
 
+	<select id="selectGoodsCategory" resultType="org.zerock.goods.vo.GoodsVO">
+	    select
+		    goods_no,
+	        cpu_id,
+	        memory_id,
+	        graphic_card_id,
+	        cpu_name,
+	        memory_name,
+	        graphic_card_name,
+	        total_price,
+	        category,
+	        delivery_charge,
+	        discount,
+	        image_name,
+	        image_files 
+	    from goods
+	    where category = #{category}  <!-- 카테고리로 상품 필터링 -->
+	    order by goods_no desc
+	</select>
+	
 	<select id="getcpu_id" resultType="org.zerock.goods.vo.Cpu">
 	    SELECT cpu_id, cpu_name, cpu_price 
 	    FROM cpu
@@ -143,7 +167,7 @@
 	</select>
 	
 	<!--  상품 이미지 리스트  -->
-	<select id="image_main" resultType="org.zerock.goods.vo.GoodsImageVO"> 
+	<select id="image_name" resultType="org.zerock.goods.vo.GoodsImageVO"> 
 		select goods_image_no, image_name, goods_no from goods_image where goods_no = #{goods_no} 
 	</select>
 

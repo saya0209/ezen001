@@ -62,7 +62,7 @@ public interface GoodsMapper {
     
     
  // 상품 이미지 리스트
- 	public List<GoodsImageVO> image_main(@Param("goods_no") Long goods_no);
+ 	public List<GoodsImageVO> image_name(@Param("goods_no") Long goods_no);
 
 
     // 이미지 삭제
@@ -87,5 +87,7 @@ public interface GoodsMapper {
 
 	public Cpu getCpuById(int cpuId);
 
+	public List<GoodsVO> selectGoodsCategory(@Param("category") String category, @Param("pageObject") PageObject pageObject);
+	
 	
 }

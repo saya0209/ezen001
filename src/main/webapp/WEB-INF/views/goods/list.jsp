@@ -82,7 +82,23 @@ $(function(){
 <body>
 
 <div class="container p-3 my-3">
-    <h1>인터넷/사무용</h1>
+    <h1>
+    <c:if test="${category == 'goods1' }">
+    인터넷/사무용
+    </c:if>
+    <c:if test="${category == 'goods2' }">
+    3D게임/그래픽용
+    </c:if>
+    <c:if test="${category == 'goods3' }">
+    고성능/전문가용
+    </c:if>
+    <c:if test="${category == 'goods4' }">
+    노트북
+    </c:if>
+    <c:if test="${category == 'goods5' }">
+    부품/주변기기
+    </c:if>
+    </h1>
     <form action="list.do" id="searchForm">
         <input type="hidden" name="page" value="${pageObject.page}">
         <!-- 검색 및 필터 시작 -->
@@ -114,7 +130,7 @@ $(function(){
                     <div class="card">
                         <div class="imageDiv">
                             <!-- 여기에 상품 이미지 추가 -->
-                            <img src="${vo.image_main }" alt="이미지">
+                            <img src="${vo.image_name }" alt="이미지">
                         </div>
                         <div class="card-body">
                             <h5 class="title">${vo.cpu_name}</h5>
@@ -135,6 +151,7 @@ $(function(){
 
     <div class="footer">
         <form action="writeForm.do" method="get">
+        	<input type="hidden" name="category" value="${category }">
 		    <!-- 폼 필드들 -->
 		    <button type="submit" class="btn btn-primary">등록</button>
 		</form>

@@ -165,7 +165,7 @@
 		.sidebar {
 		    display: none;
 		    position: absolute;
-		    top: 255px;
+		    top: 241px;
 		    left: 0; /* 왼쪽 정렬 */
 		    background-color: #002244;
 		    padding: 20px;
@@ -300,11 +300,11 @@ $(document).ready(function() {
         </nav>
 		<!-- 사이드바 메뉴 -->
         <div class="sidebar">
-            <a href="#">부품/주변기기</a>
-            <a href="#">인터넷/사무용</a>
-            <a href="#">3D게임/그래픽용</a>
-            <a href="#">고성능/전문가용</a>
-            <a href="#">노트북</a>
+            <a href="/goods/list.do?category=goods1">인터넷/사무용</a>
+            <a href="/goods/list.do?category=goods2">3D게임/그래픽용</a>
+            <a href="/goods/list.do?category=goods3">고성능/전문가용</a>
+            <a href="/goods/list.do?category=goods4">노트북</a>
+            <a href="/goods/list.do?category=goods5">부품/주변기기</a>
             <a href="#">QNA게시판</a>
         </div>
 
@@ -326,7 +326,7 @@ $(document).ready(function() {
 	      
 	        <!-- Modal Header -->
 	        <div class="modal-header">
-	          <h4 class="modal-title">처리 결과</h4>
+	          <h4 class="modal-title">처리 결과 모달 창</h4>
 	          <button type="button" class="close" data-dismiss="modal">&times;</button>
 	        </div>
 	        

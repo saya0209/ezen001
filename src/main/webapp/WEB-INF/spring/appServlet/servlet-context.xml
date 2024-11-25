@@ -51,13 +51,6 @@
 	<context:annotation-config></context:annotation-config>
 	<aop:aspectj-autoproxy></aop:aspectj-autoproxy>
 	
-	<interceptors>
-		<interceptor>
-			<mapping path="/**"></mapping>
-			<beans:bean class="org.zerock.util.interceptor.AuthrityInterceptor">
-			</beans:bean>
-		</interceptor>
-	</interceptors>
 	
 	
 </beans:beans>

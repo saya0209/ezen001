@@ -113,6 +113,7 @@ public class GoodsServiceImpl implements GoodsService {
     }
 
     
+    
     // 상품 리스트 조회
     @Override
     public List<GoodsVO> list(PageObject pageObject) {
@@ -136,9 +137,9 @@ public class GoodsServiceImpl implements GoodsService {
     
     // 상품 이미지 리스트
  	@Override
- 	public List<GoodsImageVO> image_main(Long goods_no) {
+ 	public List<GoodsImageVO> image_name(Long goods_no) {
  		// TODO Auto-generated method stub
- 		return goodsMapper.image_main(goods_no);
+ 		return goodsMapper.image_name(goods_no);
  	}
  	
  // 이미지 업로드 기본 경로 (프로퍼티로 관리 가능)
@@ -250,4 +251,9 @@ public class GoodsServiceImpl implements GoodsService {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	
+	@Override
+	public List<GoodsVO> listCategory(String category, PageObject pageObject) {
+        return goodsMapper.selectGoodsCategory(category, pageObject);  // 카테고리로 상품 조회
+    }
 }

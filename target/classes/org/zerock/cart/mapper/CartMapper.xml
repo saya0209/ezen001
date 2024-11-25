@@ -11,6 +11,17 @@
         WHERE id = #{id}
     </select>
     
+    <select id="buyList" parameterType="string" resultType="org.zerock.buy.vo.BuyItemVO">
+        SELECT *
+        FROM buy
+        WHERE id = #{id}
+    </select>
+    
+    <delete id="deleteByUserId" parameterType="String">
+	    DELETE FROM buy
+	    WHERE id = #{id}
+	</delete>
+    
     <select id="getCartItem" parameterType="map" resultType="org.zerock.cart.vo.CartItemVO">
 	    SELECT *
 	    FROM cart
@@ -44,4 +55,49 @@
         FROM cart
         WHERE goods_no = #{goods_no}
     </select>
+    
+    <!-- 결제완료시 선택된 상품 삭제처리 -->
+    <delete id="deleteSelectedItems" parameterType="String">
+	    DELETE FROM cart
+	    WHERE id = #{id} AND selected != 0
+	</delete>
+    
+    <insert id="insertHistory" parameterType="org.zerock.cart.vo.HistoryVO">
+	    INSERT INTO payment_history (orderNumber, id, paymentDate, totalAmount, status)
+	    VALUES (#{orderNumber}, #{id}, #{paymentDate}, #{totalAmount}, #{status})
+	</insert>
+	
+	<insert id="insertPaymentDetail" parameterType="org.zerock.cart.vo.PaymentDetailVO">
+	    INSERT INTO payment_detail (orderNumber, goods_no, goods_name, price, quantity, goods_total_price)
+	    VALUES (#{orderNumber}, #{goods_no}, #{goods_name}, #{price}, #{quantity}, #{goods_total_price})
+	</insert>
+	
+	<select id="selectHistoryByUserId" resultType="org.zerock.cart.vo.HistoryVO">
+    	SELECT * FROM payment_history WHERE id = #{id} ORDER BY paymentDate DESC
+	</select>
+	
+	<select id="selectPaymentDetailsByOrderNumber" resultType="org.zerock.cart.vo.PaymentDetailVO">
+	    SELECT * FROM payment_detail WHERE orderNumber = #{orderNumber}
+	</select>
+	
+	<select id="getHistoryByOrderNumber" parameterType="String" resultType="org.zerock.cart.vo.HistoryVO">
+	    SELECT orderNumber, id, paymentDate, totalAmount, status
+	    FROM payment_history
+	    WHERE orderNumber = #{orderNumber}
+	</select>
+	
+	<insert id="insertCartItem" parameterType="org.zerock.cart.vo.CartItemVO">
+	    insert into cart (id, image_name, goods_no, price, delivery_charge, discount, goods_name, quantity, goods_total_price, selected_goods_price, selected)
+	    values (#{id}, #{image_name}, #{goods_no}, #{price}, #{delivery_charge}, #{discount}, #{goods_name}, #{quantity}, #{goods_total_price}, #{selected_goods_price}, #{selected})
+	</insert>
+	
+	<insert id="insertBuyItem" parameterType="org.zerock.buy.vo.BuyItemVO">
+	    insert into buy (id, image_name, goods_no, price, delivery_charge, discount, goods_name, quantity, goods_total_price, selected_goods_price)
+	    values (#{id}, #{image_name}, #{goods_no}, #{price}, #{delivery_charge}, #{discount}, #{goods_name}, #{quantity}, #{goods_total_price}, #{selected_goods_price})
+	</insert>
+	
+	
 </mapper>
+
+
+  

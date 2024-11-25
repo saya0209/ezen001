@@ -1,11 +1,15 @@
 package org.zerock.cart.controller;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -13,11 +17,17 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.zerock.buy.vo.BuyItemVO;
 import org.zerock.cart.service.CartService;
 import org.zerock.cart.vo.CartItemVO;
+import org.zerock.cart.vo.HistoryVO;
+import org.zerock.cart.vo.PaymentDetailVO;
+import org.zerock.cart.vo.PaymentItemVO;
+
 import lombok.extern.log4j.Log4j;
 
 @Controller
@@ -77,36 +87,225 @@ public class CartController {
         }
     }
     
-    // cd /c/Users/EZEN/git/commakase/ex00
     // 결제화면
-    @PostMapping("/paymentForm.do")
+    @GetMapping("/paymentForm.do")
     public String paymentPageForm(@RequestParam("id") String id, 
-                              Model model) {
+                                   @RequestParam(value = "now", required = false) Integer now, 
+                                   @RequestParam(value = "goods_no", required = false) Integer goodsNo, 
+                                   Model model) {
         List<CartItemVO> cartItems = service.cartList(id);
-        Long totalAmount = service.calculateTotalAmount(cartItems);
+        List<PaymentItemVO> selectedItems = new ArrayList<>();
+        List<BuyItemVO> buyItems = service.buyList(id);
 
+        selectedItems.clear();
         log.info("paymentPageForm() 호출 - id: " + id);
-        log.info("paymentPage() 호출 - totalAmount: " + totalAmount);
+        
+        // 바로결제 모드일 경우
+        for (BuyItemVO item : buyItems) {
+            
+	    	if (now != null && now == 1) {
+	    		log.info("바로결제 실행");
+	    		PaymentItemVO pvo = new PaymentItemVO();
+	            pvo.setGoods_no(item.getGoods_no());
+	            pvo.setGoods_name(item.getGoods_name());
+	            pvo.setImage_name(item.getImage_name());
+	            pvo.setPrice(item.getPrice());
+	            pvo.setQuantity(item.getQuantity());
+	            pvo.setGoods_total_price(item.getGoods_total_price());
+	            selectedItems.add(pvo);
+	    	
+	    	}
+        }
+        log.info(selectedItems);
+
+        // 장바구니에서 선택된 상품만 pvo에 추가
+        for (CartItemVO item : cartItems) {
+        	if (now == null) {
+	            if (item.getSelected() == 1) { // `selected` 필드가 true인 경우
+	                PaymentItemVO pvo = new PaymentItemVO();
+	                pvo.setGoods_no(item.getGoods_no());
+	                pvo.setGoods_name(item.getGoods_name());
+	                pvo.setImage_name(item.getImage_name());
+	                pvo.setPrice(item.getPrice());
+	                pvo.setQuantity(item.getQuantity());
+	                pvo.setGoods_total_price(item.getGoods_total_price());
+	                selectedItems.add(pvo);
+	            }
+            }
+        }
+
         // 결제에 필요한 데이터 추가
         model.addAttribute("id", id);
-        model.addAttribute("cartItems", cartItems);
-        model.addAttribute("totalAmount", totalAmount);
-
+        model.addAttribute("cartItems", selectedItems);  // 선택된 항목만 전달
+        
+        log.info("paymentPageForm()----");
+        
         return "cart/payment"; // 결제 페이지로 이동
     }
     
 
-    // 결제완료 화면
+ // 결제완료 화면
     @PostMapping("/completePayment/{id}")
     public String completePayment(@PathVariable("id") String id, Model model) {
         log.info("completePayment() 호출 - id: " + id);
-        String orderNumber = "ORD-" + id + "-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
 
-        // 필요한 경우 결제 완료에 필요한 정보 추가
+        // 주문번호 생성
+        String orderNumber = "ORD-" + id + "-" + new SimpleDateFormat("yyyyMMddHHmmss").format(new Date());
+        List<CartItemVO> cartItems = service.cartList(id);
+        
+        int totalAmount = 0;
+        List<PaymentDetailVO> paymentDetails = new ArrayList<>();
+        List<PaymentItemVO> selectedItems = new ArrayList<>();  // 추가된 부분
+        
+        // 선택된 상품 정보 저장 및 결제 총액 계산
+        for (CartItemVO item : cartItems) {
+            if (item.getSelected() == 1) {
+                PaymentDetailVO detail = new PaymentDetailVO();
+                detail.setId(id);
+                detail.setOrderNumber(orderNumber);
+                detail.setGoods_no(item.getGoods_no());
+                detail.setGoods_name(item.getGoods_name());
+                detail.setPrice(item.getPrice());
+                detail.setPaymentDate(new Date());
+                detail.setQuantity(item.getQuantity());
+                detail.setGoods_total_price(item.getGoods_total_price());
+
+                paymentDetails.add(detail);
+                totalAmount += item.getGoods_total_price();
+                
+                // PaymentItemVO에 선택된 상품 추가 (selectedItems에 추가)
+                PaymentItemVO pvo = new PaymentItemVO();
+                pvo.setGoods_no(item.getGoods_no());
+                pvo.setGoods_name(item.getGoods_name());
+                pvo.setImage_name(item.getImage_name());  // 만약 이미지가 있다면 추가
+                pvo.setPrice(item.getPrice());
+                pvo.setQuantity(item.getQuantity());
+                pvo.setGoods_total_price(item.getGoods_total_price());
+                
+                selectedItems.add(pvo);  // 선택된 상품을 selectedItems에 추가
+            }
+        }
+        
+     // 바로구매한 상품도 결제 내역에 추가
+        List<BuyItemVO> buyItems = service.buyList(id);
+        for (BuyItemVO item : buyItems) {
+            PaymentDetailVO detail = new PaymentDetailVO();
+            detail.setId(id);
+            detail.setOrderNumber(orderNumber);
+            detail.setGoods_no(item.getGoods_no());
+            detail.setGoods_name(item.getGoods_name());
+            detail.setPrice(item.getPrice());
+            detail.setPaymentDate(new Date());
+            detail.setQuantity(item.getQuantity());
+            detail.setGoods_total_price(item.getGoods_total_price());
+
+            paymentDetails.add(detail);
+            totalAmount += item.getGoods_total_price();
+
+            // PaymentItemVO에 바로구매한 상품 추가
+            PaymentItemVO pvo = new PaymentItemVO();
+            pvo.setGoods_no(item.getGoods_no());
+            pvo.setGoods_name(item.getGoods_name());
+            pvo.setImage_name(item.getImage_name());
+            pvo.setPrice(item.getPrice());
+            pvo.setQuantity(item.getQuantity());
+            pvo.setGoods_total_price(item.getGoods_total_price());
+            selectedItems.add(pvo);
+        }
+        // HistoryVO 생성 후 DB에 저장
+        HistoryVO history = new HistoryVO();
+        history.setOrderNumber(orderNumber);
+        history.setId(id);
+        history.setPaymentDate(new Date());
+        history.setTotalAmount(totalAmount);
+        history.setStatus("완료");
+
+        log.info(history.getTotalAmount());
+        log.info(history.getId());
+        
+        // CartMapper를 통해 결제 내역 저장
+        service.savePaymentHistory(history, paymentDetails);
+
+        // 결제 완료 후 선택 항목 제거
+        service.removeSelectedItems(id);
+
         model.addAttribute("id", id);
         model.addAttribute("orderNumber", orderNumber);
         model.addAttribute("message", "결제가 성공적으로 완료되었습니다!");
 
         return "cart/completePayment"; // 결제 완료 페이지로 이동
     }
+
+    // 결제 기록 조회 화면
+    @GetMapping("/history")
+    public String viewHistory(@RequestParam("id") String id, Model model) {
+        log.info("viewHistory() 호출 - id: " + id);
+        List<HistoryVO> paymentHistory = service.getPaymentHistory(id);
+        model.addAttribute("id", id);
+        model.addAttribute("paymentHistory", paymentHistory);
+        return "cart/history";
+    }
+
+    // 특정 결제 내역 조회 화면
+//    @GetMapping("/history/detail/{orderNumber}")
+//    public String viewHistoryDetail(
+//            @PathVariable("orderNumber") String orderNumber, 
+//            @RequestParam("paymentDate") @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss") Date paymentDate,
+//            Model model) {
+//        List<PaymentDetailVO> paymentDetails = service.getPaymentDetails(orderNumber);
+//        model.addAttribute("orderNumber", orderNumber);
+//        model.addAttribute("paymentDate", paymentDate);
+//        model.addAttribute("paymentDetails", paymentDetails);
+//
+//        log.info("orderNumber: " + orderNumber);
+//        log.info("paymentDate: " + paymentDate);
+//        return "cart/historyDetail";
+//    }
+    
+    @GetMapping("/history/detail/{orderNumber}")
+    public String viewHistoryDetail(@PathVariable("orderNumber") String orderNumber, Model model) {
+        // orderNumber를 사용해 HistoryVO 조회
+        HistoryVO history = service.getHistoryByOrderNumber(orderNumber);
+
+        // 상세 결제 내역 조회
+        List<PaymentDetailVO> paymentDetails = service.getPaymentDetails(orderNumber);
+
+        // Model에 데이터 전달
+        model.addAttribute("history", history); // HistoryVO 객체
+        model.addAttribute("paymentDetails", paymentDetails);
+
+        log.info("HistoryVO: " + history);
+        return "cart/historyDetail";
+    }
+    
+    @PostMapping("/add")
+    @ResponseBody  // JSON 응답을 반환하기 위해 사용
+    public ResponseEntity<String> addCart(@RequestBody CartItemVO cartItem) {
+        try {
+            service.addCartItem(cartItem);
+            return ResponseEntity.ok("success");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error");
+        }
+    }
+    
+    @PostMapping("/addbuy")
+    @ResponseBody  // JSON 응답을 반환하기 위해 사용
+    public ResponseEntity<String> addBuy(@RequestBody BuyItemVO buyItem) {
+        try {
+        	// DB초기화
+        	service.clearBuyItem(buyItem.getId());
+            // DB에 데이터를 저장
+            service.addBuyItem(buyItem);
+            
+            // DB 저장이 성공했으면 결제 페이지로 리디렉션
+            return ResponseEntity.ok("/cart/paymentForm.do?id=" + buyItem.getId() + "&goods_no" + buyItem.getGoods_no() + "&now=1");
+        } catch (Exception e) {
+        	return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("error");
+        }
+    }
+    
+    
+
+
 }

@@ -24,7 +24,6 @@ import org.zerock.member.service.MemberService;
 import org.zerock.member.vo.LoginVO;
 import org.zerock.member.vo.MemberVO;
 import org.zerock.notice.vo.NoticeVO;
-import org.zerock.util.file.FileUtil;
 import org.zerock.util.page.PageObject;
 
 import lombok.extern.log4j.Log4j;
@@ -53,11 +52,10 @@ public class MemberController {
 		
 		// DB에서 로그인 정보를 가져옵니다. - id, pw를 넘겨서
 		LoginVO loginVO = service.login(vo);
-		log.info("+++++++++loginVO = "+loginVO);
 		
 		if (loginVO == null) {
 			rttr.addFlashAttribute("msg",
-				"ID 혹은 PW가 맞지 않습니다.<br>정보를 확인하시고 다시 시도해 주세요.");
+				"로그인 정보가 맞지 않습니다.<br>정보를 확인하시고 다시 시도해 주세요");
 			
 			return "redirect:/member/loginForm.do";
 		}
@@ -73,7 +71,6 @@ public class MemberController {
 		
 		return "redirect:/main/main.do";
 	}
-	
 	
 	@GetMapping("/logout.do")
 	public String logout(HttpSession session,
@@ -238,21 +235,37 @@ public class MemberController {
 	
 	// 7. 회원 정보 사진 바꾸기
 	@PostMapping("/changePhoto.do")
-	public String changePhoto(@ModelAttribute MemberVO vo,
-			HttpServletRequest request,
-			MultipartFile imageFile,
-			RedirectAttributes rttr) {
+	public String changePhoto(@ModelAttribute MemberVO vo, HttpServletRequest request, RedirectAttributes rttr) {
 	    log.info("changePhoto.do ==============");
 	    
 	    // 업로드된 파일을 가져오기
-	    //MultipartFile imageFile = vo.getImageFile();
+	    MultipartFile imageFile = vo.getImageFile();
 	    
-	    try {
-			vo.setGrade_image(FileUtil.upload("/images", imageFile, request));
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+	    if (imageFile != null && !imageFile.isEmpty()) {
+	        try {
+	            // 파일 이름 가져오기
+	            String fileName = imageFile.getOriginalFilename();
+	            
+	            // 웹 애플리케이션의 실제 경로로 저장할 경로 설정
+	            String savePath = "/resources/images/" + fileName;
+	            String realPath = request.getServletContext().getRealPath(savePath); // 실제 서버 경로
+	            
+	            // 파일 저장
+	            imageFile.transferTo(new File(realPath));
+	            
+	            // 저장된 파일 경로를 vo.grade_image에 설정
+	            vo.setGrade_image(savePath);
+	            
+	    	    log.info("fileName = " + imageFile.getOriginalFilename());
+	    	    log.info("savePath = " + "/resources/images/" + imageFile.getOriginalFilename());
+	    	    log.info("grade_image = " + vo.getGrade_image());
+	            
+	        } catch (IOException e) {
+	            e.printStackTrace();
+	            rttr.addFlashAttribute("msg", "파일 업로드 실패");
+	            return "redirect:/member/view.do?id=" + vo.getId();
+	        }
+	    }
 	    
 	    // 서비스 메서드를 통해 이미지 경로 업데이트
 	    Integer result = service.changePhoto(vo);

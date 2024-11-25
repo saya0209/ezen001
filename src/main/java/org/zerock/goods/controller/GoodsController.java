@@ -1,11 +1,17 @@
 package org.zerock.goods.controller;
 
-import java.security.Provider.Service;
+import java.io.IOException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import javax.servlet.ServletException;
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
@@ -21,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.zerock.cart.vo.CartItemVO;
 import org.zerock.goods.service.GoodsService;
 import org.zerock.goods.vo.Cpu;
 import org.zerock.goods.vo.GoodsVO;
@@ -59,13 +66,18 @@ public class GoodsController {
     
     // 상품 리스트 조회
     @GetMapping("/list.do")
-    public String list(PageObject pageObject, Model model) {
-        List<GoodsVO> goodsList = goodsService.list(pageObject);
+    public String list(@RequestParam(value = "category", required = false) String category, 
+                       PageObject pageObject,
+                       HttpServletRequest request,
+                       Model model) {
+    	if (pageObject == null) {
+    		pageObject = PageObject.getInstance(request);
+    	}
+    	if (category == null || category.equals("")) category = "goods1";
+        List<GoodsVO> goodsList = goodsService.listCategory(category, pageObject); 
         model.addAttribute("list", goodsList);
-        model.addAttribute("pageObject", pageObject); // 페이지네이션
-        
-        log.info(model);
-        return "goods/list";  // 상품 리스트 JSP로 포워딩
+        model.addAttribute("category", category);
+        return "goods/list"; // JSP 뷰로 포워딩
     }
 
     // 상품 상세 보기
@@ -157,10 +169,12 @@ public class GoodsController {
 
     // 상품 등록 폼
     @GetMapping("/writeForm.do")
-    public String writeForm(Model model) {
+    public String writeForm(@RequestParam("category") String category, Model model) {
         model.addAttribute("cpuList", goodsService.getcpu_id());
         model.addAttribute("memoryList", goodsService.getmemory_id());
         model.addAttribute("graphic_CardList", goodsService.getgraphic_Card_id());
+        model.addAttribute("category", category);
+
         return "goods/write";
     }
 
@@ -169,29 +183,37 @@ public class GoodsController {
     public String write(@RequestParam("cpu_id") int cpu_id,
                         @RequestParam("memory_id") int memory_id,
                         @RequestParam("graphic_Card_id") int graphic_Card_id,
-                        @RequestParam("image_main") MultipartFile image_main,		
+                        @RequestParam("image_name") MultipartFile image_name,
                         @RequestParam(value = "image_files", required = false) MultipartFile[] image_files,
+                        @RequestParam("category") String category,  // 카테고리 값 추가
+                        @RequestParam("delivery_charge") Long delivery_charge,
+                        @RequestParam("discount") Long discount,
                         HttpServletRequest request) {
 
         GoodsVO goods = new GoodsVO();
         goods.setCpu_id(cpu_id);
         goods.setMemory_id(memory_id);
         goods.setGraphic_Card_id(graphic_Card_id);
+        goods.setCategory(category);  // 카테고리 값 설정
+        goods.setDelivery_charge(delivery_charge);
+        goods.setDiscount(discount);
 
         // 대표 이미지 처리
-        String mainImagePath = goodsService.uploadImage(image_main, request);
-        goods.setImage_main(mainImagePath);
+        String mainImagePath = goodsService.uploadImage(image_name, request);
+        goods.setImage_name(mainImagePath);
 
         // 추가 이미지 처리
         if (image_files != null) {
             String[] imagePaths = goodsService.uploadImages(image_files);
             goods.setImage_files(imagePaths);
-            
         }  
-        goodsService.registerGoods(goods);
 
-        return "redirect:/goods/list.do";  // 등록 후 리스트 페이지로 리다이렉트
-    }   
+        // 상품 등록
+        goodsService.registerGoods(goods);  
+
+        // 등록 후 카테고리
+        return "redirect:/goods/list.do?category=" + category;  // 리다이렉트 시 카테고리와 페이지 유지
+    }
 
 
 
@@ -206,17 +228,55 @@ public class GoodsController {
 		log.info("result : " + result);
 		if (result == 1) {
 			rttr.addFlashAttribute("msg",
-					"공지사항이 삭제되었습니다.");
+					"상품이 삭제되었습니다.");
 			return "redirect:list.do";
 		}
 		else {
 			rttr.addFlashAttribute("msg",
-					"공지사항이 삭제되지 않았습니다.");
+					"상품이 삭제되지 않았습니다.");
 			
 			return "redirect:/notice/view.do?no=" + goods_no;
 		}
 		
 	}
+    
+    @WebServlet("/addCart")
+    public class AddCartServlet extends HttpServlet {
+        protected void doPost(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
+            // 전달된 데이터 가져오기
+            Long goods_no = Long.parseLong(request.getParameter("goods_no"));
+            String goods_name = request.getParameter("goods_name");
+            Long price = Long.parseLong(request.getParameter("price"));
+            int quantity = Integer.parseInt(request.getParameter("Quantity"));
+            Long discount = Long.parseLong(request.getParameter("discount"));
+            Long delivery_charge = Long.parseLong(request.getParameter("delivery_charge"));
+
+            // 세션에서 장바구니 리스트 가져오기
+            HttpSession session = request.getSession();
+            List<CartItemVO> cart = (List<CartItemVO>) session.getAttribute("cart");
+            if (cart == null) {
+                cart = new ArrayList<>();
+            }
+
+            // 장바구니에 추가할 상품 생성
+            CartItemVO item = new CartItemVO();
+            item.setGoods_no(goods_no);
+            item.setGoods_name(goods_name);
+            item.setPrice(price);
+            item.setQuantity(quantity);
+            item.setDiscount(discount);
+            item.setDelivery_charge(delivery_charge);
+
+            // 장바구니에 상품 추가
+            cart.add(item);
+
+            // 세션에 장바구니 저장
+            session.setAttribute("cart", cart);
+
+            // 장바구니 페이지로 리디렉션
+            response.sendRedirect("cart.jsp");
+        }
+    }
 
     // 이미지 수정 처리
     @PostMapping("/updateImage.do")

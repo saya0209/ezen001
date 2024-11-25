@@ -79,6 +79,8 @@
 		    margin: 20px auto;
 		    font-size: 1em;
 		    font-family: 'Arial', sans-serif;
+		    
+		     /* Flexbox로 콘텐츠 중앙 정렬 */
 		}
 
         .option-table {
@@ -96,12 +98,14 @@
 		    text-transform: uppercase;
 		    letter-spacing: 1px;
 		    border-bottom: 2px solid #ddd;
+		    text-align: center; /* 가로 중앙 정렬 */
 		}
 
         /* 테이블 셀 스타일 */
 		.option-table td {
 		    padding: 12px 15px;
-		    text-align: center;
+		    text-align: center; /* 가로 중앙 정렬 */
+   			vertical-align: middle; /* 세로 중앙 정렬 */
 		    border-bottom: 1px solid #eee;
 		    color: #555;
 		}
@@ -202,14 +206,14 @@
         }
 
         .modal-content {
-            background-color: #fefefe;
-            margin: 10% auto;
-            padding: 20px;
-            border: 1px solid #888;
-            width: 50%;
-            border-radius: 10px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-        }
+		    background-color: #fefefe;
+		    margin: 10% auto;
+		    padding: 20px;
+		    border: 1px solid #888;
+		    width: 40%; /* 가로 사이즈를 조금 줄였습니다 */
+		    border-radius: 10px;
+		    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+		    text-align: center; /* 글씨를 가운데 정렬 */
 
         .close {
             color: #aaa;
@@ -318,20 +322,30 @@
 	<script>
 	
 	$(function() {
-	    // 초기 가격 가져오기 (JSP에서 출력된 값을 바탕으로)
+		
+		// 초기 가격 가져오기 (JSP에서 출력된 값을 바탕으로)
 	    let cpu_price = parseInt($("#cpu_name").data('price')) || 0;
 	    let memory_price = parseInt($("#memory_name").data('price')) || 0;
 	    let graphic_Card_price = parseInt($("#graphic_Card_name").data('price')) || 0;
-	    let total_price = cpu_price + memory_price + graphic_Card_price;  // 총합을 저장하는 변수
+	    let delivery_charge = parseInt($("#delivery_charge").data('price')) || 0;
+	    let discount = parseInt($("#discount").data('price')) || 0;
 
+        console.log(discount);
+        console.log(delivery_charge);
+	    let total_price = cpu_price + memory_price + graphic_Card_price + delivery_charge - discount; 
+	    
+
+	    updateTotalPrice();
 	    // 총합 가격 업데이트 함수
 	    
 	    
 	    function updateTotalPrice() {
-	        total_price = cpu_price + memory_price + graphic_Card_price;
-	        $(".price_pro").text(total_price + " 원");
+	        total_price = cpu_price + memory_price + graphic_Card_price + delivery_charge - discount;
+	        $(".price_pro").text(total_price);
+
 	    }
 
+	    
 	    // CPU 변경 시
 	    $("#cpu-table").on("click", ".cpuChangeBtn", function() {
 	        let newcpu_price = $(this).data('price');  // 선택된 CPU 가격
@@ -387,9 +401,16 @@
 	            closeModal();
 	        }
 	    });
+		 // Esc 키 눌렀을 때 모달 닫기
+	    $(document).keydown(function (event) {
+	        // Esc 키 (keyCode 27 또는 event.key === 'Escape') 눌렀을 때
+	        if (event.key === "Escape" || event.keyCode === 27) {
+	            closeModal();
+	        }
+	    });
+	    
 	});
 
-	
 let cpuNoList = [];
 let memoryNoList = [];
 let graphic_CardNoList = [];
@@ -400,7 +421,7 @@ let graphic_Card_nameList = [];
 $(function() {
 	
 	$(".deleteBtn").click(function() {
-	    var goods_no = $(this).data("goods_no");  // 삭제 버튼에 설정된 data-goods_no 값을 가져옵니다.
+	    var goods_no = $(this).data("goods_no");  // 	 버튼에 설정된 data-goods_no 값을 가져옵니다.
 	    
 	    if (goods_no) {
 	        // 모달의 hidden input에 값 설정
@@ -413,6 +434,134 @@ $(function() {
 	    }
 	});
 
+	$("#addCartButton").click(function () {
+	    console.log("addCartButton");
+
+	    // 필요한 데이터 수집
+	    const id = document.getElementById("id").value; // 로그인한 사용자 ID
+	    const goods_no = 1; // 예시로 상품 번호를 고정하거나 페이지에서 동적으로 받아옴
+	    const goods_name = "사무용 컴퓨터"; // 예시로 상품 이름을 설정
+	    const image_name = document.getElementById("image_name").src; // 이미지 URL
+	    const price = parseFloat(document.getElementById("price").textContent || document.getElementById("price").innerText);
+	    const quantity = 1; // 예시로 1개로 고정, 실제로는 UI에서 수량을 입력받을 수 있음
+	    const goods_total_price = price * quantity + parseFloat(document.getElementById("delivery_charge").textContent || document.getElementById("delivery_charge").innerText);
+	    const selected_goods_price = goods_total_price; // 선택된 상품 총 가격 (예시로 상품 가격만 계산)
+	    const delivery_charge = parseFloat(document.getElementById("delivery_charge").textContent || document.getElementById("delivery_charge").innerText);
+	    const discount = parseFloat(document.getElementById("discount").textContent || document.getElementById("discount").innerText || 0);
+	    const total_discount = discount; // 전체 할인 (예시로 개별 할인과 동일하게 설정)
+	    const selected = 0; // 상품 선택 여부 (예시로 선택된 상태로 설정)
+	    const totalAmount = goods_total_price - discount; // 최종 가격 (예시로 총 가격에서 할인액을 뺀 값)
+		
+	    
+	    // JSON 객체 생성
+	    const data = {
+	        id: id,
+	        goods_no: goods_no,
+	        goods_name: goods_name,
+	        image_name: image_name,
+	        price: price,
+	        quantity: quantity,
+	        goods_total_price: goods_total_price,
+	        selected_goods_price: selected_goods_price,
+	        delivery_charge: delivery_charge,
+	        discount: discount,
+	        total_discount: total_discount,
+	        selected: selected,
+	        totalAmount: totalAmount,
+	        purchase_date: new Date().toISOString(), // 현재 날짜를 ISO 형식으로 전송
+	        category: "사무용" // 예시로 카테고리 설정
+	    };
+
+	    // jQuery AJAX 요청
+	    $.ajax({
+	        url: "/cart/add", // 서버 URL
+	        type: "POST", // HTTP 메소드
+	        contentType: "application/json", // JSON 형식으로 보냄
+	        data: JSON.stringify(data), // JSON 데이터로 변환
+	        success: function (response) {
+	            // 서버에서 성공적으로 응답을 받으면
+	            if (response === "success") {
+	                showModal("장바구니에 담았습니다!");
+	            } else {
+	                showModal("장바구니 담기 실패!");
+	            }
+	        },
+	        error: function (xhr, status, error) {
+	            // 오류가 발생했을 때
+	            console.error("Error:", error);
+	            showModal("로그인이 필요합니다.");
+	        }
+	    });
+	});
+	
+	$("#addBuyButton").click(function () {
+	    console.log("addBuyButton");
+
+	    // 필요한 데이터 수집
+	    const id = document.getElementById("id").value;  // 로그인한 사용자 ID
+	    const goods_no = 1;  // 예시로 상품 번호를 고정하거나 페이지에서 동적으로 받아옴
+	    const goods_name = "사무용 컴퓨터";  // 예시로 상품 이름을 설정
+	    const image_name = document.getElementById("image_name").src;  // 이미지 URL
+	    const price = parseFloat(document.getElementById("price").textContent || document.getElementById("price").innerText);
+	    const quantity = 1;  // 예시로 1개로 고정, 실제로는 UI에서 수량을 입력받을 수 있음
+	    const goods_total_price = price * quantity + parseFloat(document.getElementById("delivery_charge").textContent || document.getElementById("delivery_charge").innerText);
+	    const selected_goods_price = goods_total_price;  // 선택된 상품 총 가격 (예시로 상품 가격만 계산)
+	    const delivery_charge = parseFloat(document.getElementById("delivery_charge").textContent || document.getElementById("delivery_charge").innerText);
+	    const discount = parseFloat(document.getElementById("discount").textContent || document.getElementById("discount").innerText || 0);
+	    const total_discount = discount;  // 전체 할인 (예시로 개별 할인과 동일하게 설정)
+	    const selected = 0;  // 상품 선택 여부 (예시로 선택된 상태로 설정)
+	    const totalAmount = goods_total_price - discount;  // 최종 가격 (예시로 총 가격에서 할인액을 뺀 값)
+
+	    // JSON 객체 생성
+	    const data = {
+	        id: id,
+	        goods_no: goods_no,
+	        goods_name: goods_name,
+	        image_name: image_name,
+	        price: price,
+	        quantity: quantity,
+	        goods_total_price: goods_total_price,
+	        selected_goods_price: selected_goods_price,
+	        delivery_charge: delivery_charge,
+	        discount: discount,
+	        total_discount: total_discount,
+	        selected: selected,
+	        totalAmount: totalAmount,
+	        purchase_date: new Date().toISOString(),  // 현재 날짜를 ISO 형식으로 전송
+	        category: "사무용"  // 예시로 카테고리 설정
+	    };
+
+	    // jQuery AJAX 요청
+	    $.ajax({
+	        url: "/cart/addbuy",  // 서버 URL
+	        type: "POST",  // HTTP 메소드
+	        contentType: "application/json",  // JSON 형식으로 보냄
+	        data: JSON.stringify(data),  // JSON 데이터로 변환
+	        success: function(response) {
+	            // 서버에서 URL을 응답으로 받으면 그 URL로 리디렉션
+	            if (response) {
+	                window.location.href = response;  // 받은 URL로 리디렉션
+	            } else {
+	                showModal("바로결재 실패!");
+	            }
+	        },
+	        error: function (xhr, status, error) {
+	            // 오류가 발생했을 때
+	            console.error("Error:", error);
+	            showModal("로그인이 필요합니다.");
+	        }
+	    });
+	});
+
+
+	
+	 // 페이지가 로드될 때 체크박스를 모두 선택 해제 (selected = 0으로 초기화)
+    
+    
+	function showModal(message) {
+	    document.getElementById("modalMessage").innerText = message;
+	    $('#myModal').modal('show');  // Bootstrap 모달
+	}
 	
 	function openModal(optionType) {
 	    // 모달을 열고, 제목을 동적으로 설정
@@ -545,16 +694,12 @@ $(function() {
 	        });
 	    }
 	}
-
+	
+	
 	// 모달 요소와 버튼
 	const modal = document.getElementById('cpuModal');	
 	const closeModalBtn = document.getElementById('closeModal');
 
-
-
-
-	
-	
 
     // 모달 창 닫기
     function closeModal() {
@@ -635,6 +780,7 @@ $(function() {
 		
 	});
 	
+
 	
     // 모달 외부 클릭 시 닫기
     window.onclick = function(event) {
@@ -659,7 +805,7 @@ $(function() {
   <div class="product-container">
     <!-- 왼쪽 섹션: 이미지 -->
     <div class="left-section">
-        <img src="${goods.image_main}" alt="이미지" style="width: 300px; height: 300px;">
+        <img src="${goods.image_name}" id="image_name" alt="이미지" style="width: 300px; height: 300px;">
     </div>
 
     <!-- 오른쪽 섹션: 상세 정보 -->
@@ -678,16 +824,29 @@ $(function() {
                 <th>그래픽카드</th>
                 <td class="graphic_Card_name">${goods.graphic_Card_name}</td>
             </tr>
+            <tr>
+            	<th>할인가</th>
+            	 <td class="discount" id="discount" data-price="${goods.discount}">${goods.discount}</td>
+            </tr>
+            <tr>
+            	<th>배송비</th>
+            	<td class="delivery_charge" id="delivery_charge" data-price="${goods.delivery_charge}">${goods.delivery_charge}</td>
+            </tr>
         </table>
         
-        <div class="price">
+       
+        
+        
+        <div class="price" >
 		    판매가격: 
-		</div><div class="price_pro">${goods.total_price} 원</div>
+		</div> <span class="price_pro" id="price">${goods.total_price}</span><span> 원</span>
+
 
 
         <div class="btn-group">
-            <button class="btn-buy">바로구매</button>
-            <button class="btn-cart">장바구니 담기</button>
+			<input type="hidden" name="id" id="id" value="${login.id}">
+			<button class="btn-buy" id="addBuyButton">바로구매</button>
+            <button class="btn-cart" id="addCartButton">장바구니 담기</button>
             <button class="btn-list" onclick="location.href='list.do?page=${param.page}&perPageNum=${param.perPageNum}&${goodsSearchVO.searchQuery}'">리스트</button>
         </div>
      </div>
@@ -707,7 +866,6 @@ $(function() {
 		            <tr>
 		                <td>CPU</td>
 		                <td class="cpu_name" id="cpu_name" data-price="${goods.cpu_price }">${goods.cpu_name}</td>
-<%-- 		                <td><button onclick="openModal('CPU', ${goods.goodsNo})">사양변경하기</button></td> --%>
 						<td><button id="cpuChangeGoods">사양변경하기</button></td>
 		            </tr>
 		            <tr>
@@ -809,5 +967,21 @@ $(function() {
 	    </div>
 	  </div>
 
+	<!-- Modal 구조 -->
+	<div id="myModal" class="modal fade" role="dialog">
+	  <div class="modal-dialog" style="max-width: 60%;">  <!-- 여기에서 width 조정 -->
+	    <div class="modal-content">
+	      <div class="modal-header">
+	        <h4 class="modal-title">알림</h4>
+	      </div>
+	      <div class="modal-body" style="font-size: 18px;">
+	        <p id="modalMessage"></p>
+	      </div>
+	      <div class="modal-footer">
+	        <button type="button" class="btn btn-default" data-dismiss="modal">닫기</button>
+	      </div>
+	    </div>
+	  </div>
+	</div>
 </body>
 </html>

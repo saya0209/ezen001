@@ -157,8 +157,16 @@
                 <h3>상품 등록</h3>
             </div>
             <form action="write.do" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="category" value="${category}">
                 <div class="card-body">
-
+                	<div class="form-group">
+			            <label for="discount">할인가</label>
+			            <input class="form-control" name="discount" id="discount" type="number">
+			        </div>
+			        <div class="form-group">
+			            <label for="delivery_charge">배송비</label>
+			            <input class="form-control" name="delivery_charge" id="delivery_charge" type="number">
+			        </div>
                     <!-- CPU 선택 -->
                     <div class="form-group">
                         <label for="cpu_id">CPU</label>
@@ -192,10 +200,11 @@
                         </select>
                     </div>
 
+
                     <!-- 대표 이미지 -->
                     <div class="form-group">
-                        <label for="image_main">대표이미지</label>
-                        <input type="file" class="form-control" id="image_main" name="image_main" required>
+                        <label for="image_name">대표이미지</label>
+                        <input type="file" class="form-control" id="image_name" name="image_name" required>
                     </div>
 
 

@@ -70,38 +70,21 @@
 
         // 전체 결제 금액 업데이트 함수
         function updateTotalAmount() {
-		    console.log("updateTotalAmount 함수 시작"); // 함수 시작 시 로그 출력
 		    var totalAmount = 0;
 		    var items = document.querySelectorAll('.item-total'); // 각 상품 총 가격 요소를 NodeList로 가져오기
 		
-		    console.log(items);
-		    // items 요소 확인
-		    console.log('items 길이: ' + items.length);
-		    if (items.length === 0) {
-		        console.warn("item-total 클래스를 가진 요소가 없습니다.");
-		    }
-		
 		    items.forEach(function(item) {
-		        // goods_no 및 itemTotal 추출 및 확인
-		        console.log(item);
 		        var goods_no = item.id.split('-')[1]; // goods_no 추출
-		        var itemTotal = parseInt(item.innerHTML.replace(/ 원/g, '').replace(/,/g, ''));
-		        console.log('상품 번호: ' + goods_no + ', 상품 총 가격: ' + itemTotal);
+		        var itemTotal = parseInt(item.innerHTML.replace(/ 원/g, '').replace(/,/g, '')); // 총 가격 추출
+		        var checkbox = document.querySelector('input[type="checkbox"].form-check-input[value="' + goods_no + '"]'); // 해당 상품의 체크박스 찾기
 		
-		        var checkboxList = document.querySelectorAll('input[type="checkbox"].form-check-input');
-		        var checkbox = Array.from(checkboxList).find(cb => cb.value === goods_no);
-
-		        if (checkbox) {
-		            console.log('체크박스 체크 여부 : '+goods_no+ ':' +checkbox.checked);
-		            if (checkbox.checked) {
-		                totalAmount += itemTotal;
-		            }
-		        } else {
-		            console.warn('체크박스를 찾을 수 없습니다. 상품 번호: '+goods_no);
+		        // 체크박스가 체크된 상태일 때만 해당 상품의 가격을 더함
+		        if (checkbox && checkbox.checked) {
+		            totalAmount += itemTotal;
 		        }
 		    });
 		
-		    console.log('최종 금액: '+totalAmount); // 최종 금액 로그
+		    // 최종 금액 업데이트
 		    document.getElementById('finalTotal').innerHTML = new Intl.NumberFormat().format(totalAmount) + ' 원';
 		}
 
@@ -129,50 +112,9 @@
             xhr.send("goods_no=" + encodeURIComponent(goods_no) + 
                      "&quantity=" + encodeURIComponent(quantity) + 
                      "&goods_total_price=" + encodeURIComponent(goods_total_price) +
+                     "&selected=" + encodeURIComponent(selected ? 1 : 0) +
                      "&id=" + encodeURIComponent('${id}'));
         }
-        
-//         // 결제 페이지
-//         function submitPaymentForm() {
-// 		    var paymentData = {
-// 		        id: document.querySelector('input[name="id"]').value, // id 값을 가져옵니다.
-// 		        items: [] // 결제할 상품 목록을 저장할 배열
-// 		    };
-		
-// 		    var checkboxes = document.querySelectorAll('input[type="checkbox"].form-check-input:checked');
-		
-// 		    checkboxes.forEach(function(checkbox) {
-// 		        var goods_no = checkbox.value;
-// 		        var quantity = document.getElementById('quantity-'+goods_no).value;
-// 		        var price = document.getElementById('price-'+goods_no).value;
-// 		        var delivery_charge = document.getElementById('delivery_charge-'+goods_no).value;
-		
-// 		        paymentData.items.push({
-// 		            goods_no: goods_no,
-// 		            quantity: quantity,
-// 		            price: price,
-// 		            delivery_charge: delivery_charge
-// 		        });
-// 		    });
-		    
-// 		    // AJAX 요청으로 전송
-// 		    var xhr = new XMLHttpRequest();
-// 		    xhr.open("POST", "${pageContext.request.contextPath}/cart/paymentForm.do", true);
-// 		    xhr.setRequestHeader("Content-Type", "application/json;charset=UTF-8");
-// 		    xhr.onreadystatechange = function() {
-// 		        if (xhr.readyState === XMLHttpRequest.DONE) {
-// 		            if (xhr.status === 200) {
-// 		                // 성공적으로 처리된 경우
-// 		                console.log("결제 정보 전송 성공");
-// 		                // 결제 페이지로 리다이렉트
-// 		                window.location.href = "${pageContext.request.contextPath}/cart/paymentForm.do?id=" + paymentData.id; // id를 포함하여 리다이렉트
-// 		            } else {
-// 		                console.error("결제 정보 전송 실패: " + xhr.status);
-// 		            }
-// 		        }
-// 		    };
-// 		    xhr.send(JSON.stringify(paymentData)); // JSON 형태로 데이터 전송
-// 		}
 
 		function submitPaymentForm() {
             document.getElementById("paymentForm").action = `${pageContext.request.contextPath}/cart/paymentForm.do`; // POST 요청을 보낼 URL
@@ -204,6 +146,16 @@
             updateSelection(goods_no, selected); // 서버에 선택 여부 전달
             updateTotalAmount(); // 체크박스 클릭 시 총 결제 금액 업데이트
         }
+        
+        // 리스트 전체 선택
+        function toggleSelectAll(selectAllCheckbox) {
+            var checkboxes = document.querySelectorAll('input[type="checkbox"].form-check-input');
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = selectAllCheckbox.checked;
+                handleCheckboxClick(checkbox, checkbox.value); // 선택 상태 업데이트
+            });
+            updateTotalAmount(); // 전체 결제 금액 업데이트
+        }
    
     </script>
 </head>
@@ -215,6 +167,9 @@
             </div>
             <div class="card-body">
                 <p>User ID: ${id}</p> <!-- id를 User ID로 사용 -->
+            	<c:if test="${!empty cartItems}">
+                <span><input type="checkbox" id="selectAll" onclick="toggleSelectAll(this)">전체 선택</span>
+                </c:if>
                 <c:choose>
                     <c:when test="${empty cartItems}">
                         <p>장바구니에 담긴 상품이 없습니다.</p>
@@ -241,20 +196,21 @@
                                         <td>
 										    <div class="form-check centered">
 										        <label class="form-check-label">
-											        <input type="hidden" name="goods_no" value="${item.goods_no}">
-											        <input type="hidden" name="quantity-${item.goods_no}" value="${item.quantity}">
-											        <input type="hidden" name="price-${item.goods_no}" value="${item.price}">
-											        <input type="hidden" name="delivery_charge-${item.goods_no}" value="${item.delivery_charge}">
+										            <input type="hidden" name="goods_no" value="${item.goods_no}">
+										            <input type="hidden" name="quantity-${item.goods_no}" value="${item.quantity}">
+										            <input type="hidden" name="price-${item.goods_no}" value="${item.price}">
+										            <input type="hidden" name="delivery_charge-${item.goods_no}" value="${item.delivery_charge}">
+										            <!-- 선택 상태(checked)가 1이면 체크박스가 선택됨 -->
 										            <input type="checkbox" class="form-check-input" value="${item.goods_no}" 
-												       ${item.selected == 1 ? 'checked' : ''} 
-												       onclick="handleCheckboxClick(this, ${item.goods_no})">
+										                   <c:if test="${item.selected == 1}">checked</c:if>
+										                   onclick="handleCheckboxClick(this, ${item.goods_no})">
 										        </label>
 										    </div>
 										</td>
                                         <!-- 상품 이미지 -->
                                         <td>
-                                            <img src="${pageContext.request.contextPath}/upload/image/${item.image_name}" alt="${item.goods_name}" class="product-image"/> <!-- 이미지 표시 -->
-                                        </td>
+										    <img src="${item.image_name}" alt="${item.goods_name}" class="product-image"/>
+										</td>
                                         <!-- 상품명 -->
                                         <td>${item.goods_name}</td> <!-- 상품명 -->
                                         <!-- 상품 수량 -->
@@ -269,7 +225,7 @@
                                         <td><fmt:formatNumber value="${item.discount}" pattern="#,###"/> 원</td> <!-- 상품 할인가 -->
                                         <!-- 배송비  -->
                                         <td>${item.delivery_charge}
-                                            <input type="hidden" id="delivery_charge-${item.goods_no}" value="${item.delivery_charge}">										
+                                            <input type="hidden" id="delivery_charge-${item.goods_no}" value="${item.delivery_charge}" > 원									
                                         </td>
                                         <!-- 상품 총 가격  -->
                                         <td>
@@ -296,17 +252,16 @@
             </div>
             <div class="card-footer">
             	<div class="total-section">
+            	<c:if test="${!empty cartItems}">
                 	총 결제 금액: <strong id="finalTotal"><fmt:formatNumber value="${totalAmount}" pattern="#,###"/> 원</strong>
-				    <form id="paymentForm" class="float-right" method="post">
+				    <form id="paymentForm" class="float-right" method="get">
 					    <input type="hidden" name="id" value="${id}">
-					    <input type="button" value="결제하기" class="btn btn-success" onclick="submitPaymentForm()">
-					    <c:forEach var="item" items="${cartItems}">
-					        <input type="hidden" name="goods_no" value="${item.goods_no}">
-					        <input type="hidden" name="quantity-${item.goods_no}" value="${item.quantity}">
-					        <input type="hidden" name="price-${item.goods_no}" value="${item.price}">
-					        <input type="hidden" name="delivery_charge-${item.goods_no}" value="${item.delivery_charge}">
-					    </c:forEach>
+					    <input type="button" value="결제하기" class="btn btn-success" onclick="submitPaymentForm()">                
 					</form>
+                </c:if>
+                <c:if test="${empty cartItems}">
+                	<a href="/main/main.do" class="btn btn-primary">메인으로 돌아가기</a>
+                </c:if>
 			    </div>
 			</div>
         </div>

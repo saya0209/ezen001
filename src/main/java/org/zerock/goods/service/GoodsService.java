@@ -28,6 +28,7 @@ public interface GoodsService {
     // Graphic Card 리스트
     public List<Graphic_Card> getGraphic_CardList();
 
+    
     // 상품 등록
     public void registerGoods(GoodsVO goods);
 
@@ -50,7 +51,7 @@ public interface GoodsService {
 
     
     // 상품 이미지 리스트
- 	public List<GoodsImageVO> image_main(Long goods_no);
+ 	public List<GoodsImageVO> image_name(Long goods_no);
 
     // 상품 삭제
     public Long delete(Long goods_no);
@@ -69,5 +70,5 @@ public interface GoodsService {
 	
 	public Graphic_Card getgraphic_Card_id(int graphic_Card_id);
 
-    
+	public List<GoodsVO> listCategory(String category, PageObject pageObject);
 }

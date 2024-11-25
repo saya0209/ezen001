@@ -9,7 +9,9 @@
 		<pattern>/main/*</pattern>
 		<pattern>/board/*</pattern>
 		<pattern>/notice/*</pattern>
+		<pattern>/event/*</pattern>
 		<pattern>/community/*</pattern>
+		<pattern>/qna/*</pattern>
 		<pattern>/image/*</pattern>
 		<pattern>/member/*</pattern>
 		<pattern>/goods/*</pattern>
@@ -17,6 +19,8 @@
 		<pattern>/cart/*</pattern>
 		<pattern>/category/*</pattern>
 	</decorator>
+	
+	
 	
 <!-- 	<decorator name="admin" page="admin_decorator.jsp"> -->
 <!-- 		<pattern>/admin/*</pattern> -->

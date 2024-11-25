@@ -6,353 +6,434 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="decorator" uri="http://www.opensymphony.com/sitemesh/decorator" %>
-<!-- CSS -->
 <c:set var="path" value="${pageContext.request.contextPath}"/>
-
 
 <!DOCTYPE html>
 <html>
 <head>
     <meta charset="UTF-8">
     <title>COMMAKASE:<decorator:title /></title>
-   
-    <!-- Custom CSS -->
-    <link href="${path}/css/default_decorator.css" rel="stylesheet">
-<%--     <link href="${path}/resources/css/default_decorator.css" rel="stylesheet"> --%>
-   
-    <!-- Bootstrap 4 + jQuery -->
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    
+    <!-- Bootstrap 4 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- jQuery UI -->
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
 
-    <!-- Datepicker : jquery -->
-    <link rel="stylesheet" href="https://code.jquery.com/ui/1.14.0/themes/base/jquery-ui.css">
-    <script src="https://code.jquery.com/ui/1.14.0/jquery-ui.js"></script>
-
-    <!-- Font Awesome -->
+    <!-- Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-
-    <!-- Google Icons -->
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 
+<!-- css -->
+<style type="text/css">
+/* 기본 스타일 */
+body {
+    color: #333;
+    background-color: #fff;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
 
-	<style type="text/css">
-		/* 기본 텍스트 색상 */
-		body {
-		    color: #002244;
-		}
-		
-		/* 네비게이션 바 */
-		.navbar {
-		    background-color: #004080 !important;
-		}
-		.nav-link {
-		    color: white !important; /* 텍스트 색을 흰색으로 */
-		}
-		.top-link {
-		    color: #004080 !important; 
-		}
-		
-		.nav-link:hover {
-		    text-decoration: underline; /* 호버 시 밑줄 추가 */
-		}
-		
-		/* "전체카테고리" 버튼 색상 */
-		.category-button {
-		    color: #fff;
-		    cursor: pointer;
-		    padding: 10px 15px;
-		}
-		.category-button:hover {
-		    color: #fff;
-		    
-		}
-		
-		.category-center {
-		    flex: 1;
-		    display: flex;
-		    justify-content: center; /* 중앙 정렬 */
-		    gap: 10px; /* 중앙 메뉴 간격 */
-		}
-		
-		.category-center a {
-		    color: #fff;
-		    font-size: 16px;
-		    text-decoration: none;
-		    font-weight: bold;
-		    transition: color 0.3s;
-		}
-		
-		/* 푸터 스타일 */
-		footer {
-		    background-color: #002244;
-		    color: #d9e6f2;
-		    padding: 20px;
-		    text-align: center;
-		    position: fixed;
- 		    bottom: 0; /* 화면의 아래쪽에 위치 */ 
- 		    left: 0;
-		    width: 100%; /* 화면 너비를 꽉 채움 */
-		}
-		body {
-			padding-bottom: 300px;
-		}
-		
-		footer a {
-		    color: #d9e6f2;
-		    text-decoration: none;
-		}
-		
-		footer a:hover {
-		    color: #b3cde0;
-		}
+/* 상단 유틸리티 메뉴 */
+.top-utility {
+    background: #f8f9fa;
+    font-size: 12px;
+    border-bottom: 1px solid #eee;
+}
 
-        /* 상단 로고 및 사용자 메뉴 */
-        .header-top {
-		    display: flex;
-		    padding: 10px 20px;
-		    background-color: #fff; /* 흰색 배경 */
-		    border-bottom: 1px solid #ddd;
-		    justify-content: center; /* 요소들을 중앙으로 정렬 */
-		    align-items: center; /* 세로 중앙 정렬 */
-		}
-		
-		.header-logo {
-		    display: flex; /* flexbox 적용 */
-		    justify-content: center; /* 수평 중앙 정렬 */
-		    align-items: center; /* 수직 중앙 정렬 */
-		    flex-grow: 1; /* 로고가 공간을 차지하도록 설정 */
-		}
-		
-		.header-logo img {
-		    max-width: 220px;
-		    height: auto; /* 이미지의 비율을 유지하면서 크기를 조절 */
-		}
+.top-utility .container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 8px 16px;
+}
 
-        /* 사용자 메뉴 스타일 */
-        .user-menu {
-            display: flex;
-            align-items: center;
-            justify-content: flex-end; /* 오른쪽 정렬 추가 */	
-        }
+.top-utility a {
+    color: #666;
+    text-decoration: none;
+    margin-left: 15px;
+}
 
-        .user-menu .nav-item {
-            margin-left: 15px;
-        }
+/* 헤더 스타일 */
+.main-header {
+    padding: 20px 0;
+}
 
-        .user-menu a {
-            color: #fff;
-            font-size: 14px;
-            text-decoration: none;
-        }
-        .user-menu a:hover {
-            color: #6db33f;
-        }
+.header-content {
+    display: grid;
+    grid-template-columns: 200px 1fr 200px;
+    align-items: center;
+    gap: 20px;
+}
 
-        /* 카테고리 메뉴 스타일 */
-		.category-menu {
-		    display: flex;
-		    align-items: center;
-		    justify-content: space-between; /* 왼쪽과 중앙3 정렬 */
-		    background-color: #fff;
-		    padding: 10px 0;
-		    position: relative;
-		}
+.logo img {
+    max-width: 150px;
+}
+
+/* 검색바 스타일 */
+.search-area-default {
+    position: relative;
+    max-width: 700px;
+    margin: 0 auto;
+}
+
+/* 상단 검색바 */
+.search-box-default {
+    display: flex	;
+    border: 2px solid #2F87FF;
+    border-radius: 4px;
+    overflow: hidden;
+}
+
+.search-type {
+    border: none;
+    background: #f8f9fa;
+    padding: 0 10px;
+    border-right: 1px solid #ddd;
+}
+
+.search-input {
+    flex: 1;
+    padding: 12px;
+    border: none;
+    outline: none;
+    font-size: 14px;
+}
+
+.search-button {
+    background: #2F87FF;
+    color: white;
+    border: none;
+    padding: 0 25px;
+    font-size: 16px;
+}
+
+/* 네비게이션 */
+.main-nav {
+    background: white;
+    border-top: 1px solid #eee;
+    border-bottom: 1px solid #eee;
+}
+
+.nav-container {
+    display: flex;
+    align-items: center;
+    height: 48px;
+}
 
 
-		/* 사이드바 */
-		.sidebar {
-		    display: none;
-		    position: absolute;
-		    top: 241px;
-		    left: 0; /* 왼쪽 정렬 */
-		    background-color: #002244;
-		    padding: 20px;
-		    width: 250px;
-		    color: white;
-		}
-		.sidebar a {
-		    color: #d9e6f2;
-		    display: block;
-		    padding: 10px;
-		    text-align: left; /* 왼쪽 정렬1 */
-		    text-decoration: none;
-		}
-		.sidebar a:hover {
-		    background-color: #004080;
-		}
-		
-	</style>
+/* 카테고리 메뉴 스타일 */
+.category-menu {
+    position: relative;
+    height: 100%;
+}
 
+.category-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    height: 100%;
+    padding: 0 20px;
+    background: #2F87FF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    font-weight: 500;
+}
 
+/* 메인 메뉴 스타일 */
+.main-menu {
+    display: flex;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    height: 100%;
+}
 
+.main-menu li {
+    height: 100%;
+}
+
+.main-menu a {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 20px;
+    color: #333;
+    text-decoration: none;
+    font-weight: 500;
+}
+
+.main-menu a:hover {
+    color: #2F87FF;
+}
+
+/* 사이드 카테고리 스타일 */
+.side-category {
+    position: absolute;
+    top: 100%;
+    left: 0;
+    width: 220px;
+    background: white;
+    border: 1px solid #ddd;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+    z-index: 1000;
+    display: none;
+}
+
+.side-category.show {
+    display: block;
+}
+
+.side-category a {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 14px;
+    border-bottom: 1px solid #eee;
+}
+
+.side-category a:hover {
+    background: #f8f9fa;
+    color: #2F87FF;
+}
+
+/* 모달 스타일 */
+.modal-header {
+    background: #2F87FF;
+    color: white;
+}
+
+.modal-header .close {
+    color: white;
+}
+
+/* 푸터 스타일 */
+footer {
+    background: #333;
+    color: #fff;
+    padding: 40px 0;
+    margin-top: auto;
+}
+
+footer a {
+    color: #fff;
+    text-decoration: none;
+}
+
+/* 사용자 메뉴 */
+.user-widget {
+    display: flex;
+    justify-content: flex-end;
+    gap: 20px;
+}
+
+.user-widget a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #333;
+    text-decoration: none;
+    font-size: 12px;
+}
+
+.user-widget i {
+    font-size: 20px;
+    margin-bottom: 4px;
+}
+
+/* 반응형 스타일 */
+@media (max-width: 992px) {
+    .header-content {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+    
+    .logo {
+        text-align: center;
+    }
+    
+    .user-widget {
+        justify-content: center;
+    }
+    
+    .main-nav {
+        overflow-x: auto;
+    }
+}
+</style>
+
+<!-- 카테고리 사이드 바 -->
 <script type="text/javascript">
 $(document).ready(function() {
-    // 마우스를 "전체카테고리" 버튼에 올리면 사이드바를 표시
-    $('.category-button').hover(
-        function() {
-            $('.sidebar').show();
-        }
-    );
+    // 카테고리 버튼 클릭 이벤트
+    $('.category-button').click(function(e) {
+        e.stopPropagation();
+        $('.side-category').toggleClass('show');
+    });
 
-    // 마우스가 사이드바에 올라가면 계속 표시
-    $('.sidebar').hover(
-        function() {
-            $(this).show();
-        },
-        function() {
-            $(this).hide(); // 마우스가 벗어날 때 사이드바 숨기기
+    // 사이드 카테고리 클릭 이벤트 버블링 방지
+    $('.side-category').click(function(e) {
+        e.stopPropagation();
+    });
+
+    // 문서 전체 클릭 시 카테고리 닫기
+    $(document).click(function() {
+        $('.side-category').removeClass('show');
+    });
+
+    // ESC 키 누를 때 카테고리 닫기
+    $(document).keyup(function(e) {
+        if (e.key === "Escape") {
+            $('.side-category').removeClass('show');
         }
-    );
+    });
 });
-
 </script>
 
-
-    <!-- 개발자가 작성한 소스의 head 태그를 여기에 넣게 된다. title은 제외 -->
-    <decorator:head/>
+<decorator:head/>
 </head>
-
 <body>
-    	<div class="user-menu">
-			<ul class="navbar-nav d-flex flex-row">
-                <c:if test="${ empty login }">
-                    <li class="nav-item">
-						<a class="top-link" href="/member/loginForm.do">
-						<i class="fa fa-sign-in"></i> 로그인</a>
-					</li>
-						<li class="nav-item">
-							<a class="top-link" href="/member/writeForm.do">
-							<i class="fa fa-address-card-o"></i> 회원가입</a>
-						</li>
-<!-- 						<li class="nav-item"> -->
-<!-- 							<a class="nav-link" href="/member/searchID.do"> -->
-<!-- 							<i class="fa fa-search"></i>아이디/비밀번호 찾기</a> -->
-<!-- 						</li> -->
+    <!-- 상단 유틸리티 메뉴 -->
+    <div class="top-utility">
+        <div class="container">
+            <c:if test="${empty login}">
+                <a href="/member/loginForm.do">로그인</a>
+                <a href="/member/writeForm.do">회원가입</a>
+            </c:if>
+            <c:if test="${!empty login}">
+                <span class="mr-3">${login.id}님</span>
+                <a href="/member/logout.do">로그아웃</a>
+                <c:if test="${login.gradeNo == 9}">
+                    <a href="/member/list.do">회원관리</a>
                 </c:if>
-                <c:if test="${ !empty login }">
-                    <li class="nav-item">
-                        <span class="top-link">
-                            <c:if test="${ empty login.grade_image }">
-                                <i class="fa fa-user-circle-o"></i>
-                            </c:if>
-                            <c:if test="${ !empty login.grade_image }">
-                                <img src="${login.grade_image }" class="round-circle" style="width:30px; height:30px">
-                            </c:if>
-                            ${login.id }
-                        </span>
-                    </li>
-                    <li class="nav-item">
-                        <a class="top-link" href="/member/logout.do">
-                        <i class="fa fa-sign-out"></i> 로그아웃</a>
-                    </li>
-                    <c:if test="${login.gradeNo == 9 }">
-                        <li class="nav-item">
-                            <a class="top-link" href="/member/list.do">회원리스트보기</a>
-                        </li>
-                    </c:if>
-                    <li class="nav-item">
-                        <a class="top-link" href="/member/mypageMain.do">마이페이지</a>
-                    </li>
-                    <li class="nav-item">
-                        <a class="top-link" href="/cart/list/${login.id }">장바구니</a>
-                    </li>
-                </c:if>
-            </ul>
-          </div>
-        
-        <!-- 상단 로고 및 사용자 메뉴 -->
-   		<div class="header-top d-flex justify-content-between align-items-center p-2">
-            <!-- 로고 -->
-            <div class="header-logo">
-                <a href="/" title="메인으로 이동">
-                    <img src="/images/logo.png" alt="COMMAKASE">
-                </a>
+                <a href="/member/mypageMain.do">마이페이지</a>
+                <a href="/cart/list/${login.id}"><i class="fa fa-shopping-cart"></i> 장바구니</a>
+            </c:if>
+        </div>
+    </div>
+
+    <!-- 메인 헤더 -->
+    <header class="main-header">
+        <div class="container">
+            <div class="header-content">
+                <!-- 로고 -->
+                <div class="logo">
+                    <a href="/">
+                        <img src="/images/logo.png" alt="COMMAKASE">
+                    </a>
+                </div>
+
+                <!-- 검색 영역 -->
+                <div class="search-area-default">
+                    <div class="search-box-default">
+                        <select class="search-type">
+                            <option>전체</option>
+                            <option>PC부품</option>
+                            <option>노트북</option>
+                        </select>
+                        <input type="text" class="search-input" placeholder="검색어를 입력해 주세요">
+                        <button class="search-button">
+                            <i class="fa fa-search"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 사용자 위젯 -->
+<!--                 <div class="user-widget"> -->
+<!--                     <a href="/member/mypageMain.do"> -->
+<!--                         <i class="fa fa-user"></i> -->
+<!--                         <span>마이페이지</span> -->
+<!--                     </a> -->
+<%--                     <a href="/cart/list/${login.id}"> --%>
+<!--                         <i class="fa fa-shopping-cart"></i> -->
+<!--                         <span>장바구니</span> -->
+<!--                     </a> -->
+<!--                 </div> -->
             </div>
         </div>
-      
-      	
-      
-		 <!-- 카테고리 메뉴 -->      
-         <nav class="navbar navbar-expand-md navbar-dark">
-            <div class="category-button">
-                <i class="fa fa-align-justify"></i> 전체카테고리
-            </div>
+    </header>
 
-            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarContent">
-                <span class="navbar-toggler-icon"></span>
-            </button>
+    <!-- 메인 네비게이션 -->
+	<nav class="main-nav">
+	    <div class="container">
+	        <div class="nav-container position-relative">
+	            <!-- 카테고리 버튼 -->
+	            <div class="category-menu">
+	                <button type="button" class="category-button">
+	                    <i class="fa fa-bars"></i>
+	                    전체카테고리
+	                </button>
+	                <!-- 사이드 카테고리 메뉴 -->
+	                <div class="side-category">
+	                    <a href="#"><i class="fa fa-microchip"></i> CPU/메인보드</a>
+	                    <a href="#"><i class="fa fa-hdd-o"></i> 저장장치</a>
+	                    <a href="#"><i class="fa fa-desktop"></i> 모니터</a>
+	                    <a href="#"><i class="fa fa-keyboard-o"></i> 주변기기</a>
+	                    <a href="#"><i class="fa fa-laptop"></i> 노트북</a>
+	                    <a href="#"><i class="fa fa-gamepad"></i> 게이밍기기</a>
+	                    <a href="/qna/list.do"><i class="fa fa-question-circle"></i> QNA게시판</a>
+	                </div>
+	            </div>
+	            
+	            <ul class="main-menu">
+	                <li><a href="/quote.do">PC견적</a></li>
+	                <li><a href="/shop/list.do">컴퓨터</a></li>
+	                <li><a href="/weeklyBest.do">주간 BEST</a></li>
+	                <li><a href="/event/list.do">이벤트</a></li>
+	                <li><a href="/community/list.do">커뮤니티</a></li>
+	                <c:if test="${!empty login && login.gradeNo == 9}">
+	                    <li><a href="/goods/list.do">상품관리</a></li>
+	                </c:if>
+	            </ul>
+	        </div>
+	    </div>
+	</nav>
 
-            <div class="collapse navbar-collapse" id="navbarContent">
-				<ul class="navbar-nav mx-auto">
-				    <li class="nav-item"><a class="nav-link" href="/quote.do">PC견적</a></li>
-				    <li class="nav-item"><a class="nav-link" href="/shop/list.do">컴퓨터 전체보기</a></li>
-				    <li class="nav-item"><a class="nav-link" href="/weeklyBest.do">주간 BEST</a></li>
-				    <li class="nav-item"><a class="nav-link" href="/events.do">이벤트</a></li>
-				    <li class="nav-item"><a class="nav-link" href="/notice/list.do">공지사항</a></li>
-				    <li class="nav-item"><a class="nav-link" href="/community/list.do">커뮤니티</a></li>
-				    <c:if test="${(!empty login) && (login.gradeNo == 9)}">
-				        <li class="nav-item"><a class="nav-link" href="/goods/list.do">상품관리</a></li>
-				    </c:if>
-				</ul>
-            </div>
-        </nav>
-		<!-- 사이드바 메뉴 -->
-        <div class="sidebar">
-            <a href="/goods/list.do?category=goods1">인터넷/사무용</a>
-            <a href="/goods/list.do?category=goods2">3D게임/그래픽용</a>
-            <a href="/goods/list.do?category=goods3">고성능/전문가용</a>
-            <a href="/goods/list.do?category=goods4">노트북</a>
-            <a href="/goods/list.do?category=goods5">부품/주변기기</a>
-            <a href="#">QNA게시판</a>
-        </div>
-
-    <article>
+    <!-- 메인 콘텐츠 -->
+    <main class="container my-4">
         <decorator:body />
-    </article>
+    </main>
 
-    <footer class="container-fluid text-center">
-        <div>이 홈페이지의 저작권 © COMMAKASE에 있습니다.</div>
-        <div>
-            <a href="#" class="text-light">개인정보 처리방침</a> | <a href="#" class="text-light">이용약관</a>
+    <!-- 푸터 -->
+    <footer>
+        <div class="container text-center">
+            <p>이 홈페이지의 저작권 © COMMAKASE에 있습니다.</p>
+            <p>
+                <a href="#">개인정보 처리방침</a> | 
+                <a href="#">이용약관</a>
+            </p>
         </div>
     </footer>
+    
 
-    <!-- The Modal -->
-	  <div class="modal fade" id="msgModal">
-	    <div class="modal-dialog">
-	      <div class="modal-content">
-	      
-	        <!-- Modal Header -->
-	        <div class="modal-header">
-	          <h4 class="modal-title">처리 결과 모달 창</h4>
-	          <button type="button" class="close" data-dismiss="modal">&times;</button>
-	        </div>
-	        
-	        <!-- Modal body -->
-	        <div class="modal-body">
-	          ${msg}
-	        </div>
-	        
-	        <!-- Modal footer -->
-	        <div class="modal-footer">
-	          <button type="button" class="btn btn-danger" data-dismiss="modal">Close</button>
-	        </div>
-	        
-	      </div>
-	    </div>
-	  </div>
-  
-	<!-- session 담은 msg를 보여주는 모달창 -->
-	<c:if test="${!empty msg}">
-		<!-- 모달을 보이게하는 javascript -->
-		<script type="text/javascript">
-			$(function() {
-				$("#msgModal").modal("show");
-				
-			})
-		</script>
-	</c:if>
+    <!-- 모달 -->
+    <div class="modal fade" id="msgModal">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">알림</h4>
+                    <button type="button" class="close" data-dismiss="modal">&times;</button>
+                </div>
+                <div class="modal-body">${msg}</div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">닫기</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <c:if test="${!empty msg}">
+        <script>
+            $(function() {
+                $("#msgModal").modal("show");
+            });
+        </script>
+    </c:if>
 </body>
 </html>

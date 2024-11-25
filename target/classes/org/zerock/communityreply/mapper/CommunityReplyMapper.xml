@@ -11,86 +11,89 @@
 		from community_reply
 		where post_no = #{post_no}
 	</select>
+	
 
-	<!-- 커뮤니티 게시물 댓글 리스트 쿼리 -->
+	<!-- 커뮤니티 게시물 댓글과 대댓글 리스트 쿼리 -->
 	<select id="list"
-		resultType="org.zerock.communityreply.vo.CommunityReplyVO">
-		select rno, post_no, parent_no, id, nicname, content, writeDate, updateDate,
-		likeCnt, dislikeCnt, image
-		from (
-			select rownum rnum, rno, post_no, parent_no, id, nicname, content, writeDate,
-			updateDate,	likeCnt, dislikeCnt, image
-			from (
-				select c.rno, c.post_no, c.parent_no, c.id, m.nicname, c.content, c.writeDate, c.updateDate,
-				c.likeCnt, c.dislikeCnt, c.image
-				from community_reply c, member m
-				where 
-			  		(no = #{no}) <!-- 일반조건 -->
-			  		and
-			  		(c.id = m.id) <!-- 조인조건 -->
-				order by rno desc
-			)
-		)
-		where rnum between #{pageObject.startRow} and #{pageObject.endRow}
+	    resultType="org.zerock.communityreply.vo.CommunityReplyVO">
+	    select rno, post_no, parent_no, id, nicname, content, writeDate, updateDate,
+	    likeCnt, dislikeCnt, image
+	    from (
+	        select rownum rnum, rno, post_no, parent_no, id, nicname, content, writeDate,
+	        updateDate, likeCnt, dislikeCnt, image
+	        from (
+	            select c.rno, c.post_no, c.parent_no, c.id, m.nicname, c.content, c.writeDate, c.updateDate,
+	            c.likeCnt, c.dislikeCnt, c.image
+	            from community_reply c
+	            join member m on c.id = m.id
+	            where (post_no = #{post_no}) <!-- 일반조건 -->
+	            order by parent_no, rno desc <!-- 부모 댓글을 기준으로 정렬 -->
+	        )
+	    )
+	    where rnum between #{pageObject.startRow} and #{pageObject.endRow}
 	</select>
 
 	<!-- 커뮤니티 게시물 댓글 작성 쿼리 -->
 	<insert id="write">
-		<selectKey keyProperty="rno" resultType="Long" order="BEFORE">
-			select community_reply_seq.nextval from dual
-		</selectKey>
-		insert into community_reply(rno, post_no, parent_no, id, content, image)
-		values(#{rno}, #{post_no}, #{parent_no}, #{id}, #{content},	#{image})
+	    <selectKey keyProperty="rno" resultType="Long" order="BEFORE">
+	        select community_reply_seq.nextval from dual
+	    </selectKey>
+	    insert into community_reply(rno, post_no, parent_no, id, content, updateDate, image)
+	    values(
+	        #{rno}, 
+	        #{post_no}, 
+	        #{parent_no, jdbcType=INTEGER}, 
+	        #{id, jdbcType=VARCHAR}, 
+	        #{content}, 
+	        sysdate, 
+	        <if test="image != null">#{image, jdbcType=VARCHAR}</if>
+	        <if test="image == null">NULL</if>
+	    )
 	</insert>
+
 
 	<!-- 커뮤니티 게시물 댓글 수정 쿼리 -->
 	<update id="update">
-        <![CDATA[
-        update community_reply
-        set content = #{content}, image = #{image}
-        where rno = #{rno} and id = #{id}
-        ]]>
+		update community_reply set
+		content = #{content},
+		image =
+		<if test="image != null">
+			#{image, jdbcType=VARCHAR}
+		</if>
+		<if test="image == null">
+			NULL
+		</if>
+		where rno = #{rno}
 	</update>
 
 	<!-- 커뮤니티 게시물 댓글 삭제 쿼리 -->
 	<delete id="delete">
 		delete from community_reply
-		where rno = #{rno} and id = #{id}
+		where rno = #{rno}
 	</delete>
-	
-	<!-- 댓글 좋아요 증가 쿼리 -->
-	<update id="increaseLike" parameterType="Long">
-		update community_reply
-		set likeCnt = likeCnt + 1
-		where rno = #{rno}
-	</update>
-	
-	<!-- 댓글 싫어요 증가 쿼리 -->
-	<update id="increaseDislike" parameterType="Long">
-		update community_reply
-		set dislikeCnt = dislikeCnt + 1
-		where rno = #{rno}
-	</update>
 
-	<!-- 댓글 좋아요 취소(감소) 쿼리 -->
-	<update id="cancelLike" parameterType="Long">
-		update community_reply
-		set likeCnt = case
-			when likeCnt > 0 then likeCnt - 1
-			else 0
-		end
-		where rno = #{rno}
-	</update>
+<!-- /////////////////////////////////////////////////////////////// -->
 
-	<!-- 댓글 싫어요 취소(감소) 쿼리 -->
-	<update id="cancelDislike" parameterType="Long">
-		update community_reply
-		set dislikeCnt = case
-			when dislikeCnt > 0 then dislikeCnt - 1
-			else 0
-		end
-		where rno = #{rno}
-	</update>
-	
+<!-- 좋아요/싫어요 -->
+<update id="updateLike">
+    UPDATE community 
+    SET likeCnt = GREATEST(0, likeCnt + 
+        CASE WHEN #{amount} IN (1, -1) THEN #{amount} ELSE 0 END)
+    WHERE rno = #{rno}
+</update>
+
+<update id="updateDislike">
+    UPDATE community 
+    SET dislikeCnt = GREATEST(0, dislikeCnt + #{amount})
+    WHERE rno = #{rno}
+</update>
+
+
+<select id="getReply"
+	resultType="org.zerock.communityreply.vo.CommunityReplyVO">
+	SELECT *
+	FROM community_reply
+	WHERE rno = #{rno}
+</select>
 
 </mapper>

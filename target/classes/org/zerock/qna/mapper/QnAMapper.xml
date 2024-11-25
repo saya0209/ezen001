@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zerock.qna.mapper.QnAMapper">
+
+  <!-- 1-1. getTotalRow -->
+<!--   <select id="getTotalRow" resultType="Long"> -->
+<!--     select count(*) from qna -->
+<!--     <include refid="period"/> -->
+<!--   </select> -->
+  
+	<!-- QnA 게시판 리스트 쿼리 -->
+<select id="list" resultType="org.zerock.qna.vo.QnAVO">
+  select qna_no, id, nicname, title, content, writeDate, category, status
+  from (
+      select rownum rnum, qna_no, id, nicname, title, content, writeDate, category, status
+      from (
+          select q.qna_no, q.id, m.nicname, q.title, q.content, q.writeDate, q.category, q.status
+          from qna q
+          join member m on q.id = m.id
+          <include refid="search"/>
+          order by qna_no desc
+      )
+  )
+  where rnum between #{startRow} and #{endRow}
+</select>
+
+  <!-- QnA 게시판 전체 데이터 개수 -->
+  <select id="getTotalRow" resultType="Long">
+    select count(*)
+    from qna q
+    join member m on q.id = m.id <!-- 조인조건 수정 -->
+    <include refid="search"/> <!-- 검색 조건 포함 -->
+  </select>
+
+  <!-- 검색 처리 -->
+  <sql id="search">
+    <if test="word != null and word != ''">
+      <trim prefix="where" prefixOverrides="or">
+        <if test="key.indexOf('t') >= 0">
+          or title like '%' || #{word} || '%'
+        </if>
+        <if test="key.indexOf('c') >= 0">
+          or content like '%' || #{word} || '%'
+        </if>
+        <if test="key.indexOf('w') >= 0">
+          or q.id like '%' || #{word} || '%' <!-- q.id로 수정 -->
+        </if>
+      </trim>
+    </if>
+  </sql>
+
+  <!-- QnA 게시글 조회 -->
+	<select id="view" resultType="org.zerock.qna.vo.QnAVO">
+	    select q.qna_no, q.id, m.nicname, q.title, q.content, q.writeDate, q.category, q.status
+	    from qna q
+	    join member m on q.id = m.id
+	    where q.qna_no = #{qna_no}
+	</select>
+  
+
+<!-- QnA 게시글 작성 -->
+<insert id="write">
+    <selectKey keyProperty="qna_no" resultType="Long" order="BEFORE">
+        select qna_seq.nextval from dual
+    </selectKey>
+    insert into qna(
+        qna_no, id, title, content, writeDate, category, status
+    )
+    values(
+        #{qna_no}, 
+        #{id}, 
+        #{title}, 
+        #{content}, 
+        sysdate,
+        CASE 
+            WHEN #{category} = 'delivery' THEN '배송'
+            WHEN #{category} = 'payment' THEN '결제 및 환불'
+            WHEN #{category} = 'inquiry' THEN '단순문의'
+            ELSE #{category}
+        END,
+        NVL(#{status}, 'waiting')
+    )
+</insert>
+
+  <!-- QnA 게시글 수정 -->
+  <update id="update">
+    update qna
+    set title = #{title},
+        content = #{content},
+        category = #{category},
+        status = #{status}
+    where qna_no = #{qna_no}
+  </update>
+
+  <!-- QnA 게시글 삭제 -->
+  <delete id="delete">
+    delete from qna where qna_no = #{qna_no}
+  </delete>
+
+<!-- 답변 목록 조회 -->
+<select id="getAnswersByQnaNo" resultType="org.zerock.qna.vo.AnswerVO">
+    select a.answer_no, a.id, m.nicname, a.answer_title, a.answer_content, 
+           a.answerDate, a.refNo, a.ordNo, a.levNo, a.parentNo
+    from answer a
+    join member m on a.id = m.id
+    where a.parentNo = #{qna_no}
+    order by a.ordNo
+</select>
+
+<!-- 답변 작성 -->
+<insert id="writeAnswer">
+    <selectKey keyProperty="answer_no" resultType="Long" order="BEFORE">
+        select answer_seq.nextval from dual
+    </selectKey>
+    insert into answer(
+        answer_no, id, answer_title, answer_content, 
+        answerDate, refNo, ordNo, levNo, parentNo
+    )
+    values(
+        #{answer_no}, #{id}, #{answer_title}, #{answer_content}, 
+        sysdate, #{answer_no}, 
+        (select NVL(MAX(ordNo), 0) + 1 from answer where parentNo = #{parentNo}),
+        1, #{parentNo}
+    )
+</insert>
+
+<!-- 답변상태 업데이트 -->
+<update id="updateStatus">
+    update qna
+    set status = #{param2}
+    where qna_no = #{param1}
+</update>
+
+<!-- 글 확인 상태 업데이트 (답변이 있는 경우만) -->
+<update id="updateViewStatus">
+    UPDATE qna q
+    SET status = 'confirmed'
+    WHERE q.qna_no = #{qna_no}
+    AND q.id = #{id}
+    AND EXISTS (
+        SELECT 1 
+        FROM answer a 
+        WHERE a.parentNo = q.qna_no
+    )
+    AND q.status = 'completed'
+</update>
+
+<!-- 답변 수정 -->
+<!-- <update id="updateAnswer"> -->
+<!--     update answer -->
+<!--     set answer_title = #{answer_title}, -->
+<!--         answer_content = #{answer_content} -->
+<!--     where answer_no = #{answer_no} -->
+<!-- </update> -->
+
+<!-- 답변 삭제 -->
+<delete id="deleteAnswer">
+    delete from answer where answer_no = #{answer_no}
+</delete>
+</mapper>

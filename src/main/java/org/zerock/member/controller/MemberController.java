@@ -68,7 +68,7 @@ public class MemberController {
 		
 	    // 로그인 시, 최근 접속일을 현재 시간으로 갱신
 	    service.updateConDate(loginVO.getId());  // 로그인 시 conDate 갱신
-		
+	    session.setAttribute("loginUserId", vo.getId());
 		return "redirect:/main/main.do";
 	}
 	

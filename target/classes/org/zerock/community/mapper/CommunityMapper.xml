@@ -1,7 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE 
-	mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="org.zerock.community.mapper.CommunityMapper">
+	mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
+	"https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper 
+	namespace="org.zerock.community.mapper.CommunityMapper">
 
 	<!-- 커뮤니티 게시판 리스트 쿼리 -->
 	<select id="list" resultType="org.zerock.community.vo.CommunityVO">
@@ -73,59 +75,58 @@
     </selectKey>
     insert into community(
         community_no, id, title, content, image, writeDate, hit, likeCnt, dislikeCnt)
-    values(#{community_no}, #{id,jdbcType=VARCHAR}, #{title}, #{content}, #{image}, 
-    	#{writeDate}, #{hit}, #{likeCnt}, #{dislikeCnt})
-	</insert>
-	
+    values(
+        #{community_no}, 
+        #{id,jdbcType=VARCHAR}, 
+        #{title}, 
+        #{content}, 
+        <if test="image != null">#{image, jdbcType=VARCHAR}</if>
+        <if test="image == null">NULL</if>,
+        sysdate,  
+        #{hit}, 
+        #{likeCnt}, 
+        #{dislikeCnt}
+    )
+</insert>
 
-	<!-- 커뮤니티 게시판 글수정 쿼리 -->
-	<update id="update">
-	    <![CDATA[
-	    update community
-	    set title = #{title}, content = #{content}, image = #{image}
-	    where community_no = #{community_no} and id = #{id}
-	    ]]>
-	</update>
+<update id="update">
+	update community set
+	id = #{id,jdbcType=VARCHAR}, 
+	title = #{title},
+	content = #{content},
+	image =
+	<if test="image != null">
+		#{image, jdbcType=VARCHAR}
+	</if>
+	<if test="image == null">
+		NULL
+	</if>
+	where community_no = #{community_no} and id = #{id}
+</update>
+	
+<!-- 댓글 삭제 쿼리 수정 -->
+<delete id="delete">
+    delete from community
+    where community_no = #{community_no}
+</delete>
 
-	<!-- 커뮤니티 게시판 글삭제 쿼리 -->
-	<delete id="delete">
-	    delete from community
-	    where community_no = #{community_no} and id = #{id}
-	</delete>
 	
-	<!-- 좋아요 증가 쿼리 -->
-	<update id="increaseLike" parameterType="Long">
-	    update community
-	    set likeCnt = likeCnt + 1
-	    where community_no = #{community_no}
-	</update>
-	
-	<!-- 싫어요 증가 쿼리 -->
-	<update id="increaseDislike" parameterType="Long">
-	    update community
-	    set dislikeCnt = dislikeCnt + 1
-	    where community_no = #{community_no}
-	</update>
-	
-	<!-- 좋아요 취소 쿼리 -->
-	<update id="cancelLike" parameterType="Long">
-		update community
-		set likeCnt = case
-		when likeCnt > 0 then likeCnt - 1
-		else 0
-		end
-		where community_no = #{community_no}
-	</update>
-	
-	<!-- 싫어요 취소 쿼리 -->
-	<update id="cancelDislike" parameterType="Long">
-		update community
-		set dislikeCnt = case
-		when dislikeCnt > 0 then dislikeCnt - 1
-		else 0
-		end
-		where community_no = #{community_no}
-	</update>
+<!-- //////////////////////////////////////////////////////// -->
+
+<!-- 좋아요/싫어요 -->
+<update id="updateLike">
+    UPDATE community 
+    SET likeCnt = GREATEST(0, likeCnt + 
+        CASE WHEN #{amount} IN (1, -1) THEN #{amount} ELSE 0 END)
+    WHERE community_no = #{community_no}
+</update>
+
+<update id="updateDislike">
+    UPDATE community 
+    SET dislikeCnt = GREATEST(0, dislikeCnt + #{amount})
+    WHERE community_no = #{community_no}
+</update>
+
 
 
 </mapper>

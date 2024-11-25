@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zerock.event.mapper.EventMapper">
+
+<!-- 1-1. getTotalRow -->
+  <select id="getTotalRow" resultType="Long">
+    select count(*) from event
+    <include refid="search"/>
+  </select>
+
+  <!-- 1-2. list -->
+  <select id="list" resultType="org.zerock.event.vo.EventVO">
+    select
+      event_no, id, title, startDate, endDate, writeDate, files, status, category
+    from
+    (
+      select
+        rownum rnum, event_no, id, title, startDate, endDate, writeDate, files, status, category
+      from
+      (
+        select
+          event_no, id, title, startDate, endDate, writeDate, files, status, category
+        from
+          event
+        <include refid="search"/>
+        order by event_no desc
+      )
+    )
+    where rnum between #{startRow} and #{endRow}
+  </select>
+
+  <!-- 검색 조건 -->
+<sql id="search">
+  <where>
+    <if test="category != null and category != 'all'">
+      category = #{category}
+    </if>
+    <choose>
+      <when test="period == 'pre'">
+        and trunc(sysdate) between trunc(startDate) and trunc(endDate)
+        and status = 'ONGOING'
+      </when>
+      <when test="period == 'res'">
+        and trunc(startDate) > trunc(sysdate)
+        and status = 'UPCOMING'
+      </when>
+      <when test="period == 'old'">
+        <![CDATA[and trunc(endDate) < trunc(sysdate)]]>
+        and status = 'COMPLETED'
+      </when>
+      <otherwise>
+        <!-- No period filtering when 'all' is selected -->
+        and (status = 'ONGOING' or status = 'UPCOMING' or status = 'COMPLETED')
+      </otherwise>
+    </choose>
+    <if test="word != null and word != ''">
+      and (
+        upper(title) like '%' || upper(#{word}) || '%'
+        or upper(content) like '%' || upper(#{word}) || '%'
+      )
+    </if>
+  </where>
+</sql>
+
+
+  <!-- 2. view -->
+  <select id="view" resultType="org.zerock.event.vo.EventVO">
+    select event_no, id, title, content, startDate, endDate, writeDate, updateDate, files, status, category 
+    from event where event_no = #{event_no, jdbcType=BIGINT}
+  </select>
+
+  <!-- 3. write -->
+  <insert id="write">
+    <selectKey keyProperty="event_no" resultType="Long" order="BEFORE">
+      <!-- 오라클에서 시퀀스를 사용하여 event_no 생성 -->
+      select event_seq.nextval from dual
+    </selectKey>
+    insert into event(event_no, id, title, content, startDate, endDate, writeDate, files, status, category)
+    values(
+      #{event_no, jdbcType=BIGINT}, 
+      #{id}, 
+      #{title}, 
+      #{content}, 
+      #{startDate, jdbcType=DATE}, 
+      #{endDate, jdbcType=DATE}, 
+      sysdate, 
+      <if test="files != null">#{files, jdbcType=VARCHAR}</if>
+      <if test="files == null">NULL</if>,
+      #{status, jdbcType=VARCHAR}, 
+      #{category, jdbcType=VARCHAR}
+    )
+  </insert>
+
+  <!-- 4. update -->
+  <update id="update">
+    update event set
+      title = #{title},
+      content = #{content},
+      startDate = #{startDate, jdbcType=DATE},
+      endDate = #{endDate, jdbcType=DATE},
+      files = 
+        <if test="files != null">
+          #{files, jdbcType=VARCHAR}
+        </if>
+        <if test="files == null">
+          NULL
+        </if>,
+      status = #{status, jdbcType=VARCHAR},
+      category = #{category, jdbcType=VARCHAR}
+    where event_no = #{event_no, jdbcType=BIGINT}
+  </update>
+
+  <!-- 5. delete -->
+  <delete id="delete">
+    delete from event
+    where event_no = #{event_no, jdbcType=BIGINT}
+  </delete>
+
+</mapper>

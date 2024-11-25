@@ -6,8 +6,6 @@ import java.util.Map;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import org.zerock.cart.vo.CartItemVO;
-import org.zerock.cart.vo.HistoryVO;
-import org.zerock.cart.vo.PaymentDetailVO;
 
 @Repository
 public interface CartMapper {
@@ -27,18 +25,10 @@ public interface CartMapper {
     // 상품 번호로 장바구니 아이템 조회
     CartItemVO getCartItemByGoodsNo(Long goods_no);
 
+
+
     void updateSelection(Map<String, Object> params);
 
-	void deleteSelectedItems(String id);
 
-	void insertHistory(HistoryVO historyVO);
-	
-    List<HistoryVO> selectHistoryByUserId(String id);
-    
-    void insertPaymentDetail(PaymentDetailVO detail);
-    
-    List<PaymentDetailVO> selectPaymentDetailsByOrderNumber(String orderNumber);
-
-	HistoryVO getHistoryByOrderNumber(String orderNumber);
 
 }

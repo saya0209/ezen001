@@ -64,7 +64,6 @@ public class GoodsController {
         model.addAttribute("list", goodsList);
         model.addAttribute("pageObject", pageObject); // 페이지네이션
         
-        
         log.info(model);
         return "goods/list";  // 상품 리스트 JSP로 포워딩
     }
@@ -207,12 +206,12 @@ public class GoodsController {
 		log.info("result : " + result);
 		if (result == 1) {
 			rttr.addFlashAttribute("msg",
-					"상품이 삭제되었습니다.");
+					"공지사항이 삭제되었습니다.");
 			return "redirect:list.do";
 		}
 		else {
 			rttr.addFlashAttribute("msg",
-					"상품이 삭제되지 않았습니다.");
+					"공지사항이 삭제되지 않았습니다.");
 			
 			return "redirect:/notice/view.do?no=" + goods_no;
 		}

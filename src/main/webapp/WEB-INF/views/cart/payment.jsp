@@ -38,18 +38,9 @@
             </div>
             <div class="card-body">
                 <p>사용자 ID: ${id}</p>
-                
-                <c:set var="selectedItemExists" value="false" />
-				<c:forEach var="item" items="${cartItems}">
-					<c:if test="${item.selected != 0}">
-						<c:set var="selectedItemExists" value="true" />
-					</c:if>
-				</c:forEach>
-                
                 <c:choose>
-                    <c:when test="${not selectedItemExists}">
+                    <c:when test="${empty cartItems}">
                         <p>결제할 상품이 없습니다.</p>
-                        <a href="/main/main.do" class="btn btn-primary">메인으로 돌아가기</a>
                     </c:when>
                     <c:otherwise>
                         <table class="table table-bordered">
@@ -62,22 +53,19 @@
                                 </tr>
                             </thead>
                             <tbody>
-                            
-                            <c:set var="totalAmount" value="0" />
                                 <c:forEach var="item" items="${cartItems}">
-								    <c:if test="${item.selected != 0}">
-								        <tr>
-								            <td><img src="${pageContext.request.contextPath}/upload/image/${item.image_name}" alt="${item.goods_name}" class="product-image"/></td>
-								            <td>${item.goods_name}</td>
-								            <td>${item.quantity} 개</td>
-								            <td><fmt:formatNumber value="${item.goods_total_price}" pattern="#,###"/> 원</td>
-								        </tr>
-								        <c:set var="totalAmount" value="${totalAmount + item.goods_total_price}" />
-								    </c:if>
-								</c:forEach>
-
+                                    <tr>
+                                        <td><img src="${pageContext.request.contextPath}/upload/image/${item.image_name}" alt="${item.goods_name}" class="product-image"/></td>
+                                        <td>${item.goods_name}</td>
+                                        <td>${item.quantity} 개</td>
+                                        <td><fmt:formatNumber value="${item.goods_total_price}" pattern="#,###"/> 원</td>
+                                    </tr>
+                                </c:forEach>
                             </tbody>
                         </table>
+                    </c:otherwise>
+                </c:choose>
+
                 <!-- 결제 정보 입력 폼 -->
                 <form action="${pageContext.request.contextPath}/cart/completePayment/${id}" method="post">
                     <div class="form-group">
@@ -96,6 +84,7 @@
                         <label for="email">이메일:</label>
                         <input type="email" id="email" name="email" class="form-control" placeholder="이메일을 입력하세요" required>
                     </div>
+                    
                     <!-- 총 결제 금액 표시 및 결제 버튼 -->
                     <div class="total-section">
                         총 결제 금액: <strong id="final-total"><fmt:formatNumber value="${totalAmount}" pattern="#,###"/> 원</strong>
@@ -103,9 +92,6 @@
                     <input type="hidden" name="id" value="${id}">
                     <input type="submit" value="결제 확인" class="btn btn-primary float-right mt-3">
                 </form>
-                    </c:otherwise>
-                </c:choose>
-
             </div>
         </div>  
     </div>

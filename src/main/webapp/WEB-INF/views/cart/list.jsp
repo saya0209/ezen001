@@ -239,7 +239,8 @@
                                         <!-- 상품 삭제 -->
                                         <td>
                                             <form action="${pageContext.request.contextPath}/cart/removeCartItem" method="post">
-                                                <input type="hidden" name="goods_no" value="${item.goods_no}"> <!-- 상품 번호 -->
+                                                <input type="hidden" name="cart_no" value="${item.cart_no}"> <!-- 상품 번호 -->
+                                                <input type="hidden" name="id" value="${item.id}"> <!-- 상품 번호 -->
                                                 <input type="submit" value="삭제" class="btn btn-danger"> <!-- Bootstrap 버튼 -->
                                             </form>
                                         </td>

@@ -5,11 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import javax.servlet.http.HttpServletResponse;
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -305,6 +302,17 @@ public class CartController {
         }
     }
     
+    @PostMapping("/removeCartItem")
+    public String removeCartItem(@RequestParam("cart_no") Long cart_no, 
+                                 @RequestParam("id") String id) {
+        log.info("removeCartItem() 호출 - cart_no: " + cart_no + ", id: " + id);
+
+        // Service를 통해 해당 상품을 삭제
+        service.removeCartItem(id, cart_no);
+
+        // 삭제 후 장바구니 목록으로 리다이렉트
+        return "redirect:/cart/list/" + id;
+    }
     
 
 

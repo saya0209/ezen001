@@ -50,4 +50,5 @@ public interface CartMapper {
     
     void insertBuyItem(BuyItemVO cartItem);
 
+    void deleteCartItem(@Param("id") String id, @Param("cart_no") Long cart_no);
 }

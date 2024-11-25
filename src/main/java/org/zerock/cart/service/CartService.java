@@ -38,4 +38,5 @@ public interface CartService {
 	
 	void addBuyItem(BuyItemVO cartItem) throws Exception;
 
+	void removeCartItem(String id, Long cart_no);
 }

@@ -149,5 +149,9 @@ public class CartServiceImpl implements CartService {
     	mapper.insertBuyItem(buyItem);
     }
 
+    @Override
+    public void removeCartItem(String id, Long cart_no) {
+        mapper.deleteCartItem(id, cart_no);
+    }
 
 }

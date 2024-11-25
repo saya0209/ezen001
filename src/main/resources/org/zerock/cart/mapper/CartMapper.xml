@@ -87,8 +87,8 @@
 	</select>
 	
 	<insert id="insertCartItem" parameterType="org.zerock.cart.vo.CartItemVO">
-	    insert into cart (id, image_name, goods_no, price, delivery_charge, discount, goods_name, quantity, goods_total_price, selected_goods_price, selected)
-	    values (#{id}, #{image_name}, #{goods_no}, #{price}, #{delivery_charge}, #{discount}, #{goods_name}, #{quantity}, #{goods_total_price}, #{selected_goods_price}, #{selected})
+	    insert into cart (id, image_name, goods_no, price, delivery_charge, discount, goods_name, quantity, goods_total_price, selected_goods_price, selected, cart_no)
+	    values (#{id}, #{image_name}, #{goods_no}, #{price}, #{delivery_charge}, #{discount}, #{goods_name}, #{quantity}, #{goods_total_price}, #{selected_goods_price}, #{selected}, cart_seq.nextval)
 	</insert>
 	
 	<insert id="insertBuyItem" parameterType="org.zerock.buy.vo.BuyItemVO">
@@ -96,7 +96,10 @@
 	    values (#{id}, #{image_name}, #{goods_no}, #{price}, #{delivery_charge}, #{discount}, #{goods_name}, #{quantity}, #{goods_total_price}, #{selected_goods_price})
 	</insert>
 	
-	
+	<delete id="deleteCartItem" parameterType="map">
+	    DELETE FROM cart
+	    WHERE id = #{id} AND cart_no = #{cart_no}
+	</delete>
 </mapper>
 
 

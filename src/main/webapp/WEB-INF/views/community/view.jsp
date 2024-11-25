@@ -11,17 +11,16 @@
 <jsp:include page="../jsp/webLib.jsp"></jsp:include>
 
 <!-- CSS -->
-<link href="${path}/resources/css/communityView.css" rel="stylesheet">
-<link href="${path}/resources/css/msg.css" rel="stylesheet">
+<link href="${path}/resources/css/communityVA.css" rel="stylesheet">
+<link href="${path}/resources/css/likedislike.css" rel="stylesheet">
 
 
 <!-- 1. 필요한 전역변수 선언 -->
 <script type="text/javascript">
-    let id = "user1"; // 로그인한 사용자 ID
-//     let id = "${login.id}"; // 로그인한 사용자 ID
-    let no = ${vo.community_no}; // 게시글 번호
+    let id = "${login.id}"; // 로그인한 사용자 ID
+    let post_no = ${vo.community_no}; // 게시글 번호
     let replyPage = 1; // 댓글 페이지 번호
-    console.log("전역 변수 - 게시글 번호: " + community_no);
+    console.log("전역 변수 - 게시글 번호: " + post_no);
 </script>
 
 <!-- 2. 날짜 및 시간 처리 -->
@@ -31,12 +30,15 @@
 <script type="text/javascript" src="/js/util.js"></script>
 
 <!-- 3. 댓글 객체 (replySerive) 를 선언 : Ajax 처리부분 포함 -->
-<!-- 댓글 처리하는 모든 곳에 사용하는 부분을 코딩 -->
-<script type="text/javascript" src="/js/reply.js"></script>
+<script type="text/javascript" src="/js/communityreply.js"></script>
 
 <!-- 4. 댓글 객체(reply.js에서 선언한 replyService)를 호출하여 처리 + 이벤트처리 -->
-<!-- 일반 게시판 댓글에 사용되는 부분을 코딩 -->
 <script type="text/javascript" src="/js/replyProcess.js"></script>
+
+<!-- 5. 좋아요, 싫어요 : Ajax 처리부분 포함 -->
+<script type="text/javascript" src="/js/likedislike.js"></script>
+
+<!-- <script type="text/javascript" src="/js/replytest.js"></script> -->
 
 <script type="text/javascript">
 $(function() {
@@ -49,6 +51,11 @@ $(function() {
     $("#deleteBtn").click(function() {
         $('#deleteModal').modal('show'); // 모달 띄우기
     });
+    
+ 	// 취소
+	$("#cancelBtn").click(function() {
+		history.back();
+	});
 
     // 목록 버튼 클릭 시
     $("#listBtn").click(function() {
@@ -62,88 +69,93 @@ $(function() {
 
 </head>
 <body>
-<div class="container mt-4">
-    <div class="card shadow-sm border-0">
-        <!-- 카드 헤더 -->
-        <div class="card-header bg-light d-flex justify-content-between align-items-center">
-            <h3 class="post-title mb-0">${vo.title}</h3>  <!-- 제목 -->
-            
-            <!-- 수정, 삭제, 목록 버튼 -->
-            <div class="card-header-buttons">
-                <button class="btn btn-primary btn-sm" id="listBtn">목록</button>
-            </div>
-        </div>
-
-        <!-- 카드 본문 -->
-        <div class="card-body">
-            <!-- 게시글 메타 정보 -->
-            <div class="post-meta mb-3 text-muted">
-                <span class="nickname">${vo.nicname}</span>  <!-- 닉네임 -->
-                <span class="write-date ml-3">작성일: <fmt:formatDate value="${vo.writeDate}" pattern="yyyy-MM-dd" /></span>  <!-- 작성일 -->
-                <span class="hit ml-3">조회수: ${vo.hit}</span>  <!-- 조회수 -->
-            </div>
-
-            <!-- 게시글 내용 -->
-            <div class="content mb-3">
-                <pre class="text-break">${vo.content}</pre>  <!-- 내용 -->
-            </div>
-
-            <!-- 이미지가 있을 경우 표시 -->
-            <c:if test="${not empty vo.image}">
-                <img src="${pageContext.request.contextPath}${vo.image}" class="img-fluid mb-3" alt="게시글 이미지">
-            </c:if>
-
-            <!-- 좋아요, 싫어요 아이콘 -->
-            <div class="likes-dislikes mb-3">
-                <span class="like-btn mr-3">
-                    <i class="fa fa-thumbs-up"></i> ${vo.likeCnt}
-                </span>
-                <span class="dislike-btn">
-                    <i class="fa fa-thumbs-down"></i> ${vo.dislikeCnt}
-                </span>
-            </div>
-            
-            <!-- 수정, 삭제, 글 작성 버튼 (왼쪽 정렬) -->
-            <div class="d-flex justify-content-start mt-3">
-                <c:if test="${login != null && (login.id == vo.id || login.gradeNo == 9)}">
-                <button class="btn btn-outline-secondary btn-sm mr-2" onclick="location.href='writeForm.do'">
-                    <i class="fa fa-pencil"></i> 글 작성
+<div class="container">
+        <div class="card">
+            <!-- 헤더 영역 -->
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h1 class="post-title">${vo.title}</h1>
+                <button class="btn btn-primary" id="listBtn">
+                    <i class="fa fa-list"></i> 목록
                 </button>
-                    <button class="btn btn-outline-secondary btn-sm mr-2" id="updateBtn">수정</button>
-                    <button class="btn btn-outline-secondary btn-sm mr-2" id="deleteBtn">삭제</button>
+            </div>
+
+            <!-- 본문 영역 -->
+            <div class="card-body">
+                <!-- 메타 정보 -->
+                <div class="post-meta">
+                    <span><i class="fa fa-user"></i> ${vo.nicname}</span>
+                    <span><i class="fa fa-calendar"></i> <fmt:formatDate value="${vo.writeDate}" pattern="yyyy-MM-dd" /></span>
+                    <span><i class="fa fa-eye"></i> ${vo.hit}</span>
+                </div>
+
+                <!-- 컨텐츠 -->
+                <div class="content">
+                    <pre class="text-break">${vo.content}</pre>
+                </div>
+
+                <!-- 이미지 -->
+                <c:if test="${!empty vo.image}">
+                    <div class="images-list">
+                        <c:forEach items="${fn:split(vo.image, ',')}" var="file">
+                            <div class="image-item">
+                                <img src="${path}/upload/community/${file}" alt="첨부 이미지" />
+                            </div>
+                        </c:forEach>
+                    </div>
+                </c:if>
+
+                <!-- 좋아요/싫어요 -->
+                <div class="reaction-buttons">
+                    <button id="likeBtn" class="${isLiked ? 'active' : ''}" data-community-no="${vo.community_no}">
+                        <i class="material-icons">thumb_up</i>
+                        <span id="likeCount">${vo.likeCnt}</span>
+                    </button>
+                    <button id="dislikeBtn" class="${isDisliked ? 'active' : ''}" data-community-no="${vo.community_no}">
+                        <i class="material-icons">thumb_down</i>
+                        <span id="dislikeCount">${vo.dislikeCnt}</span>
+                    </button>
+                </div>
+
+                <!-- 작성자 전용 버튼 -->
+                <c:if test="${login != null && (login.id == vo.id || login.gradeNo == 9)}">
+                    <div class="action-buttons">
+                        <button class="btn btn-outline-secondary" onclick="location.href='writeForm.do'">
+                            <i class="fa fa-pencil"></i> 글 작성
+                        </button>
+                        <button class="btn btn-outline-secondary" id="updateBtn">
+                            <i class="fa fa-edit"></i> 수정
+                        </button>
+                        <button class="btn btn-outline-secondary" id="deleteBtn">
+                            <i class="fa fa-trash"></i> 삭제
+                        </button>
+                    </div>
                 </c:if>
             </div>
         </div>
+
+        <!-- 댓글 영역 -->
+        <div class="reply-section mt-4">
+            <jsp:include page="communityreply.jsp"></jsp:include>
+        </div>
     </div>
-    
-    <!-- 댓글 영역 (communityreply.jsp를 포함) -->
-    <div class="mt-4">
-        <jsp:include page="communityreply.jsp"></jsp:include>
+
+    <!-- 삭제 모달 -->
+    <div class="modal fade" id="deleteModal">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <form action="delete.do" method="post">
+                    <input type="hidden" name="community_no" value="${vo.community_no}">
+                    <div class="modal-body text-center py-4">
+                        <p class="delete-message">삭제하시겠습니까?</p>
+                        <p class="delete-warning">삭제된 데이터는 되돌릴 수 없습니다.</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">취소</button>
+                        <button type="submit" class="btn btn-primary">삭제</button>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    
-		<!-- The Modal -->
-		<div class="modal fade" id="deleteModal">
-		    <div class="modal-dialog modal-dialog-centered">
-		        <div class="modal-content">
-		            <form action="delete.do" method="post">
-		                <input type="hidden" name="notice_no" value="${vo.community_no}">
-		                <div class="modal-body d-flex justify-content-center align-items-center">
-		                    <div class="text-center">
-		                        <!-- 삭제 확인 메시지 (bold) -->
-		                        <p class="delete-message">삭제하시겠습니까?</p>
-		                        <!-- 삭제된 데이터는 되돌릴 수 없다는 메시지 (기본) -->
-		                        <p class="delete-warning">삭제된 데이터는 되돌릴 수 없습니다.</p>
-		                    </div>
-		                </div>
-		                <div class="modal-footer">
-		                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">취소</button>
-		                    <button type="submit" class="btn btn-primary">삭제</button>
-		                </div>
-		            </form>
-		        </div>
-		    </div>
-		</div>
-    
-	</div>
 </body>
 </html>

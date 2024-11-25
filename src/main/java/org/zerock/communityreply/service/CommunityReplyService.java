@@ -9,7 +9,7 @@ public interface CommunityReplyService {
 
     // 댓글 목록 조회
     public List<CommunityReplyVO> list(PageObject pageObject, Long post_no);
-
+    
     // 댓글 작성
     public Integer write(CommunityReplyVO vo);
 
@@ -19,9 +19,16 @@ public interface CommunityReplyService {
     // 댓글 삭제
     public Integer delete(CommunityReplyVO vo);
 
-    // 댓글 좋아요 증가
-    public Integer increaseLike(Long rno);
+////////////////////////////////////////////////////////
 
-    // 댓글 싫어요 증가
-    public Integer increaseDislike(Long rno);
+    // 좋아요/싫어요
+	public Integer updateLike(Long rno, int amount);
+	public Integer updateDislike(Long rno, int amount);
+
+	CommunityReplyVO getReply(Long rno);
+
+
+
+
+
 }

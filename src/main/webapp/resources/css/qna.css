@@ -1,0 +1,214 @@
+@charset "UTF-8";
+
+/* qna/css/qna-common.css */
+.qna-container {
+/*     max-width: 1200px; */
+/*     margin: 0 auto; */
+/*     padding: 20px; */
+    max-width: 900px;
+	margin: 2rem auto;
+	padding: 0 1rem;
+}
+
+.qna-title {
+    color: #333;
+    margin-bottom: 30px;
+    padding-bottom: 15px;
+    border-bottom: 2px solid #007bff;
+}
+
+.card {
+	box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.qna-category {
+    display: inline-block;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+    font-weight: 500;
+}
+
+.category-delivery {
+	background-color: #e3f2fd;
+	color: #1565c0;
+}
+
+.category-refund {
+	background-color: #f3e5f5;
+	color: #6a1b9a;
+}
+
+.category-inquiry {
+	background-color: #e8f5e9;
+	color: #2e7d32;
+}
+
+.category-delivery { background-color: #e3f2fd; color: #1976d2; }
+.category-payment { background-color: #f3e5f5; color: #7b1fa2; }
+.category-inquiry { background-color: #e8f5e9; color: #388e3c; }
+
+
+/* 상태 표시 스타일 */
+.status-waiting {
+    background-color: #fff3e0; /* 연한 오렌지 색 */
+    color: #e65100; /* 진한 오렌지 색 */
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.status-completed {
+    background-color: #e8f5e9; /* 연한 초록 색 */
+    color: #2e7d32; /* 진한 초록 색 */
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.status-confirmed {
+    background-color: #bbdefb; /* 연한 파란색 */
+    color: #1565c0; /* 진한 파란색 */
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+
+.status-unknown {
+    background-color: #f5f5f5; /* 연한 회색 */
+    color: #9e9e9e; /* 중간 회색 */
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+.btn-qna {
+    padding: 8px 16px;
+    border-radius: 4px;
+    font-weight: 500;
+    transition: all 0.3s;
+}
+
+.btn-qna-primary {
+    background-color: #007bff;
+    color: white;
+    border: none;
+}
+
+.btn-qna-primary:hover {
+    background-color: #0056b3;
+    color: white;
+}
+
+.btn-qna-secondary {
+    background-color: #6c757d;
+    color: white;
+    border: none;
+}
+
+.btn-qna-secondary:hover {
+    background-color: #545b62;
+    color: white;
+}
+
+.answer-section {
+    background-color: #f8f9fa;
+    margin-top: 20px;
+    border-left: 4px solid #28a745;
+	padding: 1.5rem;
+	border-radius: 5px;
+}
+
+.policy-section {
+    background-color: #f8f9fa;
+    padding: 20px;
+    margin: 20px 0;
+    border-radius: 8px;
+}
+
+.required-field::after {
+    content: "*";
+    color: #dc3545;
+    margin-left: 4px;
+}
+
+.pagination {
+    margin-top: 30px;
+    justify-content: center;
+}
+
+.form-group {
+    margin-bottom: 1.5rem;
+}
+
+.invalid-feedback {
+    display: none;
+    color: #dc3545;
+    font-size: 14px;
+}
+
+/* writeAnswer.jsp */
+.answer-container {
+	max-width: 800px;
+	margin: 2rem auto;
+	padding: 0 1rem;
+}
+
+.answer-title {
+	color: #333;
+	margin-bottom: 2rem;
+	padding-bottom: 1rem;
+	border-bottom: 2px solid #007bff;
+}
+
+.original-question {
+	background-color: #f8f9fa;
+	padding: 1.5rem;
+	margin-bottom: 2rem;
+	border-radius: 5px;
+	border-left: 4px solid #007bff;
+}
+
+.required-field::after {
+	content: "*";
+	color: red;
+	margin-left: 4px;
+}
+
+.btn-answer {
+	padding: 0.5rem 1.5rem;
+	border-radius: 4px;
+}
+
+.btn-answer-primary {
+	background-color: #007bff;
+	color: white;
+	border: none;
+}
+
+.btn-answer-primary:hover {
+	background-color: #0056b3;
+	color: white;
+}
+
+.btn-answer-secondary {
+	background-color: #6c757d;
+	color: white;
+	border: none;
+}
+
+.btn-answer-secondary:hover {
+	background-color: #545b62;
+	color: white;
+}
+
+.form-group label {
+	font-weight: 500;
+	color: #495057;
+}
+
+.form-control:focus {
+	border-color: #80bdff;
+	box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+}

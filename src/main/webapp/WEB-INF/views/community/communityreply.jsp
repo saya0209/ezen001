@@ -1,76 +1,133 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
-<!-- communityreply.jsp -->
-<div class="row" style="margin : 40px -10px 0 -10px">
-	<div class="col-lg-12">
-		<!-- card -->
-		<div class="card">
-			<!-- 댓글 제목 -->
-			<div class="card-header" style="background:#e0e0e0">
-				<i class="fa fa-comments fa-fw"></i> Reply
-				<!-- Button to Open the Modal -->
-				<button type="button" class="btn btn-primary btn-sm pull-right"
-				 data-toggle="modal" data-target="#replyModal" id="newReplyBtn">
-					New Reply
-				</button>
-			</div>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-			<!-- 댓글 리스트 데이터 출력 -->		
-			<div class="card-body">
-				<ul class="chat">
-					<!-- 데이터 한개당 li 태그를 만든다. for or foreach -->
-					<!-- 하드코딩 -->
-					<li class="left clearfix" data-rno="1">
-						<div>
-							<div class="header">
-								<strong class="primary-font">홍길동(test1)</strong>
-								<small class="pull-right text-muted">2024-01-01</small>
-							</div>
-							<p><pre>Good job!!</pre></p>
-						</div>
-					</li>
-				</ul>
-			</div> <!-- card-body -->
-			
-			<div class="card-footer">
-				<ul class="pagination pagination-sm">
-					<li class="page-item"><a class="page-link" href="#">Previous</a></li>
-					<li class="page-item"><a class="page-link" href="#">1</a></li>
-					<li class="page-item"><a class="page-link" href="#">2</a></li>
-					<li class="page-item"><a class="page-link" href="#">3</a></li>
-					<li class="page-item"><a class="page-link" href="#">Next</a></li>
-				</ul>
-			</div>
-		</div>
-	</div>
+<head>
+<link href="${path}/resources/css/communityreply.css" rel="stylesheet">
+
+
+<script type="text/javascript">
+$(function() {
+	// 향상된 이미지 미리보기 기능
+    
+    // 파일 크기 및 형식 검증
+    $("#uploadFiles").change(function(e) {
+        const maxSize = 5 * 1024 * 1024; // 5MB
+        const files = e.target.files;
+        
+        for(let i = 0; i < files.length; i++) {
+            if(files[i].size > maxSize) {
+                alert('파일 크기는 5MB를 초과할 수 없습니다.');
+                this.value = '';
+                return false;
+            }
+            
+            const fileType = files[i].type;
+            if(!fileType.match(/^image\/(jpeg|png|gif)$/)) {
+                alert('이미지 파일(JPG, PNG, GIF)만 업로드 가능합니다.');
+                this.value = '';
+                return false;
+            }
+        }
+    });
+});
+</script>
+
+<script>
+	$(document).ready(function() {
+		// 모달 초기화
+		$('#replyModal').on('hidden.bs.modal', function() {
+			$('#replyContent').val('');
+			$('#replyRno').val('');
+			$('#replyWriteBtn').show();
+			$('#replyUpdateBtn').hide();
+			$('#replyModalLabel').text('댓글 작성');
+		});
+
+		// 댓글 입력 글자수 제한
+		$('#replyContent').on('input', function() {
+			const maxLength = 1000;
+			let content = $(this).val();
+
+			if (content.length > maxLength) {
+				$(this).val(content.substring(0, maxLength));
+				alert('댓글은 최대 ' + maxLength + '자까지 입력 가능합니다.');
+			}
+		});
+
+		// 에러 처리를 위한 공통 함수
+		function handleError(error) {
+			console.error('Error:', error);
+			alert('처리 중 오류가 발생했습니다. 다시 시도해 주세요.');
+		}
+	});
+</script>
+
+</head>
+
+<!-- 댓글 영역 전체 컨테이너 -->
+<div class="container-fluid reply-container">
+    <div class="row">
+        <div class="col-12">
+            <!-- 댓글 카드 -->
+            <div class="card">
+                <!-- 댓글 헤더 -->
+                <div class="card-header d-flex justify-content-between align-items-center">
+                    <h5 class="mb-0">댓글</h5>
+                    <c:if test="${!empty login}">
+                        <button type="button" class="btn" data-toggle="modal" data-target="#replyModal" id="newReplyBtn">
+                            <i class="material-icons">chat_bubble_outline</i>
+                        </button>
+                    </c:if>
+                </div>
+
+                <!-- 댓글 목록 영역 -->
+                <div class="card-body p-0">
+                    <div class="reply-list-container">
+                        <ul class="chat list-unstyled mb-0">
+                            <!-- 댓글이 동적으로 추가될 영역 -->
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- The Modal -->
-	<!-- id와 Modal여는 버튼의 data-target의 이름을 같게해야 합니다. -->
-  <div class="modal fade" id="replyModal">
+<!-- 댓글 모달 -->
+<div class="modal fade" id="replyModal" tabindex="-1" role="dialog" aria-labelledby="replyModalLabel" aria-hidden="true">
     <div class="modal-dialog modal-dialog-centered">
-      <div class="modal-content">
-      
-        <!-- Modal Header -->
-        <div class="modal-header">
-          <h4 class="modal-title">댓글 등록</h4>
-          <button type="button" class="close" data-dismiss="modal">&times;</button>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="replyModalLabel">댓글 작성</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <input type="hidden" id="replyRno">
+                <form id="replyForm">
+                    <div class="form-group">
+                        <textarea class="form-control" id="replyContent" rows="4" 
+                                placeholder="댓글을 입력해주세요" required></textarea>
+                    </div>
+                    <div class="form-group mb-0">
+                        <label for="uploadFiles" class="btn btn-light btn-sm">
+                            <i class="fa fa-image mr-1"></i>사진 첨부
+                        </label>
+                        <input type="file" id="uploadFiles" name="uploadFiles" 
+                               multiple accept="image/*" style="display: none;">
+                        <small class="text-muted d-block mt-1">
+                            최대 5MB, JPG/PNG/GIF
+                        </small>
+                    </div>
+                    <div id="imagePreviewContainer" class="preview-container"></div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
+                <button type="button" class="btn btn-primary" id="replyWriteBtn">등록</button>
+                <button type="button" class="btn btn-success" id="replyUpdateBtn" style="display: none;">수정</button>
+            </div>
         </div>
-        
-        <!-- Modal body -->
-        <div class="modal-body">
-        	<input type="hidden" id="replyRno"> <!-- 댓글 수정에 사용하기 위해 rno 보관 -->
-          <textarea rows="4" class="form-control" id="replyContent"></textarea>
-        </div>
-        
-        <!-- Modal footer -->
-        <div class="modal-footer">
-        	<button class="btn btn-primary" id="replyWriteBtn">등록</button>
-        	<button class="btn btn-success" id="replyUpdateBtn">수정</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">취소</button>
-        </div>
-        
-      </div>
     </div>
-  </div>
- 
+</div>

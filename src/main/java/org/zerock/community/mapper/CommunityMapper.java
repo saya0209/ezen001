@@ -2,6 +2,7 @@ package org.zerock.community.mapper;
 
 import java.util.List;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 import org.zerock.community.vo.CommunityVO;
 import org.zerock.util.page.PageObject;
@@ -30,25 +31,14 @@ public interface CommunityMapper {
     public Integer update(CommunityVO vo);
     
     // 5. 커뮤니티 게시판 글삭제
-	public Integer delete(CommunityVO vo);
-//    public Integer delete(Long community_no);
+	public Integer delete(Long community_no);
 	
-	// 6-1. 좋아요 증가
-    public Integer increaseLike(Long community_no);
-    // 6-2. 싫어요 증가
-    public Integer increaseDislike(Long community_no);
-    // 6-3. 좋아요 취소
-    public Integer cancelLike(Long community_no);
-    // 6-4. 싫어요 취소
-    public Integer cancelDislike(Long community_no);
+	
+////////////////////////////////////////////////////////
+	
+	// 좋아요/싫어요
+	public Integer updateLike(@Param("community_no") Long community_no, @Param("amount") int amount);
+	public Integer updateDislike(@Param("community_no") Long community_no, @Param("amount") int amount);
+    
 }
-
-
-
-
-
-
-
-
-
 

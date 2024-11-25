@@ -1,0 +1,179 @@
+@charset "UTF-8";
+
+/* 기본 텍스트 색상 */
+body {
+    color: #002244;
+}
+
+/* 네비게이션 바 */
+.navbar {
+    background-color: #004080 !important;
+}
+.nav-link {
+    color: white !important; /* 텍스트 색을 흰색으로 */
+}
+.top-link {
+    color: #004080 !important; 
+}
+
+.nav-link:hover {
+    text-decoration: underline; /* 호버 시 밑줄 추가 */
+}
+
+/* "전체카테고리" 버튼 색상 */
+.category-button {
+    color: #fff;
+    cursor: pointer;
+    padding: 10px 15px;
+}
+.category-button:hover {
+    color: #fff;
+}
+
+.category-center {
+    flex: 1;
+    display: flex;
+    justify-content: center; /* 중앙 정렬 */
+    gap: 10px; /* 중앙 메뉴 간격 */
+}
+
+.category-center a {
+    color: #fff;
+    font-size: 16px;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+/* 푸터 스타일 */
+footer {
+    background-color: #002244;
+    color: #d9e6f2;
+    padding: 20px;
+    text-align: center;
+    width: 100%; /* 화면 너비를 꽉 채움 */
+    position: fixed;
+    bottom: 0; /* 화면의 아래쪽에 위치 */
+    left: 0;
+}
+
+footer a {
+    color: #d9e6f2;
+    text-decoration: none;
+}
+
+footer a:hover {
+    color: #b3cde0;
+}
+
+/* 상단 로고 및 사용자 메뉴 */
+.header-top {
+    display: flex;
+    padding: 10px 20px;
+    background-color: #fff; /* 흰색 배경 */
+    border-bottom: 1px solid #ddd;
+    justify-content: center; /* 요소들을 중앙으로 정렬 */
+    align-items: center; /* 세로 중앙 정렬 */
+}
+
+.header-logo {
+    display: flex; /* flexbox 적용 */
+    justify-content: center; /* 수평 중앙 정렬 */
+    align-items: center; /* 수직 중앙 정렬 */
+    flex-grow: 1; /* 로고가 공간을 차지하도록 설정 */
+}
+
+.header-logo img {
+    max-width: 220px;
+    height: auto; /* 이미지의 비율을 유지하면서 크기를 조절 */
+}
+
+/* 사용자 메뉴 스타일 */
+.user-menu {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end; /* 오른쪽 정렬 추가 */    
+}
+
+.user-menu .nav-item {
+    margin-left: 15px;
+}
+
+.user-menu a {
+    color: #fff;
+    font-size: 14px;
+    text-decoration: none;
+}
+.user-menu a:hover {
+    color: #6db33f;
+}
+
+/* 카테고리 메뉴 스타일 */
+.category-menu {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; /* 왼쪽과 중앙 정렬 */
+    background-color: #fff;
+    padding: 10px 0;
+    position: relative;
+}
+
+/* 사이드바 */
+.sidebar {
+    display: none;
+    position: absolute;
+    top: 255px;
+    left: 0; /* 왼쪽 정렬 */
+    background-color: #002244;
+    padding: 20px;
+    width: 250px;
+    color: white;
+}
+.sidebar a {
+    color: #d9e6f2;
+    display: block;
+    padding: 10px;
+    text-align: left; /* 왼쪽 정렬 */
+    text-decoration: none;
+}
+.sidebar a:hover {
+    background-color: #004080;
+}
+
+/* Flex 레이아웃 적용 */
+html, body {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    margin: 0;
+}
+
+.main-content {
+    flex: 1;
+    padding-bottom: 50px; /* footer 높이만큼의 패딩 추가 */
+}
+
+/* 모바일 및 데스크톱 호환 사이드바 */
+@media (max-width: 768px) {
+    .sidebar {
+        position: fixed;
+        top: 0;
+        left: 0;
+        height: 100%;
+        display: none;
+    }
+
+    .category-button {
+        display: block;
+    }
+
+    .sidebar a {
+        padding: 15px;
+        font-size: 16px;
+    }
+}
+
+/* 카테고리 메뉴에서 "전체카테고리" 버튼 클릭 시 사이드바 표시 */
+.sidebar.active {
+    display: block;
+}

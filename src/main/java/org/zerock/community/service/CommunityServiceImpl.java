@@ -79,57 +79,30 @@ public class CommunityServiceImpl implements CommunityService {
 	// 4. 일반 게시판 글수정
 	@Override
 	public Integer update(CommunityVO vo) {
-		log.info("update() 실행 =====");
-		return mapper.update(vo);
+	    log.info("update() 실행 =====");
+	    return mapper.update(vo);  // 게시물 수정 쿼리 호출
 	}
+
 	
 	// 5. 일반 게시판 글삭제
 	@Override
-	public Integer delete(CommunityVO vo) {
-		log.info("delete() 실행 =====");
-		return mapper.delete(vo);
+	public Integer delete(Long community_no) {
+	    log.info("delete() 호출됨: community_no = " + community_no);
+	    return mapper.delete(community_no);  // 게시글 삭제
 	}
-//	@Override
-//	public Integer delete(Long community_no) {
-//		log.info("delete() 실행 =====");
-//		return mapper.delete(community_no);
-//	}
+
 	
-	// 좋아요 증가
-    @Override
-    public Integer increaseLike(Long community_no) {
-        log.info("increaseLike() 실행 =====");
-        return mapper.increaseLike(community_no);
-    }
+////////////////////////////////////////////////////////
+	
+	// 좋아요/싫어요
+	@Override
+	public Integer updateLike(Long community_no, int amount) {
+	    return mapper.updateLike(community_no, amount);
+	}
 
-    // 싫어요 증가
-    @Override
-    public Integer increaseDislike(Long community_no) {
-        log.info("increaseDislike() 실행 =====");
-        return mapper.increaseDislike(community_no);
-    }
-
-    // 좋아요 취소
-    @Override
-    public Integer cancelLike(Long community_no) {
-        log.info("cancelLike() 실행 =====");
-        return mapper.cancelLike(community_no);
-    }
-
-    // 싫어요 취소
-    @Override
-    public Integer cancelDislike(Long community_no) {
-        log.info("cancelDislike() 실행 =====");
-        return mapper.cancelDislike(community_no);
-    }
+	@Override
+	public Integer updateDislike(Long community_no, int amount) {
+	    return mapper.updateDislike(community_no, amount);
+	}
 }
-
-
-
-
-
-
-
-
-
 

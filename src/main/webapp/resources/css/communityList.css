@@ -1,143 +1,181 @@
 @charset "UTF-8";
 
-/* 전체 기본 스타일 */
-body {
-    font-family: 'Arial', sans-serif;
-    background-color: #f8f9fa;
-    color: #333;
+:root {
+    --primary-color: #4a90e2;      /* 메인 블루 */
+    --secondary-color: #5b9bd5;     /* 밝은 블루 */
+    --hover-color: #f5f9ff;         /* 호버 블루 */
+    --border-color: #e1e8f0;        /* 테두리 블루 */
+    --text-color: #2c3e50;          /* 텍스트 컬러 */
+    --light-text: #7f8c8d;          /* 밝은 텍스트 */
+    --notice-bg: #f8fbff;           /* 공지사항 배경 */
 }
 
-.container {
-    max-width: 900px;
-    margin-top: 20px;
+.board-container {
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 0 20px;
 }
 
-.board-title {
-    font-size: 1.8em;
-    font-weight: bold;
-    color: #333;
+.board-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     margin-bottom: 20px;
 }
 
-/* 검색 폼 */
+.board-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--text-color);
+}
+
+.board-title i {
+    margin-right: 8px;
+    color: var(--primary-color);
+}
+
+/* 검색 영역을 상단으로 이동하고 디자인 개선 */
+.search-container {
+    background: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
+}
+
 .search-form {
-    display: flex;
+    display: grid;
+    grid-template-columns: 150px 150px 1fr auto;
+    gap: 12px;
     align-items: center;
 }
 
-.search-form input[type="text"] {
-    flex: 1;
-    padding: 8px 10px;
-    border-radius: 4px;
-    border: 1px solid #ced4da;
+.search-select {
+    height: 40px;
+    padding: 0 12px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-color);
+    background-color: white;
+    font-size: 0.9rem;
 }
 
-.search-form button {
-    margin-left: 8px;
-    padding: 8px 12px;
-    border-radius: 4px;
+.search-input {
+    height: 40px;
+    padding: 0 16px;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    color: var(--text-color);
+    font-size: 0.9rem;
 }
 
-.search-form .btn {
-    background-color: #343a40;
-    color: #fff;
+.search-input:focus {
+    outline: none;
+    border-color: var(--primary-color);
+    box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
+}
+
+.search-btn {
+    height: 40px;
+    padding: 0 24px;
+    background: var(--primary-color);
+    color: white;
     border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.2s;
 }
 
-.search-form .btn:hover {
-    background-color: #495057;
+.search-btn:hover {
+    background: var(--secondary-color);
 }
 
-/* 글 작성 버튼 */
-.btn-dark {
-    background-color: #343a40;
-    color: #fff;
-    border: none;
-    padding: 8px 12px;
-    border-radius: 4px;
+/* 정렬 옵션 스타일 개선 */
+.sort-options {
+    display: flex;
+    gap: 16px;
+    align-items: center;
+    margin-bottom: 12px;
+}
+
+.sort-options a {
+    color: var(--light-text);
     text-decoration: none;
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 0.9rem;
+    transition: all 0.2s;
 }
 
-.btn-dark:hover {
-    background-color: #495057;
+.sort-options a:hover {
+    color: var(--primary-color);
+    background: var(--hover-color);
 }
 
-/* 게시판 테이블 스타일 */
+.sort-options .active {
+    color: var(--primary-color);
+    font-weight: 500;
+    background: var(--hover-color);
+}
+
+/* 테이블 디자인 개선 */
 .board-table {
-    margin-top: 20px;
-    border: 1px solid #dee2e6;
-    background-color: #fff;
-}
-
-.board-table thead {
-    background-color: #e9ecef;
-}
-
-.board-table th, .board-table td {
-    vertical-align: middle;
-    padding: 8px 8px;  /* General padding for all cells */
-    text-align: center;
-}
-
-/* Adjust padding between 작성자, 작성일, 조회수 columns to reduce space */
-.board-table td.text-center:nth-child(2), /* 작성자 */
-.board-table td.text-center:nth-child(3), /* 작성일 */
-.board-table td.text-center:nth-child(4)  /* 조회수 */
-{
-    padding-left: 3px;  /* Reduced left padding */
-    padding-right: 3px; /* Reduced right padding */
-}
-
-/* Title column (첫번째 열) has more space on the left */
-.board-table .post-title {
-    text-align: left;
-    padding-left: 16px; /* Keep more padding on the left for title */
-    padding-right: 12px; /* Optional: adjust right padding */
+    width: 100%;
+    border-top: 2px solid var(--primary-color);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    margin-bottom: 20px;
 }
 
 .board-table th {
-    font-weight: bold;
-    color: #495057;
+    padding: 16px;
+    font-size: 0.9rem;
+    background: #fafbfc;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
+    font-weight: 600;
 }
 
-.board-table .post-title a {
-    color: #007bff;
-    text-decoration: none;
+.board-table td {
+    padding: 16px;
+    font-size: 0.9rem;
+    border-bottom: 1px solid var(--border-color);
+    color: var(--text-color);
 }
 
-.board-table .post-title a:hover {
-    color: #0056b3;
-    text-decoration: underline;
-}
-
-.board-table .fa {
-    margin-right: 4px;
-}
-
-/* 아이콘 스타일 */
-.fa-thumbs-up,
-.fa-comments,
-.fa-file-image-o {
-    color: #6c757d;
-}
-
-/* 페이지네이션 */
-.pagination-bar {
-    margin-top: 20px;
+/* 글쓰기 버튼 위치 조정 */
+.write-btn-container {
     display: flex;
-    justify-content: center;
+    justify-content: flex-end;
+    margin-bottom: 20px;
 }
 
-.pagination .page-link {
-    color: #007bff;
+.write-btn {
+    padding: 10px 24px;
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 6px;
+    text-decoration: none;
+    font-weight: 500;
+    transition: background-color 0.2s;
 }
 
-.pagination .page-link:hover {
-    color: #0056b3;
-}
-
-.pagination .page-item.active .page-link {
-    background-color: #007bff;
-    border-color: #007bff;
-    color: #fff;
+/* 반응형 디자인 개선 */
+@media (max-width: 768px) {
+    .search-form {
+        grid-template-columns: 1fr;
+    }
+    
+    .board-table th:nth-child(3),
+    .board-table th:nth-child(5),
+    .board-table th:nth-child(6),
+    .board-table td:nth-child(3),
+    .board-table td:nth-child(5),
+    .board-table td:nth-child(6) {
+        display: none;
+    }
 }

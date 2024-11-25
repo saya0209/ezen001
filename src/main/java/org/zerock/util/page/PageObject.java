@@ -6,6 +6,19 @@ import javax.servlet.http.HttpServletRequest;
 
 public class PageObject {
 
+// 카테고리 
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	private String category;  // Add this field
+
+	public String getCategory() {  // Getter for category
+	    return category;
+	}
+
+	public void setCategory(String category) {  // Setter for category
+	    this.category = category;
+	}
+//~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+	
 	// 현재 페이지를 표현할때 사용하는 정보(DB)
 	private long page; // 현재 보여주고 싶은 페이지
 	private long perPageNum; // 페이지당 보여주고싶은 데이터 수

@@ -29,9 +29,13 @@ public interface CommunityReplyMapper {
     // 4. 댓글 삭제
     public Integer delete(CommunityReplyVO vo);  // 댓글 삭제 (댓글 번호, 삭제할 작성자)
 
-    // 5. 댓글 좋아요 증가
-    public Integer increaseLike(Long rno);  // 댓글 번호로 좋아요 수 증가
+    
+    //////////////////////////////////////////////////////////
+    
+    // 좋아요/싫어요
+    public Integer updateLike(Long rno, int amount);
+	public Integer updateDislike(Long rno, int amount);
 
-    // 6. 댓글 싫어요 증가
-    public Integer increaseDislike(Long rno);  // 댓글 번호로 싫어요 수 증가
+	public CommunityReplyVO getReply(Long rno);
+
 }

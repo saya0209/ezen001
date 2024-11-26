@@ -232,7 +232,7 @@
                                             <input type="hidden" id="discount-${item.goods_no}" value="${item.discount}"/> <!-- 상품 할인가 -->
                                             <input type="hidden" id="price-${item.goods_no}" value="${item.price}"/> <!-- 상품 가격 -->
                                             <span id="total-${item.goods_no}" class="item-total">
-                                            	<c:set var="goods_total_price" value="${(item.price-item.discount) * item.quantity + item.delivery_charge}" />
+                                            	<c:set var="goods_total_price" value="${((item.price)-item.discount) * item.quantity + item.delivery_charge}" />
                                                 <fmt:formatNumber value="${goods_total_price}" pattern="#,###"/> 원
                                             </span>
                                         </td>

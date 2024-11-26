@@ -14,6 +14,7 @@ public class GoodsVO {
     private Integer cpu_price;
     private Integer memory_price;
     private Integer graphic_Card_price;
+    private Integer price;
     private String image_name;
     private String category;
     private Long discount;              // 개별 상품의 할인액

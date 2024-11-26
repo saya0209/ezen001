@@ -137,7 +137,7 @@ $(function(){
                             <h5 class="title">${vo.memory_name}</h5>
                             <h5 class="title">${vo.graphic_Card_name}</h5>
                             <p class="sale-price">
-                                <fmt:formatNumber value="${vo.total_price}" type="currency" />
+                                <fmt:formatNumber value="${vo.total_price-vo.discount+vo.delivery_charge}" type="currency" />
                             </p>
                         </div>
                     </div>

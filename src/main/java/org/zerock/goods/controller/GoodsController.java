@@ -84,6 +84,8 @@ public class GoodsController {
     @GetMapping("view.do")
     public String view(@RequestParam("goods_no") Long goods_no, Model model) {
         GoodsVO goodsVO = goodsService.view(goods_no);
+        //정가를 세팅
+        goodsVO.setPrice(goodsVO.getCpu_price()+goodsVO.getGraphic_Card_price()+goodsVO.getMemory_price());
         model.addAttribute("goods", goodsVO);
         return "goods/view";  // 상품 상세보기 JSP로 포워딩
     }

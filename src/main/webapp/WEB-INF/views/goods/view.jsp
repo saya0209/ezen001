@@ -28,7 +28,7 @@
         
         .product-container {
 		    background-color: #ffffff;
-		    width: 60%;
+		    width: 80%;
 		    padding: 20px;
 		    border-radius: 10px;
 		    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
@@ -372,6 +372,7 @@
 	    
 	    
 	    function updateTotalPrice() {
+	    	price = cpu_price + memory_price + graphic_Card_price
 	        total_price = cpu_price + memory_price + graphic_Card_price + delivery_charge - discount;
 	        $(".price_pro").text(total_price);
 
@@ -474,7 +475,7 @@ $(function() {
 	    const goods_no = 1; // 예시로 상품 번호를 고정하거나 페이지에서 동적으로 받아옴
 	    const goods_name = "사무용 컴퓨터"; // 예시로 상품 이름을 설정
 	    const image_name = document.getElementById("image_name").src; // 이미지 URL
-	    const price = parseFloat(document.getElementById("price").textContent || document.getElementById("price").innerText);
+	    let price = parseFloat(document.getElementById("price").textContent || document.getElementById("price").innerText);
 	    const quantity = 1; // 예시로 1개로 고정, 실제로는 UI에서 수량을 입력받을 수 있음
 	    const goods_total_price = price * quantity + parseFloat(document.getElementById("delivery_charge").textContent || document.getElementById("delivery_charge").innerText);
 	    const selected_goods_price = goods_total_price; // 선택된 상품 총 가격 (예시로 상품 가격만 계산)
@@ -483,6 +484,7 @@ $(function() {
 	    const total_discount = discount; // 전체 할인 (예시로 개별 할인과 동일하게 설정)
 	    const selected = 0; // 상품 선택 여부 (예시로 선택된 상태로 설정)
 	    const totalAmount = goods_total_price - discount; // 최종 가격 (예시로 총 가격에서 할인액을 뺀 값)
+	    price = ${goods.price};
 		
 	    
 	    // JSON 객체 생성
@@ -536,7 +538,7 @@ $(function() {
 	    const image_name = document.getElementById("image_name").src;  // 이미지 URL
 	    const price = parseFloat(document.getElementById("price").textContent || document.getElementById("price").innerText);
 	    const quantity = 1;  // 예시로 1개로 고정, 실제로는 UI에서 수량을 입력받을 수 있음
-	    const goods_total_price = price * quantity + parseFloat(document.getElementById("delivery_charge").textContent || document.getElementById("delivery_charge").innerText);
+	    const goods_total_price = price;
 	    const selected_goods_price = goods_total_price;  // 선택된 상품 총 가격 (예시로 상품 가격만 계산)
 	    const delivery_charge = parseFloat(document.getElementById("delivery_charge").textContent || document.getElementById("delivery_charge").innerText);
 	    const discount = parseFloat(document.getElementById("discount").textContent || document.getElementById("discount").innerText || 0);

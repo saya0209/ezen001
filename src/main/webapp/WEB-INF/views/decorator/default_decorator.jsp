@@ -371,12 +371,11 @@ $(document).ready(function() {
 	                </button>
 	                <!-- 사이드 카테고리 메뉴 -->
 	                <div class="side-category">
-	                    <a href="#"><i class="fa fa-microchip"></i> CPU/메인보드</a>
-	                    <a href="#"><i class="fa fa-hdd-o"></i> 저장장치</a>
-	                    <a href="#"><i class="fa fa-desktop"></i> 모니터</a>
-	                    <a href="#"><i class="fa fa-keyboard-o"></i> 주변기기</a>
-	                    <a href="#"><i class="fa fa-laptop"></i> 노트북</a>
-	                    <a href="#"><i class="fa fa-gamepad"></i> 게이밍기기</a>
+	                    <a href="${pageContext.request.contextPath}/goods/list.do?category=goods1"><i class="fa fa-microchip"></i> 사무용/가정용</a>
+	                    <a href="${pageContext.request.contextPath}/goods/list.do?category=goods2"><i class="fa fa-gamepad"></i> 3D게임/그래픽용</a>
+	                    <a href="${pageContext.request.contextPath}/goods/list.do?category=goods3"><i class="fa fa-desktop"></i> 고성능/전문가용</a>
+	                    <a href="${pageContext.request.contextPath}/goods/list.do?category=goods4"><i class="fa fa-laptop"></i> 노트북</a>
+	                    <a href="${pageContext.request.contextPath}/goods/list.do?category=goods5"><i class="fa fa-keyboard-o"></i> 부품/주변기기</a>
 	                    <a href="/qna/list.do"><i class="fa fa-question-circle"></i> QNA게시판</a>
 	                </div>
 	            </div>

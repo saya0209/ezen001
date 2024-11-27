@@ -110,6 +110,7 @@ CREATE TABLE goods (
     category VARCHAR2(50),
     delivery_charge NUMBER,
     discount NUMBER,
+    hit NUMBER DEFAULT 0,
     image_name VARCHAR2(300),
     image_files VARCHAR2(1000),
     FOREIGN KEY (cpu_id) REFERENCES cpu(cpu_id),                -- CPU ¿Ü·¡ Å°
@@ -134,13 +135,17 @@ INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (9, 'Intel i7 14700K', 7000
 INSERT INTO memory (memory_id, memory_name, memory_price) VALUES (1, '4GB', 30000);
 INSERT INTO memory (memory_id, memory_name, memory_price) VALUES (2, '8GB', 60000);
 INSERT INTO memory (memory_id, memory_name, memory_price) VALUES (3, '16GB', 120000);
+INSERT INTO memory (memory_id, memory_name, memory_price) VALUES (4, '32GB', 200000);
 
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (1, 'GTX1060', 100000);
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (2, 'GTX1080', 150000);
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (3, 'GTX2060', 300000);
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (4, 'GTX2080', 350000);
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (5, 'GTX3060', 400000);
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (6, 'GTX3080', 1000000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (1, 'GTX760', 40000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (2, 'GTX860', 60000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (3, 'GTX960', 80000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (4, 'GTX1060', 100000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (5, 'GTX1080', 150000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (6, 'GTX2060', 300000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (7, 'GTX2080', 350000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (8, 'GTX3060', 400000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (9, 'GTX3080', 1000000);
 
 
 -- community

@@ -1,4 +1,4 @@
--- /////// ESTIMSTE SQL ////////////////////////////////////////////
+-- ===== ESTIMSTE(견적) SQL =================================================
 DROP TABLE estimate_answer CASCADE CONSTRAINTS PURGE;
 DROP TABLE estimate_request CASCADE CONSTRAINTS PURGE;
 DROP SEQUENCE estimate_answer_seq;
@@ -41,7 +41,8 @@ VALUES (estimate_answer_seq.NEXTVAL, 'admin', '사무용 PC 견적', '인텔 i3 기반 PC
 -- 상태 업데이트
 UPDATE estimate_request SET status = 'completed' WHERE request_no = 1;
 UPDATE estimate_request SET status = 'completed' WHERE request_no = 2;
--- /////// EVENT SQL ////////////////////////////////////////////
+
+-- ===== EVENT(이벤트) SQL =================================================
 drop table event CASCADE CONSTRAINTS PURGE;
 drop SEQUENCE event_seq;
 
@@ -80,7 +81,8 @@ VALUES (event_seq.NEXTVAL, 'admin', '가을 맞이 할인 이벤트',
 '가을 한정 패션 아이템 세일이 종료되었습니다.', 
 TO_DATE('2024-09-01', 'YYYY-MM-DD'), TO_DATE('2024-10-31', 'YYYY-MM-DD'), 
 'fall_sale.jpg', 'COMPLETED', 'EVENT');
--- /////// COMMUNITY, COMMUNITY_REPLY SQL ////////////////////////////////////////////
+
+-- ===== COMMUNITY/COMMUNITY_REPLY(커뮤니티/댓글) SQL =================================================
 DROP TABLE community CASCADE CONSTRAINTS PURGE;
 DROP SEQUENCE community_seq;
 DROP TABLE community_reply CASCADE CONSTRAINTS PURGE;
@@ -149,7 +151,8 @@ INSERT INTO community_reply(rno, post_no, parent_no, id, content, writeDate, upd
 VALUES (community_reply_seq.nextval, 1, 1, 'user2', '이 그래픽 카드의 성능은 정말 뛰어납니다! 다양한 게임에서 성능이 좋습니다.', sysdate, sysdate, 0, 0, NULL);
 INSERT INTO community_reply(rno, post_no, parent_no, id, content, writeDate, updateDate, likeCnt, dislikeCnt, image) 
 VALUES (community_reply_seq.nextval, 1, 2, 'user1', 'CPU는 인텔 i5가 괜찮은 것 같습니다. 가성비가 좋고 성능도 우수해요.', sysdate, sysdate, 0, 0, NULL);   
--- /////// QnA, answer SQL ////////////////////////////////////////////
+
+-- ===== QnA/answer(질문/답변) SQL =================================================
 DROP TABLE answer CASCADE CONSTRAINTS PURGE;
 DROP TABLE qna CASCADE CONSTRAINTS PURGE;
 DROP SEQUENCE answer_seq;
@@ -194,7 +197,7 @@ VALUES (2, 'admin', '환불 안내', '환불은 요청 후 5일 이내에 처리됩니다.', sysdat
 -- 답변이 등록된 후 상태 업데이트
 UPDATE qna SET status = 'completed' WHERE qna_no = 1;
 UPDATE qna SET status = 'completed' WHERE qna_no = 2;
--- ////////////////////////////
+
 
 -- grade
 DROP TABLE grade CASCADE constraints purge;
@@ -275,6 +278,7 @@ CREATE TABLE goods (
     category VARCHAR2(50),
     delivery_charge NUMBER,
     discount NUMBER,
+    hit NUMBER DEFAULT 0,
     image_name VARCHAR2(300),
     image_files VARCHAR2(1000),
     FOREIGN KEY (cpu_id) REFERENCES cpu(cpu_id),                -- CPU 외래 키
@@ -299,16 +303,17 @@ INSERT INTO cpu (cpu_id, cpu_name, cpu_price) VALUES (9, 'Intel i7 14700K', 7000
 INSERT INTO memory (memory_id, memory_name, memory_price) VALUES (1, '4GB', 30000);
 INSERT INTO memory (memory_id, memory_name, memory_price) VALUES (2, '8GB', 60000);
 INSERT INTO memory (memory_id, memory_name, memory_price) VALUES (3, '16GB', 120000);
+INSERT INTO memory (memory_id, memory_name, memory_price) VALUES (4, '32GB', 200000);
 
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (1, 'GTX1060', 100000);
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (2, 'GTX1080', 150000);
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (3, 'GTX2060', 300000);
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (4, 'GTX2080', 350000);
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (5, 'GTX3060', 400000);
-INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (6, 'GTX3080', 1000000);
-
-
-
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (1, 'GTX760', 40000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (2, 'GTX860', 60000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (3, 'GTX960', 80000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (4, 'GTX1060', 100000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (5, 'GTX1080', 150000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (6, 'GTX2060', 300000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (7, 'GTX2080', 350000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (8, 'GTX3060', 400000);
+INSERT INTO graphic_card (graphic_card_id, graphic_card_name, graphic_card_price) VALUES (9, 'GTX3080', 1000000);
 
 DROP TABLE goods_reply CASCADE CONSTRAINTS;
 DROP SEQUENCE goods_reply_seq;
@@ -432,7 +437,3 @@ CREATE TABLE payment_detail (
     goods_total_price NUMBER NOT NULL
 );
 CREATE SEQUENCE payment_detail_seq;
-
-
-
-

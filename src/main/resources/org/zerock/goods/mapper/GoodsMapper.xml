@@ -26,45 +26,145 @@
     <!-- 상품 등록 -->
     <insert id="insertGoods" parameterType="org.zerock.goods.vo.GoodsVO">
         insert into goods (goods_no, cpu_id, memory_id, graphic_Card_id, cpu_name, memory_name, graphic_Card_name, total_price, category, delivery_charge, discount, image_name)
-        values (goods_seq.NEXTVAL, #{cpu_id}, #{memory_id}, #{graphic_Card_id},
-        (SELECT cpu_name FROM cpu WHERE cpu_id = #{cpu_id}),
-        (SELECT memory_name FROM memory WHERE memory_id = #{memory_id}), 
-        (SELECT graphic_Card_name FROM graphic_Card WHERE graphic_Card_id = #{graphic_Card_id}),
+        values (goods_seq.NEXTVAL, #{cpu_id,jdbcType=BIGINT}, #{memory_id,jdbcType=BIGINT}, #{graphic_Card_id,jdbcType=BIGINT},
+        (SELECT cpu_name FROM cpu WHERE cpu_id = #{cpu_id,jdbcType=BIGINT}),
+        (SELECT memory_name FROM memory WHERE memory_id = #{memory_id,jdbcType=BIGINT}), 
+        (SELECT graphic_Card_name FROM graphic_Card WHERE graphic_Card_id = #{graphic_Card_id,jdbcType=BIGINT}),
         (
-            select cpu_price from cpu where cpu_id = #{cpu_id}
+            select cpu_price from cpu where cpu_id = #{cpu_id,jdbcType=BIGINT}
         ) + (
-            select memory_price from memory where memory_id = #{memory_id}
+            select memory_price from memory where memory_id = #{memory_id,jdbcType=BIGINT}
         ) + (
-            select graphic_Card_price from graphic_Card where graphic_Card_id = #{graphic_Card_id}
+            select graphic_Card_price from graphic_Card where graphic_Card_id = #{graphic_Card_id,jdbcType=BIGINT}
         ), #{category}, #{delivery_charge}, #{discount},
         #{image_name}
         )
     </insert>
+    
+    <insert id="insertGoods1" parameterType="org.zerock.goods.vo.GoodsVO">
+	    insert into goods (goods_no, cpu_id, category, total_price, delivery_charge, discount, image_name)
+	    values (goods_seq.NEXTVAL, #{cpu_id}, #{category},
+	    (
+	        select cpu_price from cpu where cpu_id = #{cpu_id,jdbcType=BIGINT}
+	    ),
+	    #{delivery_charge}, #{discount}, #{image_name})
+	</insert>
+
+
 
     <!-- 상품 리스트 조회 (페이징 처리 포함) -->
-    <select id="list" resultType="org.zerock.goods.vo.GoodsVO">
-        select g.goods_no,
+    <select id="getGoodsList" resultType="org.zerock.goods.vo.GoodsVO">
+	    SELECT g.goods_no,
+	           g.cpu_id,
+	           g.memory_id,
+	           g.graphic_card_id,
+	           g.total_price,
+	           g.category,
+	           g.hit,
+	           c.cpu_name,           <!-- CPU 이름 -->
+	           m.memory_name,        <!-- 메모리 이름 -->
+	           gc.graphic_card_name, <!-- 그래픽 카드 이름 -->
+	           g.image_name
+	    FROM goods g
+	    JOIN cpu c ON g.cpu_id = c.cpu_id
+	    JOIN memory m ON g.memory_id = m.memory_id
+	    JOIN graphic_card gc ON g.graphic_card_id = gc.graphic_card_id
+	    <where>
+	        <!-- 페이징 처리: 시작 행과 끝 행 계산 -->
+	        <if test="pageObject.startRow != null and pageObject.endRow != null">
+	            AND ROWNUM BETWEEN #{pageObject.startRow} AND #{pageObject.endRow}
+	        </if>
+	    </where>
+
+	</select>
+	
+  
+
+	<!-- 조회수순으로 정렬 -->
+    <select id="getGoodsListSortedByHit" resultType="org.zerock.goods.vo.GoodsVO">
+        SELECT g.goods_no,
                g.cpu_id,
                g.memory_id,
                g.graphic_card_id,
                g.total_price,
                g.category,
-               c.cpu_name,           <!-- CPU 이름 -->
-               m.memory_name,     <!-- 메모리 이름 -->
-               gc.graphic_card_name, <!-- 그래픽 카드 이름 -->
+               g.hit,
+               c.cpu_name,
+               m.memory_name,
+               gc.graphic_card_name,
                g.image_name
-        from goods g
-        join cpu c ON g.cpu_id = c.cpu_id
-        join memory m ON g.memory_id = m.memory_id
-        join graphic_card GC ON g.graphic_card_id = gc.graphic_card_id
+        FROM goods g
+        JOIN cpu c ON g.cpu_id = c.cpu_id
+        JOIN memory m ON g.memory_id = m.memory_id
+        JOIN graphic_card gc ON g.graphic_card_id = gc.graphic_card_id
         <where>
-            <!-- 페이징 처리: 시작 행과 끝 행 계산 -->
+            <if test="category != null and category != ''">
+                AND g.category = #{category}
+            </if>
             <if test="pageObject.startRow != null and pageObject.endRow != null">
-                and ROWNUM between #{pageObject.startRow} and #{pageObject.endRow}
+                AND ROWNUM BETWEEN #{pageObject.startRow} AND #{pageObject.endRow}
             </if>
         </where>
-        order BY g.goods_no DESC  <!-- 최신 상품 순으로 정렬 -->
+        ORDER BY g.hit DESC
     </select>
+    
+
+    <!-- 최저가순으로 정렬 -->
+    <select id="getGoodsListSortedByPriceAsc" resultType="org.zerock.goods.vo.GoodsVO">
+        SELECT g.goods_no,
+               g.cpu_id,
+               g.memory_id,
+               g.graphic_card_id,
+               g.total_price,
+               g.category,
+               g.hit,
+               c.cpu_name,
+               m.memory_name,
+               gc.graphic_card_name,
+               g.image_name
+        FROM goods g
+        JOIN cpu c ON g.cpu_id = c.cpu_id
+        JOIN memory m ON g.memory_id = m.memory_id
+        JOIN graphic_card gc ON g.graphic_card_id = gc.graphic_card_id
+        <where>
+            <if test="category != null and category != ''">
+                AND g.category = #{category}
+            </if>
+            <if test="pageObject.startRow != null and pageObject.endRow != null">
+                AND ROWNUM BETWEEN #{pageObject.startRow} AND #{pageObject.endRow}
+            </if>
+        </where>
+        ORDER BY g.total_price ASC
+    </select>
+
+    <!-- 최고가순으로 정렬 -->
+    <select id="getGoodsListSortedByPriceDesc" resultType="org.zerock.goods.vo.GoodsVO">
+        SELECT g.goods_no,
+               g.cpu_id,
+               g.memory_id,
+               g.graphic_card_id,
+               g.total_price,
+               g.category,
+               g.hit,
+               c.cpu_name,
+               m.memory_name,
+               gc.graphic_card_name,
+               g.image_name
+        FROM goods g
+        JOIN cpu c ON g.cpu_id = c.cpu_id
+        JOIN memory m ON g.memory_id = m.memory_id
+        JOIN graphic_card gc ON g.graphic_card_id = gc.graphic_card_id
+        <where>
+            <if test="category != null and category != ''">
+                AND g.category = #{category}
+            </if>
+            <if test="pageObject.startRow != null and pageObject.endRow != null">
+                AND ROWNUM BETWEEN #{pageObject.startRow} AND #{pageObject.endRow}
+            </if>
+        </where>
+        ORDER BY g.total_price DESC
+    </select>
+
 
     <!-- 전체 상품 개수 조회 (페이징을 위한) -->
     <select id="getTotalCount" resultType="int">
@@ -75,7 +175,8 @@
         join graphic_card gc ON g.graphic_card_id = gc.graphic_card_id
     </select>
 
-
+	
+	
     <!-- 상품 상세 조회 -->
     <select id="view" resultType="org.zerock.goods.vo.GoodsVO">
         SELECT 
@@ -91,6 +192,7 @@
         g.image_name,
         g.delivery_charge, 
         g.discount,
+        g.hit,
         c.cpu_price,
         m.memory_price,
         gr.graphic_Card_price
@@ -112,6 +214,7 @@
 	        graphic_card_name,
 	        total_price,
 	        category,
+	        hit,
 	        delivery_charge,
 	        discount,
 	        image_name,
@@ -121,26 +224,36 @@
 	    order by goods_no desc
 	</select>
 	
+	<!-- 조회수 증가 쿼리 -->
+	<update id="increase">
+		update goods set hit = hit + 1
+		where goods_no = #{goods_no}
+	</update>
+	
 	<select id="getcpu_id" resultType="org.zerock.goods.vo.Cpu">
 	    SELECT cpu_id, cpu_name, cpu_price 
 	    FROM cpu
+	    where cpu_id != 999
 	</select>
 	
 	<select id="getmemory_id" resultType="org.zerock.goods.vo.Memory">
 	    SELECT memory_id, memory_name, memory_price 
 	    FROM memory
+	    where memory_id != 999
 	</select>
 	
 	<select id="getgraphic_Card_id" resultType="org.zerock.goods.vo.Graphic_Card">
 	    SELECT graphic_card_id, graphic_card_name, graphic_card_price 
 	    FROM graphic_card
+	     where graphic_card_id != 999
 	</select>
+
 
     <!-- CPU 리스트 조회 -->
     <select id="getCpuList" resultType="org.zerock.goods.vo.Cpu">
-        select cpu_id, cpu_name, cpu_price
-        from cpu
-    </select>
+	    select cpu_id, cpu_name, cpu_price
+	    from cpu
+	</select>
 
     <!-- Memory 리스트 조회 -->
     <select id="getMemoryList" resultType="org.zerock.goods.vo.Memory">

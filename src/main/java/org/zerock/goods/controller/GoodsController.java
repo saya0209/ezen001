@@ -49,10 +49,11 @@ public class GoodsController {
     
     // 고객의 부품 선택에 따라 상품을 조회하거나 새로 생성
     @PostMapping("/checkOrCreate")
-    public GoodsVO checkOrCreateGoods(@RequestParam int cpu_id,
-                                      @RequestParam int memory_id,
-                                      @RequestParam int graphic_Card_id
-                                      ) {
+    public GoodsVO checkOrCreateGoods(
+            @RequestParam(value = "cpu_id", defaultValue = "0") int cpu_id,
+            @RequestParam(value = "memory_id", defaultValue = "0") int memory_id,
+            @RequestParam(value = "graphic_Card_id", defaultValue = "0") int graphic_Card_id
+    ) {
         // 1. 기존 구성 조회
         GoodsVO goods = goodsService.GoodsCheck(cpu_id, memory_id, graphic_Card_id);
 
@@ -64,29 +65,39 @@ public class GoodsController {
         return goods;
     }
     
-    // 상품 리스트 조회
     @GetMapping("/list.do")
-    public String list(@RequestParam(value = "category", required = false) String category, 
-                       PageObject pageObject,
-                       HttpServletRequest request,
-                       Model model) {
-    	if (pageObject == null) {
-    		pageObject = PageObject.getInstance(request);
-    	}
-    	if (category == null || category.equals("")) category = "goods1";
-        List<GoodsVO> goodsList = goodsService.listCategory(category, pageObject); 
-        model.addAttribute("list", goodsList);
-        model.addAttribute("category", category);
-        return "goods/list"; // JSP 뷰로 포워딩
-    }
+    public String listGoods(PageObject pageObject,
+                            @RequestParam(value = "category", required = false) String category,
+                            @RequestParam(value = "sort", defaultValue = "hit") String sort, 
+                            Model model) {
+        // category가 null 또는 빈 문자열이면 기본값 설정
+        if (category == null || category.isEmpty()) {
+            category = "goods1"; // 기본 카테고리
+        }
 
+        // 상품 목록을 가져오는 서비스 호출
+        List<GoodsVO> goodsList = goodsService.getGoodsList(pageObject, sort, category);
+        
+        // 모델에 데이터 추가
+        model.addAttribute("goodsList", goodsList);
+        model.addAttribute("category", category);  // category 전달
+        model.addAttribute("sort", sort);  // 정렬 정보 전달
+        model.addAttribute("pageObject", pageObject);  // 페이지 정보 전달
+        
+        return "goods/list";  // JSP로 포워딩
+    }
+    
     // 상품 상세 보기
     @GetMapping("view.do")
-    public String view(@RequestParam("goods_no") Long goods_no, Model model) {
+    public String view(@RequestParam("goods_no") Long goods_no,
+    		@RequestParam(value = "category", required = false) String category, Model model) {
+    	// 조회수 증가
+        goodsService.increaseHit(goods_no);
         GoodsVO goodsVO = goodsService.view(goods_no);
         //정가를 세팅
         goodsVO.setPrice(goodsVO.getCpu_price()+goodsVO.getGraphic_Card_price()+goodsVO.getMemory_price());
         model.addAttribute("goods", goodsVO);
+        model.addAttribute("category", category);  // category 전달
         return "goods/view";  // 상품 상세보기 JSP로 포워딩
     }
     
@@ -172,9 +183,9 @@ public class GoodsController {
     // 상품 등록 폼
     @GetMapping("/writeForm.do")
     public String writeForm(@RequestParam("category") String category, Model model) {
-        model.addAttribute("cpuList", goodsService.getcpu_id());
-        model.addAttribute("memoryList", goodsService.getmemory_id());
-        model.addAttribute("graphic_CardList", goodsService.getgraphic_Card_id());
+        model.addAttribute("cpuList", goodsService.getCpuList());
+        model.addAttribute("memoryList", goodsService.getMemoryList());
+        model.addAttribute("graphic_CardList", goodsService.getGraphic_CardList());
         model.addAttribute("category", category);
 
         return "goods/write";
@@ -216,6 +227,7 @@ public class GoodsController {
         // 등록 후 카테고리
         return "redirect:/goods/list.do?category=" + category;  // 리다이렉트 시 카테고리와 페이지 유지
     }
+    
 
 
 

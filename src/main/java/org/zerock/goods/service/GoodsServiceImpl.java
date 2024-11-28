@@ -11,6 +11,7 @@ import java.util.UUID;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.ibatis.annotations.Param;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
@@ -111,6 +112,11 @@ public class GoodsServiceImpl implements GoodsService {
     public void registerGoods(GoodsVO goods) {
         goodsMapper.insertGoods(goods);
     }
+    
+    @Override
+    public Integer registerGoods1(GoodsVO goods) {
+    	return goodsMapper.insertGoods1(goods);
+    }
 
     
     
@@ -132,6 +138,12 @@ public class GoodsServiceImpl implements GoodsService {
     @Override
     public Integer write(GoodsVO goodsVO) {
         return goodsMapper.write(goodsVO);
+    }
+    
+    // 상품 등록
+    @Override
+    public Integer cpuwrite(GoodsVO goodsVO) {
+    	return goodsMapper.cpuwrite(goodsVO);
     }
 
     
@@ -212,6 +224,9 @@ public class GoodsServiceImpl implements GoodsService {
         return imagePaths.toArray(new String[0]);
     }
 
+    public void increaseHit(Long goods_no) {
+        goodsMapper.increase(goods_no);  // GoodsMapper에서 증가 메서드 호출
+    }
 
     // 이미지 삭제
     @Override
@@ -256,4 +271,19 @@ public class GoodsServiceImpl implements GoodsService {
 	public List<GoodsVO> listCategory(String category, PageObject pageObject) {
         return goodsMapper.selectGoodsCategory(category, pageObject);  // 카테고리로 상품 조회
     }
+
+	@Override
+    public List<GoodsVO> getGoodsList(PageObject pageObject, String sort, String category) {
+        // sort 값에 따라 호출할 Mapper 메서드 다르게 처리
+        if ("priceAsc".equals(sort)) {
+            return goodsMapper.getGoodsListSortedByPriceAsc(pageObject, category);
+        } else if ("priceDesc".equals(sort)) {
+            return goodsMapper.getGoodsListSortedByPriceDesc(pageObject, category);
+        } else {
+            return goodsMapper.getGoodsListSortedByHit(pageObject, category);  // 기본적으로 조회수순
+        }
+    }
+	
+	
+	
 }

@@ -31,6 +31,8 @@ public interface GoodsService {
     
     // 상품 등록
     public void registerGoods(GoodsVO goods);
+    
+    public Integer registerGoods1(GoodsVO goods);
 
     // 이미지 업로드 (대표 이미지)
     public String uploadImage(MultipartFile file, HttpServletRequest request);
@@ -48,8 +50,11 @@ public interface GoodsService {
 
     // 상품 등록
     public Integer write(GoodsVO goodsvo);
-
     
+    public Integer cpuwrite(GoodsVO goodsvo);
+
+    public void increaseHit(Long goods_no);
+
     // 상품 이미지 리스트
  	public List<GoodsImageVO> image_name(Long goods_no);
 
@@ -71,4 +76,8 @@ public interface GoodsService {
 	public Graphic_Card getgraphic_Card_id(int graphic_Card_id);
 
 	public List<GoodsVO> listCategory(String category, PageObject pageObject);
+	
+	public List<GoodsVO> getGoodsList(PageObject pageObject, String sort, String category);
+	
+	
 }

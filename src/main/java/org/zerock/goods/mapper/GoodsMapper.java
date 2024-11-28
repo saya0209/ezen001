@@ -33,6 +33,8 @@ public interface GoodsMapper {
     
     // 새로운 상품을 삽입
     public void insertGoods(GoodsVO goods);
+    
+    public Integer insertGoods1(GoodsVO goods);
 
     // 부품별 가격 가져오기
     public Integer getcpu_price(@Param("cpu_id") int cpu_id);
@@ -49,12 +51,17 @@ public interface GoodsMapper {
 	public List<GoodsVO> list(
 			@Param("pageObject") PageObject pageObject);
 	
-
+	// 조회수 증가
+	public Integer increase(Long goods_no);
+	
+	
     // 상품 상세 조회
     public GoodsVO view(@Param("goods_no") Long goods_no);
     
     // 상품 등록
     public Integer write(GoodsVO goodsVO);
+    
+    public Integer cpuwrite(GoodsVO goodsVO);
     
 
     // 상품 수정
@@ -88,6 +95,13 @@ public interface GoodsMapper {
 	public Cpu getCpuById(int cpuId);
 
 	public List<GoodsVO> selectGoodsCategory(@Param("category") String category, @Param("pageObject") PageObject pageObject);
+
+	List<GoodsVO> getGoodsList(@Param("pageObject") PageObject pageObject, @Param("sort") String sort, @Param("category") String category);
 	
-	
+	List<GoodsVO> getGoodsListSortedByHit(@Param("pageObject") PageObject pageObject, @Param("category") String category);
+	List<GoodsVO> getGoodsListSortedHit(@Param("pageObject") PageObject pageObject, @Param("category") String category);
+    List<GoodsVO> getGoodsListSortedByPriceAsc(@Param("pageObject") PageObject pageObject, @Param("category") String category);
+    List<GoodsVO> getGoodsListSortedPriceAsc(@Param("pageObject") PageObject pageObject, @Param("category") String category);
+    List<GoodsVO> getGoodsListSortedByPriceDesc(@Param("pageObject") PageObject pageObject, @Param("category") String category);
+    List<GoodsVO> getGoodsListSortedPriceDesc(@Param("pageObject") PageObject pageObject, @Param("category") String category);
 }

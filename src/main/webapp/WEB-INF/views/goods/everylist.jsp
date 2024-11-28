@@ -63,13 +63,12 @@
 
         // 상품 클릭 시 상세 페이지로 이동
         $(".dataRow").click(function() {
-        	let category = $(this).data("category");
             let goods_no = $(this).data("goods_no");
             console.log("goods_no =", goods_no);
             let pageQuery = $(this).data("page_query");
             let searchQuery = $(this).data("search_query");
 
-            location = "view.do?category=" + category + "&goods_no=" + goods_no + "&" + pageQuery + "&" + searchQuery;
+            location = "view.do?goods_no=" + goods_no + "&" + pageQuery + "&" + searchQuery;
         });
 
         // Sort 옵션 변경 시 자동으로 폼 제출
@@ -82,25 +81,8 @@
 <body>
 
 <div class="container p-3 my-3">
-    <h1>
-        <c:if test="${category == 'goods1' }">
-            인터넷/사무용
-        </c:if>
-        <c:if test="${category == 'goods2' }">
-            3D게임/그래픽용
-        </c:if>
-        <c:if test="${category == 'goods3' }">
-            고성능/전문가용
-        </c:if>
-        <c:if test="${category == 'goods4' }">
-            노트북
-        </c:if>
-        <c:if test="${category == 'goods5' }">
-            부품/주변기기
-        </c:if>
-    </h1>
 
-    <form action="list.do" method="get" id="searchForm">
+    <form action="everylist.do" method="get" id="searchForm">
         <!-- 현재 페이지, 카테고리, 검색 조건을 유지하면서 폼 제출 -->
         <input type="hidden" name="page" value="${pageObject.page}">
         <input type="hidden" name="category" value="${category}">
@@ -118,17 +100,17 @@
         </div>
     </form>
 
-    <c:if test="${empty goodsList}">
+    <c:if test="${empty goodseveryList}">
         <h4>데이터가 존재하지 않습니다.</h4>
     </c:if>
 
-    <c:if test="${!empty goodsList}">
+    <c:if test="${!empty goodseveryList}">
         <div class="row">
-            <c:forEach var="goods" items="${goodsList}" varStatus="vs">
+            <c:forEach var="goods" items="${goodseveryList}" varStatus="vs">
                 <c:if test="${(vs.index != 0) && (vs.index % 4 == 0)}">
                     ${"</div><div class='row'>"}
                 </c:if>
-                <div class="col-md-3 dataRow" data-category="${goods.category }" data-goods_no="${goods.goods_no}"
+                <div class="col-md-3 dataRow" data-goods_no="${goods.goods_no}"
                      data-page_query="${pageObject.pageQuery}" data-search_query="${goodsSearchVO.searchQuery}">
                     <div class="card">
                         <div class="imageDiv">
@@ -136,15 +118,7 @@
                             <img src="${goods.image_name}" alt="이미지">
                         </div>
                         <div class="card-body">
-                            <c:if test="${not empty goods.cpu_name and goods.cpu_name != '0'}">
-						        <h5 class="title">${goods.cpu_name}</h5>
-						    </c:if>
-                            <c:if test="${not empty goods.memory_name and goods.memory_name != '0'}">
-						        <h5 class="title">${goods.memory_name}</h5>
-						    </c:if>
-						    <c:if test="${not empty goods.graphic_Card_name and goods.graphic_Card_name != '0'}">
-						        <h5 class="title">${goods.graphic_Card_name}</h5>
-						    </c:if>
+                            <h5 class="title">${goods.cpu_name}</h5>
                             <p class="sale-price">
                                 <fmt:formatNumber value="${goods.total_price - goods.discount + goods.delivery_charge}" type="currency" />
                             </p>
@@ -156,7 +130,7 @@
 
         <!-- 페이지 네비게이션 -->
         <div>
-            <pageNav:pageNav listURI="list.do" pageObject="${pageObject}"></pageNav:pageNav>
+            <pageNav:pageNav listURI="listevery.do" pageObject="${pageObject}"></pageNav:pageNav>
         </div>
     </c:if>
 
@@ -165,6 +139,11 @@
             <input type="hidden" name="category" value="${category}">
             <button type="submit" class="btn btn-primary">등록</button>
         </form>
+        <form action="cpuwriteForm.do" method="get">
+            <input type="hidden" name="category" value="${category}">
+            <button type="submit" class="btn btn-primary">cpu등록</button>
+        </form>
+    </div>
 </div>
 
 </body>

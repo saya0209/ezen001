@@ -473,19 +473,43 @@ $(function() {
 	    // 필요한 데이터 수집
 	    const id = document.getElementById("id").value; // 로그인한 사용자 ID
 	    const goods_no = 1; // 예시로 상품 번호를 고정하거나 페이지에서 동적으로 받아옴
-	    const goods_name = "사무용 컴퓨터"; // 예시로 상품 이름을 설정
+	    let goods_name = "";
 	    const image_name = document.getElementById("image_name").src; // 이미지 URL
 	    let price = parseFloat(document.getElementById("price").textContent || document.getElementById("price").innerText);
 	    const quantity = 1; // 예시로 1개로 고정, 실제로는 UI에서 수량을 입력받을 수 있음
-	    const goods_total_price = price * quantity + parseFloat(document.getElementById("delivery_charge").textContent || document.getElementById("delivery_charge").innerText);
+	    const goods_total_price = price * quantity;// + parseFloat(document.getElementById("delivery_charge").textContent || document.getElementById("delivery_charge").innerText);
 	    const selected_goods_price = goods_total_price; // 선택된 상품 총 가격 (예시로 상품 가격만 계산)
 	    const delivery_charge = parseFloat(document.getElementById("delivery_charge").textContent || document.getElementById("delivery_charge").innerText);
 	    const discount = parseFloat(document.getElementById("discount").textContent || document.getElementById("discount").innerText || 0);
 	    const total_discount = discount; // 전체 할인 (예시로 개별 할인과 동일하게 설정)
 	    const selected = 0; // 상품 선택 여부 (예시로 선택된 상태로 설정)
 	    const totalAmount = goods_total_price - discount; // 최종 가격 (예시로 총 가격에서 할인액을 뺀 값)
+		 // category와 goods 정보를 기반으로 JavaScript 변수에 값을 설정
+	    const category = "${category}";  // 카테고리 값
+	    const cpu_name = "${goods.cpu_name}";
+	    const memory_name = "${goods.memory_name}";
+	    const graphic_card_name = "${goods.graphic_Card_name}";
 	    price = ${goods.price};
 		
+	 // category 값에 따라 goods_name 설정
+	    if (category == 'goods1') {
+	        goods_name = "인터넷/사무용";
+	    } else if (category == 'goods2') {
+	        goods_name = "3D게임/그래픽용";
+	    } else if (category == 'goods3') {
+	        goods_name = "고성능/전문가용";
+	    } else if (category == 'goods4') {
+	        goods_name = "노트북";
+	    } else if (category == 'goods5') {
+	        // goods5 카테고리에서 CPU, 메모리, 그래픽카드 값에 따라 설정
+	        if (cpu_name != '0' && cpu_name != '') {
+	            goods_name = "CPU: " + cpu_name;
+	        } else if (memory_name != '0' && memory_name != '') {
+	            goods_name = "메모리: " + memory_name;
+	        } else if (graphic_card_name != '0' && graphic_card_name != '') {
+	            goods_name = "그래픽카드: " + graphic_card_name;
+	        }
+	    }
 	    
 	    // JSON 객체 생성
 	    const data = {
@@ -503,7 +527,7 @@ $(function() {
 	        selected: selected,
 	        totalAmount: totalAmount,
 	        purchase_date: new Date().toISOString(), // 현재 날짜를 ISO 형식으로 전송
-	        category: "사무용" // 예시로 카테고리 설정
+	        category: category // 예시로 카테고리 설정
 	    };
 
 	    // jQuery AJAX 요청
@@ -534,7 +558,7 @@ $(function() {
 	    // 필요한 데이터 수집
 	    const id = document.getElementById("id").value;  // 로그인한 사용자 ID
 	    const goods_no = 1;  // 예시로 상품 번호를 고정하거나 페이지에서 동적으로 받아옴
-	    const goods_name = "사무용 컴퓨터";  // 예시로 상품 이름을 설정
+	    let goods_name = "";  // 예시로 상품 이름을 설정
 	    const image_name = document.getElementById("image_name").src;  // 이미지 URL
 	    const price = parseFloat(document.getElementById("price").textContent || document.getElementById("price").innerText);
 	    const quantity = 1;  // 예시로 1개로 고정, 실제로는 UI에서 수량을 입력받을 수 있음
@@ -546,6 +570,30 @@ $(function() {
 	    const selected = 0;  // 상품 선택 여부 (예시로 선택된 상태로 설정)
 	    const totalAmount = goods_total_price - discount;  // 최종 가격 (예시로 총 가격에서 할인액을 뺀 값)
 
+	    const category = "${category}";  // 카테고리 값
+	    const cpu_name = "${goods.cpu_name}";
+	    const memory_name = "${goods.memory_name}";
+	    const graphic_card_name = "${goods.graphic_Card_name}";
+		 // category 값에 따라 goods_name 설정
+	    if (category == 'goods1') {
+	        goods_name = "인터넷/사무용";
+	    } else if (category == 'goods2') {
+	        goods_name = "3D게임/그래픽용";
+	    } else if (category == 'goods3') {
+	        goods_name = "고성능/전문가용";
+	    } else if (category == 'goods4') {
+	        goods_name = "노트북";
+	    } else if (category == 'goods5') {
+	        // goods5 카테고리에서 CPU, 메모리, 그래픽카드 값에 따라 설정
+	        if (cpu_name != '0' && cpu_name != '') {
+	            goods_name = "CPU: " + cpu_name;
+	        } else if (memory_name != '0' && memory_name != '') {
+	            goods_name = "메모리: " + memory_name;
+	        } else if (graphic_card_name != '0' && graphic_card_name != '') {
+	            goods_name = "그래픽카드: " + graphic_card_name;
+	        }
+	    }
+	    
 	    // JSON 객체 생성
 	    const data = {
 	        id: id,
@@ -844,29 +892,69 @@ $(function() {
 
     <!-- 오른쪽 섹션: 상세 정보 -->
     <div class="right-section">
-        <div class="product-title">사무용/가정용</div>
+        <div class="product-title">
+        <c:if test="${category == 'goods1' }">
+            인터넷/사무용
+        </c:if>
+        <c:if test="${category == 'goods2' }">
+            3D게임/그래픽용
+        </c:if>
+        <c:if test="${category == 'goods3' }">
+            고성능/전문가용
+        </c:if>
+        <c:if test="${category == 'goods4' }">
+            노트북
+        </c:if>
+        <c:if test="${category == 'goods5' and goods.cpu_name != '0' and not empty goods.cpu_name}">
+            <p>CPU</p>
+        </c:if>
+        
+        <c:if test="${category == 'goods5' and goods.memory_name != '0' and not empty goods.memory_name}">
+            <p>메모리</p>
+        </c:if>
+        
+        <c:if test="${category == 'goods5' and goods.graphic_Card_name != '0' and not empty goods.graphic_Card_name}">
+            <p>그래픽카드</p>
+        </c:if>
+        </div>
         <table class="spec-table">
-            <tr>
-                <th>CPU</th>
-                <td class="cpu_name">${goods.cpu_name}</td>
-            </tr>
-            <tr>
-                <th>메모리</th>
-                <td class="memory_name">${goods.memory_name}</td>
-            </tr>
-            <tr>
-                <th>그래픽카드</th>
-                <td class="graphic_Card_name">${goods.graphic_Card_name}</td>
-            </tr>
-            <tr>
-            	<th>할인가</th>
-            	 <td class="discount" id="discount" data-price="${goods.discount}">${goods.discount}</td>
-            </tr>
-            <tr>
-            	<th>배송비</th>
-            	<td class="delivery_charge" id="delivery_charge" data-price="${goods.delivery_charge}">${goods.delivery_charge}</td>
-            </tr>
-        </table>
+		    <!-- CPU 이름이 null 또는 '0'일 경우 출력하지 않도록 처리 -->
+		    <c:if test="${not empty goods.cpu_name and goods.cpu_name != '0'}">
+		        <tr>
+		            <th>CPU</th>
+		            <td class="cpu_name">${goods.cpu_name}</td>
+		        </tr>
+		    </c:if>
+		
+		    <!-- 메모리 이름이 null 또는 '0'일 경우 출력하지 않도록 처리 -->
+		    <c:if test="${not empty goods.memory_name and goods.memory_name != '0'}">
+		        <tr>
+		            <th>메모리</th>
+		            <td class="memory_name">${goods.memory_name}</td>
+		        </tr>
+		    </c:if>
+		
+		    <!-- 그래픽카드 이름이 null 또는 '0'일 경우 출력하지 않도록 처리 -->
+		    <c:if test="${not empty goods.graphic_Card_name and goods.graphic_Card_name != '0'}">
+		        <tr>
+		            <th>그래픽카드</th>
+		            <td class="graphic_Card_name">${goods.graphic_Card_name}</td>
+		        </tr>
+		    </c:if>
+		
+		    <!-- 할인가 출력 -->
+		    <tr>
+		        <th>할인가</th>
+		        <td class="discount" id="discount" data-price="${goods.discount}">${goods.discount}</td>
+		    </tr>
+		
+		    <!-- 배송비 출력 -->
+		    <tr>
+		        <th>배송비</th>
+		        <td class="delivery_charge" id="delivery_charge" data-price="${goods.delivery_charge}">${goods.delivery_charge}</td>
+		    </tr>
+		</table>
+
         
        
         
@@ -881,7 +969,7 @@ $(function() {
 			<input type="hidden" name="id" id="id" value="${login.id}">
 			<button class="btn-buy" id="addBuyButton">바로구매</button>
             <button class="btn-cart" id="addCartButton">장바구니 담기</button>
-            <button class="btn-list" onclick="location.href='list.do?page=${param.page}&perPageNum=${param.perPageNum}&${goodsSearchVO.searchQuery}'">리스트</button>
+			<button class="btn-list" onclick="location.href='list.do?category=${category}&page=${param.page}&perPageNum=${param.perPageNum}&${goodsSearchVO.searchQuery}'">리스트</button>
         </div>
      </div>
     
@@ -897,30 +985,37 @@ $(function() {
                     </tr>
                 </thead>
                 <tbody>
-		            <tr>
-		                <td>CPU</td>
-		                <td class="cpu_name" id="cpu_name" data-price="${goods.cpu_price }">${goods.cpu_name}</td>
-						<td><button id="cpuChangeGoods">사양변경하기</button></td>
-		            </tr>
-		            <tr>
-		                <td>메모리</td>
-		                <td class="memory_name" id="memory_name" data-price="${goods.memory_price }">${goods.memory_name}</td>
-		                <td><button id="memoryChangeGoods">사양변경하기</button></td>
-		            </tr>
-		            <tr>
-		                <td>그래픽카드</td>
-		                <td class="graphic_Card_name" id="graphic_Card_name" data-price="${goods.graphic_Card_price }">${goods.graphic_Card_name}</td>
-		                <td><button id="graphic_CardChangeGoods">사양변경하기</button></td>
-		            </tr>
+		            <c:if test="${not empty goods.cpu_name and goods.cpu_name != '0'}">
+					    <tr>
+					        <td>CPU</td>
+					        <td class="cpu_name" id="cpu_name" data-price="${goods.cpu_price}">${goods.cpu_name}</td>
+					        <td><button id="cpuChangeGoods">사양변경하기</button></td>
+					    </tr>
+					</c:if>
+		            <c:if test="${not empty goods.memory_price and goods.memory_price != '0'}">
+					    <tr>
+					        <td>메모리</td>
+					        <td class="memory_name" id="memory_name" data-price="${goods.memory_price}">${goods.memory_price}</td>
+					        <td><button id="memoryChangeGoods">사양변경하기</button></td>
+					    </tr>
+					</c:if>
+		            <c:if test="${not empty goods.graphic_Card_price and goods.graphic_Card_price != '0'}">
+					    <tr>
+					        <td>그래픽</td>
+					        <td class="graphic_Card_name" id="graphic_Card_name" data-price="${goods.graphic_Card_price}">${goods.graphic_Card_price}</td>
+					        <td><button id="graphic_CardChangeGoods">사양변경하기</button></td>
+					    </tr>
+					</c:if>
 		        </tbody>
             </table>
-		        <div class="card-footer">
-				<button class="btn btn-danger" id="deleteBtn"
-					data-toggle="modal" data-target="#deleteModal">삭제</button>
-			</div>
+		        
 			<!-- 리뷰 -->
 			<div>
 				<jsp:include page="goodsReview.jsp"></jsp:include>
+			</div>
+       		 <div class="card-footer">
+				<button class="btn btn-danger" id="deleteBtn"
+					data-toggle="modal" data-target="#deleteModal">삭제</button>	
 			</div>
         </div>
 	   <!-- 모달 창 -->

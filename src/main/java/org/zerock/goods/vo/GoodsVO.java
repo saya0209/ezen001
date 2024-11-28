@@ -19,6 +19,7 @@ public class GoodsVO {
     private String category;
     private Long discount;              // 개별 상품의 할인액
     private Long delivery_charge;       // 배송비
+    private Long hit;
     private String[] image_files;
     private int total_price;            // 총 가격 (CPU + Memory + GPU 가격 합산)
 }

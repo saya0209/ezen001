@@ -15,6 +15,17 @@
     <title>COMMAKASE:<decorator:title /></title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
     
+    
+    <link href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="${path}/resources/css/main.css" rel="stylesheet">
+    
+    <!-- 추가 스크립트 -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.5.4/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    
     <!-- Bootstrap 4 -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.6.2/dist/css/bootstrap.min.css">
     <script src="https://cdn.jsdelivr.net/npm/jquery@3.7.1/dist/jquery.min.js"></script>
@@ -344,7 +355,6 @@ $(document).ready(function() {
                     </div>
                 </div>
 
-                <!-- 사용자 위젯 -->
 <!--                 <div class="user-widget"> -->
 <!--                     <a href="/member/mypageMain.do"> -->
 <!--                         <i class="fa fa-user"></i> -->
@@ -371,17 +381,18 @@ $(document).ready(function() {
 	                </button>
 	                <!-- 사이드 카테고리 메뉴 -->
 	                <div class="side-category">
-	                    <a href="${pageContext.request.contextPath}/goods/list.do?category=goods1"><i class="fa fa-microchip"></i> 사무용/가정용</a>
-	                    <a href="${pageContext.request.contextPath}/goods/list.do?category=goods2"><i class="fa fa-gamepad"></i> 3D게임/그래픽용</a>
-	                    <a href="${pageContext.request.contextPath}/goods/list.do?category=goods3"><i class="fa fa-desktop"></i> 고성능/전문가용</a>
-	                    <a href="${pageContext.request.contextPath}/goods/list.do?category=goods4"><i class="fa fa-laptop"></i> 노트북</a>
-	                    <a href="${pageContext.request.contextPath}/goods/list.do?category=goods5"><i class="fa fa-keyboard-o"></i> 부품/주변기기</a>
+	                    <a href="#"><i class="fa fa-microchip"></i> CPU/메인보드</a>
+	                    <a href="#"><i class="fa fa-hdd-o"></i> 저장장치</a>
+	                    <a href="#"><i class="fa fa-desktop"></i> 모니터</a>
+	                    <a href="#"><i class="fa fa-keyboard-o"></i> 주변기기</a>
+	                    <a href="#"><i class="fa fa-laptop"></i> 노트북</a>
+	                    <a href="#"><i class="fa fa-gamepad"></i> 게이밍기기</a>
 	                    <a href="/qna/list.do"><i class="fa fa-question-circle"></i> QNA게시판</a>
 	                </div>
 	            </div>
 	            
 	            <ul class="main-menu">
-	                <li><a href="/quote.do">PC견적</a></li>
+	                <li><a href="/estimate/list.do">PC견적</a></li>
 	                <li><a href="/shop/list.do">컴퓨터</a></li>
 	                <li><a href="/weeklyBest.do">주간 BEST</a></li>
 	                <li><a href="/event/list.do">이벤트</a></li>

@@ -71,6 +71,16 @@
                     <i class="fa fa-user-o"></i> ${request.nicname}
                 </h6>
                 <p class="card-text">${request.content}</p>
+                
+                <!-- 견적 금액 표시 -->
+                <div class="estimate-price-container mt-3">
+                    <div class="estimate-price-badge">
+                        예산
+                        <span class="price-value">
+                            <fmt:formatNumber value="${request.budget}" type="number" pattern="#,###원"/>
+                        </span>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -91,22 +101,34 @@
                     </div>
                     <p class="mb-3">${answer.content}</p>
                     
+                    <!-- 견적 가격 표시 -->
+                    <div class="estimate-price-container mt-3">
+                        <div class="estimate-price-badge answer-price">
+                            견적 금액 
+                            <span class="price-value">
+                                <fmt:formatNumber value="${answer.total_price}" type="number" pattern="#,###원"/>
+                            </span>
+                        </div>
+                    </div>
+                    
                     <!-- 관리자만 답변 삭제 및 수정 가능 -->
                     <c:if test="${login.gradeNo == 9}">
-                        <form action="/estimate/deleteAnswer.do" method="post" class="d-inline">
-                            <input type="hidden" name="answer_no" value="${answer.answer_no}">
-                            <input type="hidden" name="request_no" value="${request.request_no}">
-                            <button type="submit" class="btn btn-sm btn-outline-secondary delete-btn">
-                                <i class="fa fa-trash"></i>
-                            </button>
-                        </form>
-                        <form action="/estimate/updateAnswerForm.do" method="get" class="d-inline">
-                            <input type="hidden" name="answer_no" value="${answer.answer_no}">
-                            <input type="hidden" name="request_no" value="${request.request_no}">
-                            <button type="submit" class="btn btn-sm btn-outline-secondary ml-2">
-                                <i class="fa fa-pencil"></i>
-                            </button>
-                        </form>
+                        <div class="answer-action-buttons mt-3">
+                            <form action="/estimate/deleteAnswer.do" method="post" class="d-inline-block mr-2">
+                                <input type="hidden" name="answer_no" value="${answer.answer_no}">
+                                <input type="hidden" name="request_no" value="${request.request_no}">
+                                <button type="submit" class="btn btn-sm btn-outline-secondary delete-btn">
+                                    <i class="fa fa-trash"></i>
+                                </button>
+                            </form>
+                            <form action="/estimate/updateAnswerForm.do" method="get" class="d-inline-block">
+                                <input type="hidden" name="answer_no" value="${answer.answer_no}">
+                                <input type="hidden" name="request_no" value="${request.request_no}">
+                                <button type="submit" class="btn btn-sm btn-outline-secondary">
+                                    <i class="fa fa-pencil"></i>
+                                </button>
+                            </form>
+                        </div>
                     </c:if>
                 </div>
             </c:forEach>

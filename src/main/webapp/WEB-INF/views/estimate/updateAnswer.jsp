@@ -14,7 +14,6 @@
 
 <script>
 $(document).ready(function() {
-
     // 취소 버튼 클릭 시 확인
     $('#cancelBtn').click(function() {
         if (confirm("작성 중인 수정 내용이 사라집니다. 정말 취소하시겠습니까?")) {
@@ -23,6 +22,7 @@ $(document).ready(function() {
     });
 });
 </script>
+
 </head>
 <body>
     <div class="answer-container">
@@ -30,28 +30,27 @@ $(document).ready(function() {
             <i class="fa fa-comments-o"></i> 견적 답변 수정
         </h2>
 
-        <!-- 원본 질문 표시 -->
-        <div class="original-question">
-            <h5 class="mb-3">[${request.category}] ${request.title}</h5>
-            <p class="mb-2">${request.content}</p>
-            <small class="text-muted">
-                작성자: ${request.nicname} | 
-                작성일: <fmt:formatDate value="${request.request_date}" pattern="yyyy-MM-dd HH:mm"/>
-            </small>
-        </div>
+		<!-- 원본 질문 표시 -->
+		<div class="original-question">
+		    <h5 class="mb-3">[${request.category}] ${request.title}</h5>
+		    <p class="mb-2">${request.content}</p>
+		    <div class="estimate-price-badge mb-2">
+		        예산: <fmt:formatNumber value="${request.budget}" type="number" pattern="#,###원"/>
+		    </div>
+		    <small class="text-muted">
+		        작성자: ${request.nicname} | 
+		        작성일: <fmt:formatDate value="${request.request_date}" pattern="yyyy-MM-dd HH:mm"/>
+		    </small>
+		</div>
 
-       <!-- 답변 수정 폼 -->
-		<div class="card">
-		    <div class="card-body">
-		        <form action="updateAnswer.do" method="post">
-		            <!-- hidden 필드 값 디버깅용 -->
-		            <p>답변 번호: ${answer.answer_no}</p>
-		            <p>요청 번호: ${request_no}</p>
-		            
-		            <!-- 답변 번호 (hidden) -->
-		            <input type="hidden" name="answer_no" value="${answer.answer_no}">
-		            <input type="hidden" name="request_no" value="${request_no}">
-		            <input type="hidden" name="parentNo" value="${request_no}">
+        <!-- 답변 수정 폼 -->
+        <div class="card">
+            <div class="card-body">
+                <form action="updateAnswer.do" method="post">
+                    <!-- 답변 번호 및 요청 번호 (hidden) -->
+                    <input type="hidden" name="answer_no" value="${answer.answer_no}">
+                    <input type="hidden" name="request_no" value="${request_no}">
+                    <input type="hidden" name="parentNo" value="${request_no}">
 
                     <!-- 답변 제목 -->
                     <div class="form-group">

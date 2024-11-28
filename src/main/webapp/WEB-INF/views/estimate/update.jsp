@@ -46,15 +46,9 @@
                     <label for="category" class="required-field">카테고리</label>
                     <select class="form-control" id="category" name="category" required>
                         <option value="">카테고리 선택</option>
-                        <option value="cpu" ${request.category == 'CPU' ? 'selected' : ''}>CPU</option>
-                        <option value="motherboard" ${request.category == '메인보드' ? 'selected' : ''}>메인보드</option>
-                        <option value="ram" ${request.category == '메모리 (RAM)' ? 'selected' : ''}>메모리 (RAM)</option>
-                        <option value="gpu" ${request.category == '그래픽카드' ? 'selected' : ''}>그래픽카드</option>
-                        <option value="storage" ${request.category == '저장장치 (SSD/HDD)' ? 'selected' : ''}>저장장치 (SSD/HDD)</option>
-                        <option value="case" ${request.category == '케이스' ? 'selected' : ''}>케이스</option>
-                        <option value="power" ${request.category == '파워서플라이' ? 'selected' : ''}>파워서플라이</option>
-                        <option value="cooling" ${request.category == '쿨링' ? 'selected' : ''}>쿨링</option>
-                        <option value="complete" ${request.category == '완성품 PC' ? 'selected' : ''}>완성품 PC</option>
+                        <option value="gaming" ${request.category == '게이밍' ? 'selected' : ''}>게이밍</option>
+                        <option value="office" ${request.category == '사무용' ? 'selected' : ''}>사무용</option>
+                        <option value="design" ${request.category == '디자인' ? 'selected' : ''}>디자인</option>
                     </select>
                     <div class="invalid-feedback">카테고리를 선택해주세요.</div>
                 </div>

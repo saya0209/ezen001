@@ -23,6 +23,7 @@ $(document).ready(function() {
     });
 });
 </script>
+
 </head>
 <body>
     <div class="answer-container">
@@ -30,15 +31,18 @@ $(document).ready(function() {
             <i class="fa fa-comments-o"></i> 견적 답변 작성
         </h2>
 
-        <!-- 원본 질문 표시 -->
-        <div class="original-question">
-            <h5 class="mb-3">[${request.category}] ${request.title}</h5>
-            <p class="mb-2">${request.content}</p>
-            <small class="text-muted">
-                작성자: ${request.nicname} | 
-                작성일: <fmt:formatDate value="${request.request_date}" pattern="yyyy-MM-dd HH:mm"/>
-            </small>
-        </div>
+		<!-- 원본 질문 표시 -->
+		<div class="original-question">
+		    <h5 class="mb-3">[${request.category}] ${request.title}</h5>
+		    <p class="mb-2">${request.content}</p>
+		    <div class="estimate-price-badge mb-2">
+		        예산: <fmt:formatNumber value="${request.budget}" type="number" pattern="#,###원"/>
+		    </div>
+		    <small class="text-muted">
+		        작성자: ${request.nicname} | 
+		        작성일: <fmt:formatDate value="${request.request_date}" pattern="yyyy-MM-dd HH:mm"/>
+		    </small>
+		</div>
 
         <!-- 답변 작성 폼 -->
         <div class="card">
@@ -94,3 +98,4 @@ $(document).ready(function() {
     </div>
 </body>
 </html>
+

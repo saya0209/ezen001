@@ -53,29 +53,27 @@
     </select>
 
     <!-- 견적 요청 작성 -->
-    <insert id="write">
-        <selectKey keyProperty="request_no" resultType="Long" order="BEFORE">
-            select estimate_request_seq.nextval from dual
-        </selectKey>
-        insert into estimate_request(
-		    request_no, id, title, content, category,
-		    budget, request_date, status
-		)
-		values(
-		    #{request_no}, #{id}, #{title}, #{content}, 
-		    CASE 
-			    WHEN #{category} = 'cpu' THEN 'CPU'
-			    WHEN #{category} = 'motherboard' THEN '메인보드'
-			    WHEN #{category} = 'ram' THEN '메모리 (RAM)'
-			    WHEN #{category} = 'gpu' THEN '그래픽카드'
-			    WHEN #{category} = 'storage' THEN '저장장치 (SSD/HDD)'
-			    ELSE #{category}
-			END,
-		    #{budget}, sysdate, NVL(#{status}, 'waiting')
-		)
-    </insert>
-
-    <!-- 견적 요청 수정 -->
+	<insert id="write">
+	    <selectKey keyProperty="request_no" resultType="Long" order="BEFORE">
+	        select estimate_request_seq.nextval from dual
+	    </selectKey>
+	    insert into estimate_request(
+	        request_no, id, title, content, category,
+	        budget, request_date, status
+	    )
+	    values(
+	        #{request_no}, #{id}, #{title}, #{content}, 
+	        CASE 
+	            WHEN #{category} = 'gaming' THEN '게이밍'
+	            WHEN #{category} = 'office' THEN '사무용'
+	            WHEN #{category} = 'design' THEN '디자인'
+	            ELSE #{category}
+	        END,
+	        #{budget}, sysdate, NVL(#{status}, 'waiting')
+	    )
+	</insert>
+	
+	<!-- 견적 요청 수정 -->
 	<update id="update">
 	    update estimate_request
 	    <set>
@@ -83,15 +81,9 @@
 	        <if test="content != null">content = #{content},</if>
 	        <if test="category != null">
 	            category = CASE 
-	                WHEN #{category} = 'cpu' THEN 'CPU'
-	                WHEN #{category} = 'motherboard' THEN '메인보드'
-	                WHEN #{category} = 'ram' THEN '메모리 (RAM)'
-	                WHEN #{category} = 'gpu' THEN '그래픽카드'
-	                WHEN #{category} = 'storage' THEN '저장장치 (SSD/HDD)'
-	                WHEN #{category} = 'case' THEN '케이스'
-	                WHEN #{category} = 'power' THEN '파워서플라이'
-	                WHEN #{category} = 'cooling' THEN '쿨링'
-	                WHEN #{category} = 'complete' THEN '완성품 PC'
+	                WHEN #{category} = 'gaming' THEN '게이밍'
+	                WHEN #{category} = 'office' THEN '사무용'
+	                WHEN #{category} = 'design' THEN '디자인'
 	                ELSE #{category}
 	            END,
 	        </if>
@@ -99,6 +91,7 @@
 	    </set>
 	    where request_no = #{request_no}
 	</update>
+
 
     <!-- 견적 요청 삭제 -->
     <delete id="delete">

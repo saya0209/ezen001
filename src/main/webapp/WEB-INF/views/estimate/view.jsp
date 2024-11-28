@@ -87,29 +87,35 @@
         <!-- 답변 목록 -->
         <div class="answers-container">
             <c:forEach items="${answers}" var="answer">
-                <div class="answer-section mb-3">
-                    <div class="d-flex justify-content-between align-items-center mb-3">
-                        <div>
-                            <h6 class="mb-1">
-                                <i class="fa fa-comment-o"></i> 관리자 답변: ${answer.title}
-                            </h6>
-                        </div>
+               <div class="answer-section mb-3 ${status.first ? 'first-answer' : ''}">
+       			     <div class="answer-header d-flex justify-content-between align-items-center mb-3">
+                         <div class="d-flex align-items-center">
+		                    <div class="badge badge-info mr-2">견적</div>
+		                    <h6 class="mb-0">${answer.title}</h6>
+		                </div>
                         <small class="text-muted">
-                            <i class="fa fa-clock-o"></i>
-                            <fmt:formatDate value="${answer.answer_date}" pattern="yyyy-MM-dd HH:mm"/>
-                        </small>
+		                    <i class="fa fa-clock-o"></i>
+		                    <fmt:formatDate value="${answer.answer_date}" pattern="yyyy-MM-dd HH:mm"/>
+		                </small>
                     </div>
-                    <p class="mb-3">${answer.content}</p>
-                    
-                    <!-- 견적 가격 표시 -->
-                    <div class="estimate-price-container mt-3">
-                        <div class="estimate-price-badge answer-price">
-                            견적 금액 
-                            <span class="price-value">
-                                <fmt:formatNumber value="${answer.total_price}" type="number" pattern="#,###원"/>
-                            </span>
-                        </div>
-                    </div>
+                    <div class="answer-content">
+		                <!-- 컴포넌트 형태로 변경 -->
+		                <div class="card border-light mb-3">
+		                    <div class="card-body">
+		                        <pre class="card-text">${fn:replace(answer.content, ':', ' : ')}</pre>
+		                    </div>
+		                </div>
+		                
+		                <!-- 견적 가격 표시 개선 -->
+		                <div class="estimate-price-container">
+		                    <div class="alert alert-secondary" role="alert">
+		                        <strong>총 견적 금액:</strong>
+		                        <span class="float-right font-weight-bold text-primary">
+		                            <fmt:formatNumber value="${answer.total_price}" type="number" pattern="#,###원"/>
+		                        </span>
+		                    </div>
+		                </div>
+		            </div>
                     
                     <!-- 관리자만 답변 삭제 및 수정 가능 -->
                     <c:if test="${login.gradeNo == 9}">

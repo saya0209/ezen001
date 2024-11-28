@@ -1,3 +1,4 @@
+-- ===== ESTIMSTE(견적) SQL =================================================
 DROP TABLE estimate_answer CASCADE CONSTRAINTS PURGE;
 DROP TABLE estimate_request CASCADE CONSTRAINTS PURGE;
 DROP SEQUENCE estimate_answer_seq;
@@ -28,19 +29,32 @@ CREATE TABLE estimate_answer (
 CREATE SEQUENCE estimate_request_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE estimate_answer_seq START WITH 1 INCREMENT BY 1;
 
--- 요청/답변 샘플 데이터 삽입
+-- 견적 답변 샘플 데이터 삽입 (수정된 버전)
 INSERT INTO estimate_request (request_no, id, title, content, category, budget, request_date, status)
-VALUES (estimate_request_seq.NEXTVAL, 'user1', '게이밍 PC 견적 요청', '배틀그라운드 풀옵으로 돌아가는 견적 부탁드립니다.', '그래픽카드', 2000000, sysdate, 'waiting');
+VALUES (estimate_request_seq.NEXTVAL, 'user1', '게이밍 PC 견적 요청', '고성능 게이밍 PC를 원합니다. 최신 게임을 최고 설정으로 구동할 수 있는 사양 부탁드립니다.', '게이밍', 2500000, sysdate, 'waiting');
 INSERT INTO estimate_request (request_no, id, title, content, category, budget, request_date, status)
-VALUES (estimate_request_seq.NEXTVAL, 'user2', '사무용 PC 견적 요청', '문서 작업 및 가벼운 인터넷 사용 용도입니다.', '저장장치 (SSD/HDD)', 800000, sysdate, 'waiting');
+VALUES (estimate_request_seq.NEXTVAL, 'user2', '사무용 PC 견적 요청', '업무용 문서 작업과 기본적인 멀티태스킹에 적합한 PC를 찾고 있습니다.', '사무용', 1000000, sysdate, 'waiting');
+
 INSERT INTO estimate_answer (answer_no, id, title, content, total_price, answer_date, reNo, ordNo, levNo, parentNo)
-VALUES (estimate_answer_seq.NEXTVAL, 'admin', '게이밍 PC 견적', 'RTX 3060 기반 PC 구성', 1800000, sysdate, NULL, 1, 0, 1);
+VALUES (estimate_answer_seq.NEXTVAL, 'admin', '게이밍 PC 견적', 
+'CPU : AMD Ryzen 7 5800X (599,000원)
+메모리 : G.Skill Ripjaws V 32GB (DDR4/3600MHz) (159,000원)
+그래픽카드 : NVIDIA GeForce RTX 3080 (1,200,000원)', 
+2500000, sysdate, NULL, 1, 0, 1);
+
 INSERT INTO estimate_answer (answer_no, id, title, content, total_price, answer_date, reNo, ordNo, levNo, parentNo)
-VALUES (estimate_answer_seq.NEXTVAL, 'admin', '사무용 PC 견적', '인텔 i3 기반 PC 구성', 700000, sysdate, NULL, 1, 0, 2);
+VALUES (estimate_answer_seq.NEXTVAL, 'admin', '사무용 PC 견적', 
+'CPU : Intel Core i5-11400 (259,000원)
+메모리 : Samsung DDR4 16GB (89,000원)
+그래픽카드 : Intel UHD Graphics 750 (내장그래픽)', 
+1000000, sysdate, NULL, 1, 0, 2);
+
+
 -- 상태 업데이트
 UPDATE estimate_request SET status = 'completed' WHERE request_no = 1;
 UPDATE estimate_request SET status = 'completed' WHERE request_no = 2;
 
+-- ===== EVENT(이벤트) SQL =================================================
 drop table event CASCADE CONSTRAINTS PURGE;
 drop SEQUENCE event_seq;
 
@@ -150,6 +164,7 @@ VALUES (community_reply_seq.nextval, 1, 1, 'user2', '이 그래픽 카드의 성능은 정�
 INSERT INTO community_reply(rno, post_no, parent_no, id, content, writeDate, updateDate, likeCnt, dislikeCnt, image) 
 VALUES (community_reply_seq.nextval, 1, 2, 'user1', 'CPU는 인텔 i5가 괜찮은 것 같습니다. 가성비가 좋고 성능도 우수해요.', sysdate, sysdate, 0, 0, NULL);   
 
+-- ===== QnA/answer(질문/댓글) SQL =================================================
 DROP TABLE answer CASCADE CONSTRAINTS PURGE;
 DROP TABLE qna CASCADE CONSTRAINTS PURGE;
 DROP SEQUENCE answer_seq;
@@ -181,12 +196,12 @@ CREATE TABLE answer (
 CREATE SEQUENCE qna_seq START WITH 1 INCREMENT BY 1;
 CREATE SEQUENCE answer_seq START WITH 1 INCREMENT BY 1;
 
--- QnA 샘플 데이터 
+-- QnA/Answer 샘플 데이터 
 INSERT INTO qna (qna_no, id, title, content, writeDate, category, status)
 VALUES (1, 'test1', '배송은 어떻게 하나요?', '배송 관련 질문입니다. 언제 받을 수 있나요?', sysdate, '배송', 'waiting');
 INSERT INTO qna (qna_no, id, title, content, writeDate, category, status)
 VALUES (2, 'test1', '환불 정책은 무엇인가요?', '환불 절차와 소요 시간에 대해 알고 싶습니다.', sysdate, '환불', 'waiting');
--- Answer 샘플 데이터
+
 INSERT INTO answer (answer_no, id, answer_title, answer_content, answerDate, refNo, ordNo, levNo, parentNo)
 VALUES (1, 'admin', '배송 안내', '배송은 3일 이내에 가능합니다.', sysdate, NULL, 1, 0, 1);
 INSERT INTO answer (answer_no, id, answer_title, answer_content, answerDate, refNo, ordNo, levNo, parentNo)
@@ -195,8 +210,7 @@ VALUES (2, 'admin', '환불 안내', '환불은 요청 후 5일 이내에 처리됩니다.', sysdat
 UPDATE qna SET status = 'completed' WHERE qna_no = 1;
 UPDATE qna SET status = 'completed' WHERE qna_no = 2;
 
-
--- grade
+-- ===== GRADE SQL =================================================
 DROP TABLE grade CASCADE constraints purge;
 
 create table grade (
@@ -230,8 +244,7 @@ insert into member (id, pw, nicname, email, address, gradeNo) values('test1','te
 insert into member (id, pw, nicname, email, address, gradeNo) values('user1','user1','김유저','user1@gmail.com','서울 노원구 창석로길 2-1, 201호',1);
 insert into member (id, pw, nicname, email, address, gradeNo) values('user2','user2','박유저','user2@gmail.com','강원 동해시 낙수대로 38, 낙수힐스테이트 312동 101호',1);
 
-
-
+-- ===== GOODS SQL =================================================
 -- 기존 테이블 삭제
 DROP TABLE cpu CASCADE CONSTRAINTS PURGE;
 DROP TABLE memory CASCADE CONSTRAINTS PURGE;
@@ -329,7 +342,7 @@ CREATE TABLE goods_reply (
 );
 CREATE SEQUENCE goods_reply_seq;
 
--- cart
+-- ===== CART SQL =================================================
 DROP TABLE cart CASCADE CONSTRAINTS;
 DROP SEQUENCE cart_seq;
 
@@ -381,11 +394,9 @@ CREATE TABLE buy (
     final_price NUMBER  
 );
 
-
 CREATE SEQUENCE buy_seq;
 
-
--- payment
+-- ===== PAYMENT SQL =================================================
 DROP TABLE payment CASCADE CONSTRAINTS;
 DROP SEQUENCE payment_seq;
 

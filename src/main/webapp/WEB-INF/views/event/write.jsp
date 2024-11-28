@@ -168,11 +168,11 @@
 
                             <div class="row mt-4">
                                 <div class="col-12 d-flex justify-content-between">
-                                    <a href="/event/list.do" class="btn btn-secondary">
-                                        <i class="fa fa-arrow-left mr-1"></i>취소
+                                    <a href="/event/list.do" class="btn btn-outline-secondary">
+                                        취소
                                     </a>
                                     <button type="submit" class="btn btn-primary">
-                                        <i class="fa fa-check mr-1"></i>등록
+                                        등록
                                     </button>
                                 </div>
                             </div>

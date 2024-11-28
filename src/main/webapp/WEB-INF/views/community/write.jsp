@@ -153,18 +153,30 @@ $(function() {
 			</div>
 
             <div class="button-group">
-                <button type="submit" class="btn btn-primary">
-                    <i class="fa fa-check"></i> 등록
+                <button type="submit" class="btn btn-primary btn-sm">
+                    등록
                 </button>
-                <button type="button" class="btn btn-info" id="tempSaveBtn">
-                    <i class="fa fa-save"></i> 임시저장
+                <button type="button" class="btn btn-outline-info btn-sm" id="tempSaveBtn">
+                    임시저장
                 </button>
-                <button type="reset" class="btn btn-secondary">
-                    <i class="fa fa-refresh"></i> 새로입력
+                <button type="reset" class="btn btn-outline-secondary btn-sm">
+                    새로입력
                 </button>
-                <button type="button" class="btn btn-outline-secondary" id="cancelBtn">
-                    <i class="fa fa-times"></i> 취소
+                <button type="button" class="btn btn-outline-secondary btn-sm" id="cancelBtn">
+                    취소
                 </button>
+<!--                 <button type="submit" class="btn btn-primary"> -->
+<!--                     <i class="fa fa-check"></i> 등록 -->
+<!--                 </button> -->
+<!--                 <button type="button" class="btn btn-info" id="tempSaveBtn"> -->
+<!--                     <i class="fa fa-save"></i> 임시저장 -->
+<!--                 </button> -->
+<!--                 <button type="reset" class="btn btn-secondary"> -->
+<!--                     <i class="fa fa-refresh"></i> 새로입력 -->
+<!--                 </button> -->
+<!--                 <button type="button" class="btn btn-outline-secondary" id="cancelBtn"> -->
+<!--                     <i class="fa fa-times"></i> 취소 -->
+<!--                 </button> -->
             </div>
         </form>
     </div>

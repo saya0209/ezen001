@@ -32,11 +32,11 @@ $(document).ready(function() {
 
         <!-- 원본 질문 표시 -->
         <div class="original-question">
-            <h5 class="mb-3">[${qna.category}] ${qna.title}</h5>
+            <h5 class="mb-3">[${qna.category}] ${vo.title}</h5>
             <p class="mb-2">${qna.content}</p>
             <small class="text-muted">
                 작성자: ${qna.nicname} | 
-                작성일: <fmt:formatDate value="${qna.writeDate}" pattern="yyyy-MM-dd HH:mm"/>
+                작성일: <fmt:formatDate value="${vo.writeDate}" pattern="yyyy-MM-dd HH:mm"/>
             </small>
         </div>
 

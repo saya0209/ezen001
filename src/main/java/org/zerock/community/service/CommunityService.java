@@ -1,6 +1,7 @@
 package org.zerock.community.service;
 
 import java.util.List;
+import java.util.Map;
 
 import org.zerock.community.vo.CommunityVO;
 import org.zerock.util.page.PageObject;
@@ -29,5 +30,8 @@ public interface CommunityService {
 	// 좋아요/싫어요
 	public Integer updateLike(Long community_no, int amount);
 	public Integer updateDislike(Long community_no, int amount);
+	
+	// 좋아요/싫어요 처리
+    Map<String, Object> processReaction(Long communityNo, String id, String reactionType);
 }
 

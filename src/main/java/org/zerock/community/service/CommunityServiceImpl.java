@@ -1,6 +1,8 @@
 package org.zerock.community.service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 
@@ -103,6 +105,46 @@ public class CommunityServiceImpl implements CommunityService {
 	@Override
 	public Integer updateDislike(Long community_no, int amount) {
 	    return mapper.updateDislike(community_no, amount);
+	}
+	
+	@Override
+	public Map<String, Object> processReaction(Long communityNo, String id, String reactionType) {
+	    Map<String, Object> result = new HashMap<>();
+	    
+	    try {
+	        // 현재 사용자의 기존 반응 확인
+	        String existingReaction = mapper.checkUserReaction(communityNo, id);
+	        
+	        if (existingReaction == null) {
+	            // 처음 반응하는 경우
+	            mapper.insertReaction(communityNo, id, reactionType);
+	        } else if (existingReaction.equals(reactionType)) {
+	            // 같은 반응을 다시 클릭한 경우 (취소)
+	            mapper.deleteReaction(communityNo, id);
+	        } else {
+	            // 다른 반응에서 변경
+	            mapper.deleteReaction(communityNo, id);
+	            mapper.insertReaction(communityNo, id, reactionType);
+	        }
+	        
+	        // 좋아요/싫어요 카운트 업데이트
+	        if (reactionType.equals("like")) {
+	            mapper.updateLike(communityNo, 0);  // 0을 전달하여 카운트 다시 계산
+	            result.put("likeCnt", mapper.view(communityNo).getLikeCnt());
+	        } else {
+	            mapper.updateDislike(communityNo, 0);  // 0을 전달하여 카운트 다시 계산
+	            result.put("dislikeCnt", mapper.view(communityNo).getDislikeCnt());
+	        }
+	        
+	        result.put("status", "success");
+	    } catch (Exception e) {
+	        result.put("status", "error");
+	        result.put("message", "처리 중 오류가 발생했습니다.");
+	        log.error("Reaction processing error", e);
+	    }
+	    
+	    log.info("result : " + result);
+	    return result;
 	}
 }
 

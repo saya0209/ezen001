@@ -1,99 +1,110 @@
 $(function() {
-    // 좋아요 버튼 클릭 이벤트
-    $("#likeBtn").on("click", function() {
-        let community_no = $(this).data("community-no");
-        let userId = $("#userId").val(); // hidden input으로 전달된 사용자 ID
-        
-        // 로컬스토리지에서 상태 확인
-        const storageKey = `community_${community_no}_${userId}`;
-        let state = JSON.parse(localStorage.getItem(storageKey) || '{"isLiked":false,"isDisliked":false}');
-        
-        // 이미 싫어요를 눌렀다면 싫어요 취소
-        if(state.isDisliked) {
-            updateDislike(community_no, -1, state);
+     $(".reaction-buttons button").on("click", function() {
+        const communityNo = $(this).data("community-no");
+        const reactionType = $(this).attr("id") === "likeBtn" ? "like" : "dislike";
+
+        // 로그인 체크 알림 추가
+        if (!$("#userId").val()) {
+            alert("로그인이 필요합니다.");
+            return;
         }
-        
-        // 좋아요 처리
+
+        // AJAX 요청을 통해 데이터 처리
         $.ajax({
-            url: "/community/updateLike",
+            url: "/community/react",
             method: "POST",
-            data: { 
-                community_no: community_no, 
-                amount: state.isLiked ? -1 : 1 
+            data: {
+                community_no: communityNo,
+                reaction_type: reactionType
             },
+            dataType: "json", 
             success: function(result) {
-                if(result.status === "success") {
+            	console.log(result);
+                if (result.status === "success") {
                     // UI 업데이트
-                    $("#likeCount").text(result.likeCnt);
-                    state.isLiked = !state.isLiked;
-                    localStorage.setItem(storageKey, JSON.stringify(state));
-                    
-                    // 버튼 스타일 변경
-                    $("#likeBtn").toggleClass("active");
-                    if(state.isDisliked) {
-                        $("#dislikeBtn").removeClass("active");
-                        state.isDisliked = false;
+                    if (result.likeCnt !== undefined) {
+                        $("#likeCount").text(result.likeCnt);
                     }
+                    if (result.dislikeCnt !== undefined) {
+                        $("#dislikeCount").text(result.dislikeCnt);
+                    }
+
+                    // 버튼 상태 토글
+                    $("#likeBtn, #dislikeBtn").removeClass("active");
+                    if (result.likeCnt !== undefined) {
+                        $("#likeBtn").addClass("active");
+                    }
+                    if (result.dislikeCnt !== undefined) {
+                        $("#dislikeBtn").addClass("active");
+                    }
+
+                    // 상태 저장 로직 호출
+                    saveLikeDislikeState({
+                        isLiked: reactionType === "like",
+                        isDisliked: reactionType === "dislike"
+                    });
+                } else {
+                    alert(result.message || "처리 중 오류가 발생했습니다.");
                 }
             },
-            error: function() {
-                alert("좋아요 처리에 실패했습니다.");
+            error: function(xhr, status, error) {
+                console.error("Error:", error);
+                alert("반응 처리에 실패했습니다. 다시 시도해주세요.");
             }
         });
     });
 
-    // 싫어요 버튼 클릭 이벤트
-    $("#dislikeBtn").on("click", function() {
-        let community_no = $(this).data("community-no");
-        let userId = $("#userId").val();
-        
-        // 로컬스토리지에서 상태 확인
-        const storageKey = `community_${community_no}_${userId}`;
-        let state = JSON.parse(localStorage.getItem(storageKey) || '{"isLiked":false,"isDisliked":false}');
-        
-        // 이미 좋아요를 눌렀다면 좋아요 취소
-        if(state.isLiked) {
-            updateLike(community_no, -1, state);
+    // 상태 저장 및 가져오기 함수들
+    const userInteractionState = {
+        community_no: $("#likeBtn").data("community-no"),
+        userId: $("#userId").val()
+    };
+
+    function getLikeDislikeState() {
+        const storageKey = `community_${userInteractionState.community_no}_${userInteractionState.userId}`;
+        return JSON.parse(localStorage.getItem(storageKey) || '{"isLiked":false, "isDisliked":false}');
+    }
+
+    function saveLikeDislikeState(state) {
+        const storageKey = `community_${userInteractionState.community_no}_${userInteractionState.userId}`;
+        localStorage.setItem(storageKey, JSON.stringify(state));
+    }
+
+    // 초기 로드 시 버튼 상태 설정
+    function initializeButtonStates() {
+        const state = getLikeDislikeState();
+
+        if (state.isLiked) {
+            $("#likeBtn").addClass("active");
         }
-        
-        // 싫어요 처리
-        updateDislike(community_no, state.isDisliked ? -1 : 1, state);
-    });
 
-    // 좋아요 업데이트 함수
-    function updateLike(community_no, amount, state) {
-        $.ajax({
-            url: "/community/updateLike",
-            method: "POST",
-            data: { community_no, amount },
-            success: function(result) {
-                if(result.status === "success") {
-                    $("#likeCount").text(result.likeCnt);
-                    state.isLiked = amount > 0;
-                    localStorage.setItem(`community_${community_no}_${userId}`, JSON.stringify(state));
-                    $("#likeBtn").toggleClass("active");
-                }
-            }
-        });
+        if (state.isDisliked) {
+            $("#dislikeBtn").addClass("active");
+        }
+
+        // 로그인한 사용자만 클릭 가능하도록 설정
+        if (userInteractionState.userId) {
+            $("#likeBtn, #dislikeBtn").addClass("clickable");
+        }
     }
 
-    // 싫어요 업데이트 함수
-    function updateDislike(community_no, amount, state) {
-        $.ajax({
-            url: "/community/updateDislike",
-            method: "POST",
-            data: { community_no, amount },
-            success: function(result) {
-                if(result.status === "success") {
-                    $("#dislikeCount").text(result.dislikeCnt);
-                    state.isDisliked = amount > 0;
-                    localStorage.setItem(`community_${community_no}_${userId}`, JSON.stringify(state));
-                    $("#dislikeBtn").toggleClass("active");
-                }
-            },
-            error: function() {
-                alert("싫어요 처리에 실패했습니다.");
-            }
-        });
-    }
+    initializeButtonStates();
 });
+
+
+// 보조 함수: 좋아요/싫어요 카운트 업데이트
+function updateLikeCount(community_no, amount) {
+    $.ajax({
+        url: "/community/updateLike",
+        method: "POST",
+        data: { community_no, amount }
+    });
+}
+
+function updateDislikeCount(community_no, amount) {
+    $.ajax({
+        url: "/community/updateDislike",
+        method: "POST",
+        data: { community_no, amount }
+    });
+}

@@ -39,6 +39,19 @@ public interface CommunityMapper {
 	// 좋아요/싫어요
 	public Integer updateLike(@Param("community_no") Long community_no, @Param("amount") int amount);
 	public Integer updateDislike(@Param("community_no") Long community_no, @Param("amount") int amount);
+	
+	// 사용자의 좋아요/싫어요 상태 확인
+    String checkUserReaction(@Param("community_no") Long communityNo, @Param("id") String id);
+
+    // 좋아요/싫어요 등록
+    void insertReaction(@Param("community_no") Long communityNo, 
+                        @Param("id") String id, 
+                        @Param("reactionType") String reactionType);
+
+    // 좋아요/싫어요 취소
+    void deleteReaction(@Param("community_no") Long communityNo, 
+                        @Param("id") String id);
+
     
 }
 

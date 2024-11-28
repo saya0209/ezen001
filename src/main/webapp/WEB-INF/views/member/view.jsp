@@ -7,6 +7,10 @@
 <head>
 <meta charset="UTF-8">
 <title>[${vo.id }] 회원정보</title>
+
+<!-- Custom CSS -->
+<link href="${path}/resources/css/memeberView.css" rel="stylesheet">
+
 <style type="text/css">
 	#infoDiv>.row{
 		padding: 10px;
@@ -48,7 +52,7 @@ $(function() {
 	<div class="card">
 	  <div class="card-header">
 	  	<div>
-	  		${vo.nicname } (${vo.id }) ${vo.grade_image }
+	  		${vo.nicname } (${vo.id })
 	  	</div>
 		</div>
 	  <div class="card-body" id="infoDiv">
@@ -69,9 +73,8 @@ $(function() {
 				  이미지변경
 				</button>
 	  	</div>
-	  	
 	  	<!-- id, nicname, tel, email, address, regDate, conDate, gradeName, status -->
-	  		<div class="row">
+	  	<div class="row">
 			  <div class="col-md-3"><i class="fa fa-check"></i> 연락처</div>
 			  <div class="col-md-9">${vo.id }</div>
 			</div>
@@ -126,14 +129,14 @@ $(function() {
 	
 	      <!-- Modal Header -->
 	      <div class="modal-header">
-	        <h4 class="modal-title">사진 선택하기</h4>
+	        <h4 class="modal-title">바꿀사진 선택하기</h4>
 	        <button type="button" class="close" data-dismiss="modal">&times;</button>
 	      </div>
 	      
 	      <form action="changePhoto.do" method="post" enctype="multipart/form-data">
-	      	<!-- 숨겨서 넘겨야 할 데이터 : id, 파일 -->
+	      	<!-- 숨겨서 넘겨야 할 데이터 : 회원id, 현재화일이름(삭제를 위해서) -->
 	      	<input name="id" value="${vo.id }" type="hidden">
-	      	<!-- <input name="deleteFileName" value="${vo.grade_image }" type="hidden"> -->
+	      	<input name="deleteFileName" value="${vo.grade_image }" type="hidden">
 		      <!-- Modal body -->
 		      <div class="modal-body">
 		        <div class="form-group">

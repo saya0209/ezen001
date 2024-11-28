@@ -15,6 +15,7 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -340,4 +341,22 @@ public class CommunityController {
 		return result;
 	}
 
+    @PostMapping(value = "/react",
+    		produces = {MediaType.APPLICATION_XML_VALUE,MediaType.APPLICATION_JSON_UTF8_VALUE})
+    @ResponseBody
+    public Map<String, Object> processReaction(
+        @RequestParam("community_no") Long communityNo,
+        @RequestParam("reaction_type") String reactionType,
+        HttpSession session) {
+        
+        LoginVO loginVO = (LoginVO) session.getAttribute("login");
+        if (loginVO == null) {
+            Map<String, Object> result = new HashMap<>();
+            result.put("status", "error");
+            result.put("message", "로그인이 필요합니다.");
+            return result;
+        }
+        
+        return service.processReaction(communityNo, loginVO.getId(), reactionType);
+    }
 }

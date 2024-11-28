@@ -106,27 +106,27 @@ $(function() {
 
                 <!-- 좋아요/싫어요 -->
                 <div class="reaction-buttons">
-                    <button id="likeBtn" class="${isLiked ? 'active' : ''}" data-community-no="${vo.community_no}">
-                        <i class="material-icons">thumb_up</i>
-                        <span id="likeCount">${vo.likeCnt}</span>
-                    </button>
-                    <button id="dislikeBtn" class="${isDisliked ? 'active' : ''}" data-community-no="${vo.community_no}">
-                        <i class="material-icons">thumb_down</i>
-                        <span id="dislikeCount">${vo.dislikeCnt}</span>
-                    </button>
-                </div>
+	                <button id="likeBtn" class="${isLiked ? 'active' : ''}" data-community-no="${vo.community_no}">
+	                    <i class="material-icons">thumb_up</i>
+	                    <span id="likeCount">${vo.likeCnt}</span>
+	                </button>
+	                <button id="dislikeBtn" class="${isDisliked ? 'active' : ''}" data-community-no="${vo.community_no}">
+	                    <i class="material-icons">thumb_down</i>
+	                    <span id="dislikeCount">${vo.dislikeCnt}</span>
+	                </button>
+	            </div>
 
                 <!-- 작성자 전용 버튼 -->
                 <c:if test="${login != null && (login.id == vo.id || login.gradeNo == 9)}">
                     <div class="action-buttons">
-                        <button class="btn btn-outline-secondary" onclick="location.href='writeForm.do'">
+                        <button class="btn btn-primary btn-sm" onclick="location.href='writeForm.do'">
                             <i class="fa fa-pencil"></i> 글 작성
                         </button>
-                        <button class="btn btn-outline-secondary" id="updateBtn">
-                            <i class="fa fa-edit"></i> 수정
+                        <button class="btn btn-outline-secondary btn-sm" id="updateBtn">
+                            수정
                         </button>
-                        <button class="btn btn-outline-secondary" id="deleteBtn">
-                            <i class="fa fa-trash"></i> 삭제
+                        <button class="btn btn-outline-secondary btn-sm" id="deleteBtn">
+                            삭제
                         </button>
                     </div>
                 </c:if>
@@ -145,6 +145,7 @@ $(function() {
             <div class="modal-content">
                 <form action="delete.do" method="post">
                     <input type="hidden" name="community_no" value="${vo.community_no}">
+                    <input type="hidden" id="userId" value="${login.id}">
                     <div class="modal-body text-center py-4">
                         <p class="delete-message">삭제하시겠습니까?</p>
                         <p class="delete-warning">삭제된 데이터는 되돌릴 수 없습니다.</p>

@@ -26,11 +26,11 @@
             margin: 20px auto;
             padding: 0 20px;
         }
-        
+
         /* 검색 영역을 상단으로 이동 및 스타일 수정 */
         .search-area {
             margin-bottom: 20px;
-            padding: 15px 20px;
+            padding: 10px;
             background: white;
             border: 1px solid var(--border-color);
             border-radius: 4px;
@@ -39,55 +39,59 @@
             align-items: center;
             gap: 10px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+            max-width: 800px; /* 가로 크기 제한 */
+            margin: 20px auto; /* 가운데 정렬 */
         }
-        
+
         .search-left {
             display: flex;
             gap: 10px;
             flex: 1;
         }
-        
-        .search-right {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
+
         .search-select {
             padding: 8px;
             border: 1px solid var(--border-color);
             border-radius: 4px;
             color: var(--text-color);
             background-color: white;
+            font-size: 0.9rem;
         }
-        
+
         .search-input {
-            flex: 1;
-            min-width: 200px;
+            min-width: 150px; 
             padding: 8px 12px;
             border: 1px solid var(--border-color);
             border-radius: 4px;
             color: var(--text-color);
+            font-size: 0.9rem;
+            flex: 1; /* 검색 입력란이 남는 공간을 채우도록 설정 */
         }
-        
-        .search-input:focus {
-            outline: none;
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.1);
-        }
-        
-        .search-btn {
-            padding: 8px 20px;
+
+        .search-btn, .write-btn {
+            padding: 8px 16px;
             background: var(--primary-color);
             color: white;
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            font-size: 0.9rem;
             transition: background-color 0.2s;
+            white-space: nowrap; /* Keep the button text on one line */
         }
-        
-        .search-btn:hover {
+
+        .search-btn:hover, .write-btn:hover {
             background: var(--secondary-color);
+        }
+
+        .write-btn {
+            margin-left: 10px; /* Adjust spacing between search and write buttons */
+        }
+
+        .search-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
         }
 
         .board-header {
@@ -98,7 +102,7 @@
             padding: 10px 0;
             border-bottom: 1px solid var(--border-color);
         }
-        
+
         .board-title {
             display: flex;
             align-items: center;
@@ -106,18 +110,18 @@
             font-weight: bold;
             color: var(--primary-color);
         }
-        
+
         .board-title i {
             margin-right: 5px;
             color: var(--primary-color);
         }
-        
+
         .sort-options {
             display: flex;
             gap: 15px;
             align-items: center;
         }
-        
+
         .sort-options a {
             color: var(--light-text);
             text-decoration: none;
@@ -125,16 +129,16 @@
             font-size: 0.9rem;
             transition: color 0.2s;
         }
-        
+
         .sort-options a:hover {
             color: var(--primary-color);
         }
-        
+
         .sort-options .active {
             color: var(--primary-color);
             font-weight: bold;
         }
-        
+
         .board-table {
             width: 100%;
             border-top: 2px solid var(--primary-color);
@@ -142,7 +146,7 @@
             border-radius: 4px;
             box-shadow: 0 1px 3px rgba(0,0,0,0.05);
         }
-        
+
         .board-table th {
             padding: 15px;
             font-size: 0.9rem;
@@ -151,22 +155,22 @@
             color: var(--text-color);
             font-weight: 600;
         }
-        
+
         .board-table td {
             padding: 15px;
             font-size: 0.9rem;
             border-bottom: 1px solid var(--border-color);
             color: var(--text-color);
         }
-        
+
         .board-table tr:hover {
             background-color: var(--hover-color);
         }
-        
+
         .notice {
             background-color: var(--notice-bg);
         }
-        
+
         .notice-badge {
             display: inline-block;
             padding: 2px 8px;
@@ -175,34 +179,16 @@
             border-radius: 3px;
             font-size: 0.8rem;
         }
-        
+
         .count-info {
             color: var(--light-text);
             font-size: 0.85rem;
             margin-left: 5px;
         }
-        
+
         .reply-count {
             color: var(--primary-color);
             font-weight: bold;
-        }
-        
-        .write-btn {
-            padding: 8px 20px;
-            background: var(--primary-color);
-            color: white;
-            border: none;
-            border-radius: 4px;
-            text-decoration: none;
-            float: right;
-            margin-top: 10px;
-            transition: background-color 0.2s;
-        }
-        
-        .write-btn:hover {
-            background: var(--secondary-color);
-            color: white;
-            text-decoration: none;
         }
 
         .pagination {
@@ -211,7 +197,7 @@
             margin-top: 20px;
             gap: 5px;
         }
-        
+
         .pagination a {
             padding: 8px 12px;
             border: 1px solid var(--border-color);
@@ -220,13 +206,13 @@
             border-radius: 4px;
             transition: all 0.2s;
         }
-        
+
         .pagination a:hover {
             background: var(--hover-color);
             border-color: var(--primary-color);
             color: var(--primary-color);
         }
-        
+
         .pagination .active {
             background: var(--primary-color);
             color: white;
@@ -237,15 +223,15 @@
             .search-area {
                 flex-direction: column;
             }
-            
+
             .search-left, .search-right {
                 width: 100%;
             }
-            
+
             .search-input {
                 width: 100%;
             }
-            
+
             .board-table th:nth-child(3),
             .board-table th:nth-child(5),
             .board-table th:nth-child(6),
@@ -275,7 +261,7 @@
 <body>
 <div class="board-container">
     <!-- 검색 영역을 상단으로 이동 -->
-    <div class="search-area">
+     <div class="search-area">
         <div class="search-left">
             <select class="search-select">
                 <option>전체기간</option>
@@ -292,11 +278,17 @@
                 <option>댓글작성자</option>
             </select>
             <input type="text" class="search-input" placeholder="검색어를 입력해주세요">
+            <button class="search-btn btn-sm">검색</button> <!-- 검색 버튼 -->
         </div>
         <div class="search-right">
-            <button class="search-btn">검색</button>
+            <c:if test="${!empty login}">
+                <a href="writeForm.do" class="write-btn btn-sm">
+                    <i class="fa fa-pencil"></i> 글작성
+                </a>
+            </c:if>
         </div>
     </div>
+   
 
     <div class="board-header">
         <div class="board-title">
@@ -322,13 +314,14 @@
             </tr>
         </thead>
         <tbody>
-            <c:if test="${login.gradeNo == 9}">
                 <tr class="notice">
                     <td><span class="notice-badge">공지</span></td>
                     <td>
                         중요 공지사항입니다
                         <span class="count-info">
-                            <span class="reply-count">[3]</span>
+                            <c:if test="${!empty vo.image}">
+				                <i class="reply-count fa fa-file-image-o"></i>
+				            </c:if>
                         </span>
                     </td>
                     <td>관리자</td>
@@ -336,31 +329,24 @@
                     <td>100</td>
                     <td>10</td>
                 </tr>
-            </c:if>
             
             <c:forEach items="${list}" var="vo">
-                <tr class="dataRow" data-no="${vo.community_no}">
-                    <td>${vo.community_no}</td>
-                    <td>
-                        ${vo.title}
-                        <span class="count-info">
-                            <span class="reply-count">[2]</span>
-                        </span>
-                    </td>
-                    <td>${vo.nicname}</td>
-                    <td><fmt:formatDate value="${vo.writeDate}" pattern="yyyy.MM.dd"/></td>
-                    <td>${vo.hit}</td>
-                    <td>0</td>
-                </tr>
-            </c:forEach>
+			    <tr class="dataRow" data-no="${vo.community_no}">
+			        <td>${vo.community_no}</td>
+			        <td>
+			            ${vo.title} 
+			            <c:if test="${!empty vo.image}">
+			                <i class="reply-count fa fa-file-image-o"></i>
+			            </c:if>
+			        </td>
+			        <td>${vo.nicname}</td>
+			        <td><fmt:formatDate value="${vo.writeDate}" pattern="yyyy.MM.dd"/></td>
+			        <td>${vo.hit}</td>
+			        <td>0</td>
+			    </tr>
+			</c:forEach>
         </tbody>
     </table>
-
-    <c:if test="${!empty login}">
-        <a href="writeForm.do" class="write-btn">
-            <i class="fa fa-pencil"></i> 글쓰기
-        </a>
-    </c:if>
 
     <div class="pagination">
         <pageNav:pageNav listURI="list.do" pageObject="${pageObject}"></pageNav:pageNav>

@@ -61,10 +61,11 @@ body {
 
 
 .main-image {
-	width: 100%;
-	border-radius: 10px;
-	margin-bottom: 2rem;
-	box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    border-radius: 10px;
+    margin-bottom: 2rem;  /* 이미지 간 간격 */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    display: block;  /* 이미지를 블록 레벨 요소로 만들어 세로로 쌓이게 함 */
 }
 
 .datetime-info {
@@ -222,9 +223,16 @@ body {
         <h1 class="event-title">${vo.title}</h1>
         
         <!-- 메인 이미지 -->
-        <c:if test="${not empty vo.files}">
-            <img src="/upload/event/${vo.files.split(',')[0]}" class="main-image" alt="Event main image">
-        </c:if>
+<%--         <c:if test="${!empty vo.files}"> --%>
+<%--             <img src="/upload/event/${vo.files.split(',')[0]}" class="main-image" alt="Event main image"> --%>
+<%--         </c:if> --%>
+        
+        <!-- 이미지들 -->
+		<c:if test="${!empty vo.files}">
+		    <c:forEach items="${fn:split(vo.files, ',')}" var="file">
+		        <img src="/upload/event/${file}" class="main-image" alt="Event image">
+		    </c:forEach>
+		</c:if>
         
         <!-- 날짜 정보 -->
         <div class="datetime-info">

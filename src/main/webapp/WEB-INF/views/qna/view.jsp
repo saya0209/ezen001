@@ -39,9 +39,9 @@
         });
         
         // 답변 등록 성공 메시지
-        <c:if test="${!empty msg}">
-            alert("${msg}");
-        </c:if>
+//         <c:if test="${!empty msg}">
+//             alert("${msg}");
+//         </c:if>
     </script>
 </head>
 <body>
@@ -96,8 +96,8 @@
                         <form action="/qna/deleteAnswer.do" method="post" class="d-inline">
                             <input type="hidden" name="answer_no" value="${answer.answer_no}">
                             <input type="hidden" name="qna_no" value="${qna.qna_no}">
-                            <button type="submit" class="btn btn-sm btn-outline-danger delete-btn">
-                                <i class="fa fa-trash"></i> 삭제
+                            <button type="submit" class="btn btn-sm btn-outline-secondary delete-btn">
+                                <i class="fa fa-trash"></i>
                             </button>
                         </form>
                     </c:if>
@@ -120,10 +120,10 @@
             
             <!-- 작성자 본인만 삭제 가능 -->
 <%--             <c:if test="${login.id == qna.id}"> --%>
-            <c:if test="${login != null && (login.id == vo.id || login.gradeNo == 9)}">
+            <c:if test="${!empty login && (login.id == qna.id || login.gradeNo == 9)}">
                 <form action="/qna/delete.do" method="post" class="d-inline">
                     <input type="hidden" name="qna_no" value="${qna.qna_no}">
-                    <button type="submit" class="btn btn-qna btn-danger delete-btn">
+                    <button type="submit" class="btn btn-qna btn-qna-light delete-btn">
                         <i class="fa fa-trash"></i> 삭제
                     </button>
                 </form>

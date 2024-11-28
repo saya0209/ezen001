@@ -19,29 +19,26 @@ $(function() {
             },
             dataType: "json", 
             success: function(result) {
-            	console.log(result);
+                console.log(result);
                 if (result.status === "success") {
                     // UI 업데이트
-                    if (result.likeCnt !== undefined) {
-                        $("#likeCount").text(result.likeCnt);
-                    }
-                    if (result.dislikeCnt !== undefined) {
-                        $("#dislikeCount").text(result.dislikeCnt);
-                    }
+                    $("#likeCount").text(result.likeCnt);
+                    $("#dislikeCount").text(result.dislikeCnt);
 
                     // 버튼 상태 토글
                     $("#likeBtn, #dislikeBtn").removeClass("active");
-                    if (result.likeCnt !== undefined) {
+                    
+                    // 새로운 반응 상태에 따라 버튼 활성화
+                    if (result.reaction === "like") {
                         $("#likeBtn").addClass("active");
-                    }
-                    if (result.dislikeCnt !== undefined) {
+                    } else if (result.reaction === "dislike") {
                         $("#dislikeBtn").addClass("active");
                     }
 
                     // 상태 저장 로직 호출
                     saveLikeDislikeState({
-                        isLiked: reactionType === "like",
-                        isDisliked: reactionType === "dislike"
+                        isLiked: result.reaction === "like",
+                        isDisliked: result.reaction === "dislike"
                     });
                 } else {
                     alert(result.message || "처리 중 오류가 발생했습니다.");

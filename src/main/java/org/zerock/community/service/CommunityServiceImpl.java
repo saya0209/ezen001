@@ -121,22 +121,24 @@ public class CommunityServiceImpl implements CommunityService {
 	        } else if (existingReaction.equals(reactionType)) {
 	            // 같은 반응을 다시 클릭한 경우 (취소)
 	            mapper.deleteReaction(communityNo, id);
+	            reactionType = null;  // 취소 상태 표시
 	        } else {
-	            // 다른 반응에서 변경
+	            // 다른 반응으로 변경 (기존 반응 삭제 후 새 반응 추가)
 	            mapper.deleteReaction(communityNo, id);
 	            mapper.insertReaction(communityNo, id, reactionType);
 	        }
 	        
 	        // 좋아요/싫어요 카운트 업데이트
-	        if (reactionType.equals("like")) {
-	            mapper.updateLike(communityNo, 0);  // 0을 전달하여 카운트 다시 계산
-	            result.put("likeCnt", mapper.view(communityNo).getLikeCnt());
-	        } else {
-	            mapper.updateDislike(communityNo, 0);  // 0을 전달하여 카운트 다시 계산
-	            result.put("dislikeCnt", mapper.view(communityNo).getDislikeCnt());
-	        }
+	        mapper.updateLike(communityNo, 0);
+	        mapper.updateDislike(communityNo, 0);
+	        
+	        // 업데이트된 게시물 정보 가져오기
+	        CommunityVO updatedVO = mapper.view(communityNo);
 	        
 	        result.put("status", "success");
+	        result.put("likeCnt", updatedVO.getLikeCnt());
+	        result.put("dislikeCnt", updatedVO.getDislikeCnt());
+	        result.put("reaction", reactionType);
 	    } catch (Exception e) {
 	        result.put("status", "error");
 	        result.put("message", "처리 중 오류가 발생했습니다.");

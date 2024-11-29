@@ -122,7 +122,7 @@ function submitForm() {
 						        </div>
 						        <div class="col-md-4">
 						            <select id="budget" class="form-control custom-select">
-						                <option selected disabled>예산 범위</option>
+						                <option selected disabled>예산</option>
 						                <option value="1000000">100만원</option>
 						                <option value="2000000">200만원</option>
 						                <option value="2000000">200만원 이상</option>

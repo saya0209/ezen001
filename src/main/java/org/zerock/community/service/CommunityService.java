@@ -33,5 +33,6 @@ public interface CommunityService {
 	
 	// 좋아요/싫어요 처리
     Map<String, Object> processReaction(Long communityNo, String id, String reactionType);
+
 }
 

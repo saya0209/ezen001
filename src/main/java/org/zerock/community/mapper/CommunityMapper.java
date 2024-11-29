@@ -33,7 +33,6 @@ public interface CommunityMapper {
     // 5. 커뮤니티 게시판 글삭제
 	public Integer delete(Long community_no);
 	
-	
 ////////////////////////////////////////////////////////
 	
 	// 좋아요/싫어요
@@ -54,5 +53,6 @@ public interface CommunityMapper {
 
     // 특정 게시글의 좋아요/싫어요 반응 삭제
     public void deleteReactions(Long community_no);
+
 }
 

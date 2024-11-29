@@ -19,20 +19,91 @@ public class AuthrityInterceptor extends HandlerInterceptorAdapter {
 					
 	// 권한 정보를 등록하는 초기화 블럭				
 	{				
-		// 등급이 1 이상이면 로그인이 필요, 등급이 9이면 관리자 권한 필요			
-		// 댓글 관련 기능 (로그인 권한 필요)			
-		authMap.put("/goodsreply/write.do", 1);			
-		authMap.put("/goodsreply/update.do", 1);			
-		authMap.put("/goodsreply/delete.do", 1);			
-		authMap.put("/communityreply/write.do", 1);			
-		authMap.put("/communityreply/update.do", 1);			
-		authMap.put("/communityreply/delete.do", 1);			
-					
+		// 등급이 1 이상이면 로그인이 필요, 등급이 9이면 관리자 권한 필요
+		//로그인 권한 필요	
+			//카트 - 리스트, 수정, 상품선택, 결제창, 결제완료, 결제내역, 결제내역 상세, 추가, 결제추가, 삭제
+			authMap.put("/cart/list.do", 1);
+			authMap.put("/cart/list/{id}", 1);
+			authMap.put("/cart/updateCartItem", 1);
+			authMap.put("/cart/updateSelection", 1);
+			authMap.put("/cart/paymentForm.do", 1);
+			authMap.put("/cart/completePayment/{id}", 1);
+			authMap.put("/cart/history", 1);
+			authMap.put("/cart/history/detail/{orderNumber}", 1);
+			authMap.put("/cart/add", 1);
+			authMap.put("/cart/addbuy", 1);
+			authMap.put("/cart/removeCartItem", 1);
+			//커뮤니티 - 작성, 수정, 삭제, 파일삭제, 좋아요, 싫어요
+			authMap.put("/community/write.do", 1);	
+			authMap.put("/community/update.do", 1);	
+			authMap.put("/community/delete.do", 1);	
+			authMap.put("/community/deleteFile.do", 1);	
+			authMap.put("/community/updateLike.do", 1);	
+			authMap.put("/community/updateDislike.do", 1);	
+			//커뮤니티댓글 - 작성, 수정, 삭제
+			authMap.put("/communityreply/write.do", 1);			
+			authMap.put("/communityreply/update.do", 1);			
+			authMap.put("/communityreply/delete.do", 1);
+			authMap.put("/communityreply/like.do", 1);
+			authMap.put("/communityreply/dislike.do", 1);
+			//회원 - 마이페이지, 회원가입, 내정보수정, 사진수정, 회원탈퇴
+			authMap.put("/member/mypageMain.do", 1);
+			authMap.put("/member/write.do", 1);
+			authMap.put("/member/update.do", 1);
+			authMap.put("/member/changePhoto.do", 1);
+			authMap.put("/member/delete.do", 1);
+			//견적 - 작성, 수정, 삭제
+			authMap.put("/estimate/write.do", 1);
+			authMap.put("/estimate/update.do", 1);
+			authMap.put("/estimate/delete.do", 1);
+			//굿즈 - 카트담기
+			authMap.put("/goods/addCart.do", 1);
+			//굿즈리뷰 - 작성, 수정, 삭제
+			authMap.put("/goodsReview/write.do", 1);			
+			authMap.put("/goodsReview/update.do", 1);			
+			authMap.put("/goodsReview/delete.do", 1);
+			//QnA - 작성, 삭제
+			authMap.put("/qna/write.do", 1);
+			authMap.put("/qna/delete.do", 1);
+			
+			
+						
 		// 로그아웃		
-		//authMap.put("/member/logout.do", 1);			
+			//authMap.put("/member/logout.do", 1);
+
 					
-		// 관리자 전용 페이지 (관리자 등급 필요)							
-		authMap.put("/member/list.do", 9);										
+		//관리자 권한 필요						
+			//회원 - 회원관리, 등급수정, 상태수정
+			authMap.put("/member/list.do", 9);																			
+			authMap.put("/member/changeGradeNo.do", 1);
+			authMap.put("/member/changeStatus.do", 1);
+			//카테고리 - 리스트, 작성, 수정, 삭제
+			authMap.put("/category/list.do", 1);
+			authMap.put("/category/write.do", 1);
+			authMap.put("/category/update.do", 1);
+			authMap.put("/category/delete.do", 1);
+			//견적 - 답변작성, 답변수정, 답변삭제
+			authMap.put("/estimate/writeAnswer.do", 1);
+			authMap.put("/estimate/updateAnswer.do", 1);
+			authMap.put("/estimate/deleteAnswer.do", 1);
+			//이벤트 - 작성, 수정, 삭제, 파일삭제
+			authMap.put("/event/write.do", 1);
+			authMap.put("/event/update.do", 1);
+			authMap.put("/event/delete.do", 1);
+			authMap.put("/event/deleteFile.do", 1);
+			//굿즈 - 작성, 이미지수정, 이미지삭제, 삭제
+			authMap.put("/goods/write.do", 1);
+			authMap.put("/goods/updateImage.do", 1);
+			authMap.put("/goods/deleteImage.do", 1);
+			authMap.put("/goods/delete.do", 1);
+			//공지사항 - 작성, 수정, 삭제
+			authMap.put("/notice/write.do", 1);
+			authMap.put("/notice/update.do", 1);
+			authMap.put("/notice/delete.do", 1);
+			//QnA - 답변작성, 답변삭제
+			authMap.put("/qna/writeAnswer.do", 1);
+			authMap.put("/qna/deleteAnswer.do", 1);
+			
 	}				
 					
 	@Override				

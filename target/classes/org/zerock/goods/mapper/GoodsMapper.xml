@@ -58,6 +58,8 @@
 	           g.cpu_id,
 	           g.memory_id,
 	           g.graphic_card_id,
+	           g.delivery_charge,
+	           g.discount,
 	           g.total_price,
 	           g.category,
 	           g.hit,
@@ -78,7 +80,12 @@
 
 	</select>
 	
-  
+	<select id="getGoodsByCategory" resultType="org.zerock.goods.vo.GoodsVO">
+        SELECT goods_no, category, cpu_name, memory_name, graphic_Card_name, image_name, total_price, discount, delivery_charge
+        FROM goods
+        WHERE category = #{category}
+    </select>
+  	
 
 	<!-- 조회수순으로 정렬 -->
     <select id="getGoodsListSortedByHit" resultType="org.zerock.goods.vo.GoodsVO">
@@ -86,6 +93,8 @@
                g.cpu_id,
                g.memory_id,
                g.graphic_card_id,
+               g.delivery_charge,
+	           g.discount,
                g.total_price,
                g.category,
                g.hit,
@@ -115,6 +124,8 @@
                g.cpu_id,
                g.memory_id,
                g.graphic_card_id,
+               g.delivery_charge,
+	           g.discount,
                g.total_price,
                g.category,
                g.hit,
@@ -143,6 +154,8 @@
                g.cpu_id,
                g.memory_id,
                g.graphic_card_id,
+               g.delivery_charge,
+	           g.discount,
                g.total_price,
                g.category,
                g.hit,

@@ -316,7 +316,7 @@
 						                <option selected disabled>용도 선택</option>
 						                <option value="office">사무용</option>
 						                <option value="gaming">게이밍용</option>
-						                <option value="workstation">워크스테이션</option>
+						                <option value="design">디자인</option>
 						            </select>
 						        </div>
 						        <div class="col-md-4">

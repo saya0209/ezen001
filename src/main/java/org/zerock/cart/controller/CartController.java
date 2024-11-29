@@ -5,6 +5,8 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpStatus;
@@ -24,6 +26,7 @@ import org.zerock.cart.vo.CartItemVO;
 import org.zerock.cart.vo.HistoryVO;
 import org.zerock.cart.vo.PaymentDetailVO;
 import org.zerock.cart.vo.PaymentItemVO;
+import org.zerock.member.vo.LoginVO;
 
 import lombok.extern.log4j.Log4j;
 
@@ -89,11 +92,24 @@ public class CartController {
     public String paymentPageForm(@RequestParam("id") String id, 
                                    @RequestParam(value = "now", required = false) Integer now, 
                                    @RequestParam(value = "goods_no", required = false) Integer goodsNo, 
-                                   Model model) {
+                                   Model model,
+                                   HttpSession session) {
         List<CartItemVO> cartItems = service.cartList(id);
         List<PaymentItemVO> selectedItems = new ArrayList<>();
         List<BuyItemVO> buyItems = service.buyList(id);
-
+        // 세션에서 로그인 정보를 가져옴
+        LoginVO loginVO = (LoginVO) session.getAttribute("login");
+        
+        // 로그인 정보가 없으면 로그인 페이지로 리다이렉트
+        if (loginVO == null) {
+        	   log.error("로그인 정보가 세션에 없습니다.");
+            return "redirect:/member/loginForm.do";
+        } else {
+            log.info("로그인 정보: " + loginVO.getAddress() + ", " + loginVO.getTel() + ", " + loginVO.getEmail());
+        }
+        // 로그인 정보를 JSP로 전달
+        model.addAttribute("login", loginVO);
+        
         selectedItems.clear();
         log.info("paymentPageForm() 호출 - id: " + id);
         

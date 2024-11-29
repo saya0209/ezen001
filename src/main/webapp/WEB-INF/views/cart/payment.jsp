@@ -89,23 +89,31 @@
                             </tbody>
                         </table>
                 <!-- 결제 정보 입력 폼 -->
-                <form action="${pageContext.request.contextPath}/cart/completePayment/${id}" method="post">
-                    <div class="form-group">
-                        <label for="address">주소:</label>
-                        <input type="text" id="address" name="address" class="form-control" placeholder="주소를 입력하세요 (예: ㅇㅇ시 ㅇㅇ동 ㅇㅇ아파트 ㅇㅇㅇ동 ㅇㅇㅇ호)" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="contactNumber">연락처:</label>
-                        <input type="tel" id="contactNumber" name="contactNumber" class="form-control" placeholder="연락처를 입력하세요 (예: 010-1234-5678)" required>
-                    </div>
+                <form action="${pageContext.request.contextPath}/cart/completePayment/${id}" method="post" >
                     <div class="form-group">
                         <label for="postalCode">우편번호:</label>
                         <input type="text" id="postalCode" name="postalCode" class="form-control" placeholder="우편번호를 입력하세요" required>
                     </div>
-                    <div class="form-group">
-                        <label for="email">이메일:</label>
-                        <input type="email" id="email" name="email" class="form-control" placeholder="이메일을 입력하세요" required>
-                    </div>
+                    <!-- 주소 -->
+				    <div class="form-group">
+				        <label for="address">주소:</label>
+				        <input type="text" id="address" name="address" class="form-control" 
+				               value="${login.address}" placeholder="주소를 입력하세요" required>
+				    </div>
+				
+				    <!-- 연락처 -->
+				    <div class="form-group">
+				        <label for="contactNumber">연락처:</label>
+				        <input type="tel" id="contactNumber" name="contactNumber" class="form-control" 
+				               value="${login.tel}" placeholder="연락처를 입력하세요" required>
+				    </div>
+				
+				    <!-- 이메일 -->
+				    <div class="form-group">
+				        <label for="email">이메일:</label>
+				        <input type="email" id="email" name="email" class="form-control" 
+				               value="${login.email}" placeholder="이메일을 입력하세요" required>
+				    </div>
                     <!-- 총 결제 금액 표시 및 결제 버튼 -->
                     <div class="total-section">
                         총 결제 금액: <strong id="final-total"><fmt:formatNumber value="${totalAmount}" pattern="#,###"/> 원</strong>

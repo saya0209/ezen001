@@ -48,7 +48,6 @@ public class AuthrityInterceptor extends HandlerInterceptorAdapter {
 			authMap.put("/communityreply/dislike.do", 1);
 			//회원 - 마이페이지, 회원가입, 내정보수정, 사진수정, 회원탈퇴
 			authMap.put("/member/mypageMain.do", 1);
-			authMap.put("/member/write.do", 1);
 			authMap.put("/member/update.do", 1);
 			authMap.put("/member/changePhoto.do", 1);
 			authMap.put("/member/delete.do", 1);

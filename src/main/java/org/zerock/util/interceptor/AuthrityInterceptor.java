@@ -75,34 +75,34 @@ public class AuthrityInterceptor extends HandlerInterceptorAdapter {
 		//관리자 권한 필요						
 			//회원 - 회원관리, 등급수정, 상태수정
 			authMap.put("/member/list.do", 9);																			
-			authMap.put("/member/changeGradeNo.do", 1);
-			authMap.put("/member/changeStatus.do", 1);
+			authMap.put("/member/changeGradeNo.do", 9);
+			authMap.put("/member/changeStatus.do", 9);
 			//카테고리 - 리스트, 작성, 수정, 삭제
-			authMap.put("/category/list.do", 1);
-			authMap.put("/category/write.do", 1);
-			authMap.put("/category/update.do", 1);
-			authMap.put("/category/delete.do", 1);
+			authMap.put("/category/list.do", 9);
+			authMap.put("/category/write.do", 9);
+			authMap.put("/category/update.do", 9);
+			authMap.put("/category/delete.do", 9);
 			//견적 - 답변작성, 답변수정, 답변삭제
-			authMap.put("/estimate/writeAnswer.do", 1);
-			authMap.put("/estimate/updateAnswer.do", 1);
-			authMap.put("/estimate/deleteAnswer.do", 1);
+			authMap.put("/estimate/writeAnswer.do", 9);
+			authMap.put("/estimate/updateAnswer.do", 9);
+			authMap.put("/estimate/deleteAnswer.do", 9);
 			//이벤트 - 작성, 수정, 삭제, 파일삭제
-			authMap.put("/event/write.do", 1);
-			authMap.put("/event/update.do", 1);
-			authMap.put("/event/delete.do", 1);
-			authMap.put("/event/deleteFile.do", 1);
+			authMap.put("/event/write.do", 9);
+			authMap.put("/event/update.do", 9);
+			authMap.put("/event/delete.do", 9);
+			authMap.put("/event/deleteFile.do", 9);
 			//굿즈 - 작성, 이미지수정, 이미지삭제, 삭제
-			authMap.put("/goods/write.do", 1);
-			authMap.put("/goods/updateImage.do", 1);
-			authMap.put("/goods/deleteImage.do", 1);
-			authMap.put("/goods/delete.do", 1);
+			authMap.put("/goods/write.do", 9);
+			authMap.put("/goods/updateImage.do", 9);
+			authMap.put("/goods/deleteImage.do", 9);
+			authMap.put("/goods/delete.do", 9);
 			//공지사항 - 작성, 수정, 삭제
-			authMap.put("/notice/write.do", 1);
-			authMap.put("/notice/update.do", 1);
-			authMap.put("/notice/delete.do", 1);
+			authMap.put("/notice/write.do", 9);
+			authMap.put("/notice/update.do", 9);
+			authMap.put("/notice/delete.do", 9);
 			//QnA - 답변작성, 답변삭제
-			authMap.put("/qna/writeAnswer.do", 1);
-			authMap.put("/qna/deleteAnswer.do", 1);
+			authMap.put("/qna/writeAnswer.do", 9);
+			authMap.put("/qna/deleteAnswer.do", 9);
 			
 	}				
 					

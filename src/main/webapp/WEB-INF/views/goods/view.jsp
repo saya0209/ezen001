@@ -1014,8 +1014,10 @@ $(function() {
 				<jsp:include page="goodsReview.jsp"></jsp:include>
 			</div>
        		 <div class="card-footer">
+       		 <c:if test="${login.gradeNo == 9 }">
 				<button class="btn btn-danger" id="deleteBtn"
 					data-toggle="modal" data-target="#deleteModal">삭제</button>	
+			</c:if>
 			</div>
         </div>
 	   <!-- 모달 창 -->
@@ -1088,13 +1090,13 @@ $(function() {
 	        </div>
 	        <!-- deleto.do 로 이동시 no, pw 가 필요합니다. -->
 	        <!-- no : hidden으로, pw: 사용자입력으로 세팅 -->
-	        <form action="delete.do" method="get">
-			    <input type="hidden" id="deleteNo" name="goods_no" value="${goods.goods_no }">
-			    <div class="modal-footer">
-			        <button class="btn btn-danger">삭제</button>
-			        <button class="btn btn-secondary" data-dismiss="modal">취소</button>
-			    </div>
-			</form>
+		        <form action="delete.do" method="get">
+				    <input type="hidden" id="deleteNo" name="goods_no" value="${goods.goods_no }">
+				    <div class="modal-footer">
+				        <button class="btn btn-danger">삭제</button>
+				        <button class="btn btn-secondary" data-dismiss="modal">취소</button>
+				    </div>
+				</form>
 
 	      </div>
 	    </div>

@@ -1,10 +1,20 @@
 package org.zerock.main.controller;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.zerock.util.vo.WeatherVO;
-import org.zerock.util.weather.WeatherXML;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.zerock.goods.service.GoodsService;
+import org.zerock.goods.vo.GoodsVO;
+
 
 import lombok.extern.log4j.Log4j;
 
@@ -12,6 +22,37 @@ import lombok.extern.log4j.Log4j;
 @Log4j
 public class MainController {
 
+	@Autowired
+	 @Qualifier("goodsServiceImpl")
+    private GoodsService goodsService;
+
+    // 카테고리별 상품 조회 (JSON 응답)
+	@GetMapping("/getGoodsByCategory")
+	@ResponseBody
+	public Map<String, Object> getGoodsByCategory(@RequestParam("category") String category) {
+	    log.info("getGoodsByCategory()++");
+
+	    Map<String, Object> response = new HashMap<>();
+	    try {
+	        List<GoodsVO> goodsList = goodsService.getGoodsByCategory(category);
+
+	        // 정상적으로 데이터를 조회한 경우
+	        response.put("status", "success");
+	        response.put("message", "상품 목록 조회 성공");
+	        response.put("category", category);
+	        response.put("goods", goodsList);
+
+	    } catch (Exception e) {
+	        // 예외 발생 시, 에러 메시지와 함께 응답
+	        response.put("status", "error");
+	        response.put("message", "상품 목록 조회 중 오류 발생");
+	        response.put("errorDetails", e.getMessage());
+	    }
+	    return response; // 자동으로 JSON 형식으로 변환되어 반환됩니다.
+	}
+
+
+	
 	@GetMapping(value = {"/", "/main.do"})
 	public String goMain() {
 		log.info("redirect main---------------");

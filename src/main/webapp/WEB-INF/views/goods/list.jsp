@@ -61,6 +61,7 @@
     $(function(){
         console.log("jQuery Loaded");
 
+        
         // 상품 클릭 시 상세 페이지로 이동
         $(".dataRow").click(function() {
         	let category = $(this).data("category");
@@ -131,25 +132,29 @@
                 <div class="col-md-3 dataRow" data-category="${goods.category }" data-goods_no="${goods.goods_no}"
                      data-page_query="${pageObject.pageQuery}" data-search_query="${goodsSearchVO.searchQuery}">
                     <div class="card">
-                        <div class="imageDiv">
-                            <!-- 여기에 상품 이미지 추가 -->
-                            <img src="${goods.image_name}" alt="이미지">
-                        </div>
-                        <div class="card-body">
-                            <c:if test="${not empty goods.cpu_name and goods.cpu_name != '0'}">
-						        <h5 class="title">${goods.cpu_name}</h5>
-						    </c:if>
-                            <c:if test="${not empty goods.memory_name and goods.memory_name != '0'}">
-						        <h5 class="title">${goods.memory_name}</h5>
-						    </c:if>
-						    <c:if test="${not empty goods.graphic_Card_name and goods.graphic_Card_name != '0'}">
-						        <h5 class="title">${goods.graphic_Card_name}</h5>
-						    </c:if>
-                            <p class="sale-price">
-                                <fmt:formatNumber value="${goods.total_price - goods.discount + goods.delivery_charge}" type="currency" />
-                            </p>
-                        </div>
-                    </div>
+					    <div class="imageDiv">
+					        <img src="${goods.image_name}" alt="상품 이미지" class="card-img-top">
+					    </div>
+					    <div class="card-body">
+					        <div class="product-info">
+					            <c:if test="${not empty goods.cpu_name and goods.cpu_name != '0'}">
+					                <h5 class="title">${goods.cpu_name}</h5>
+					            </c:if>
+					            <c:if test="${not empty goods.memory_name and goods.memory_name != '0'}">
+					                <h5 class="title">${goods.memory_name}</h5>
+					            </c:if>
+					            <c:if test="${not empty goods.graphic_Card_name and goods.graphic_Card_name != '0'}">
+					                <h5 class="title">${goods.graphic_Card_name}</h5>
+					            </c:if>
+					        </div>
+					        <div class="price-container">
+					            <p class="sale-price">
+					                <fmt:formatNumber value="${goods.total_price - goods.discount + goods.delivery_charge}" type="currency" />
+					            </p>
+					        </div>
+					    </div>
+					</div>
+
                 </div>
             </c:forEach>
         </div>
@@ -161,10 +166,13 @@
     </c:if>
 
     <div class="footer">
-        <form action="writeForm.do" method="get">
-            <input type="hidden" name="category" value="${category}">
-            <button type="submit" class="btn btn-primary">등록</button>
-        </form>
+    	<c:if test="${login.gradeNo == 9 }">
+	        <form action="writeForm.do" method="get">
+	            <input type="hidden" name="category" value="${category}">
+	            <button type="submit" class="btn btn-primary">등록</button>
+	        </form>
+	    </c:if>
+    </div>
 </div>
 
 </body>

@@ -41,7 +41,7 @@
             align-items: center;
         }
     </style>
-    <script>
+<script>
 	    function updateQuantity(goods_no, change) {
 	        var input = document.getElementById('quantity-' + goods_no);
 	        var currentValue = parseInt(input.value);
@@ -208,7 +208,7 @@
                             <tbody>
                                 <c:forEach var="item" items="${cartItems}">
                                     <tr>
-                                        <!-- 선택여부 -->
+                                         <!-- 선택여부 -->
                                         <td>
 										    <div class="form-check centered">
 										        <label class="form-check-label">
@@ -224,8 +224,8 @@
 										</td>
                                         <!-- 상품 이미지 -->
                                         <td>
-                                            <img src="${pageContext.request.contextPath}/upload/image/${item.image_name}" alt="${item.goods_name}" class="product-image"/> <!-- 이미지 표시 -->
-                                        </td>
+										    <img src="${item.image_name}" alt="${item.goods_name}" class="product-image"/>
+										</td>
                                         <!-- 상품명 -->
                                         <td>${item.goods_name}</td> <!-- 상품명 -->
                                         <!-- 상품 수량 -->
@@ -247,14 +247,15 @@
                                             <input type="hidden" id="discount-${item.goods_no}" value="${item.discount}"/> <!-- 상품 할인가 -->
                                             <input type="hidden" id="price-${item.goods_no}" value="${item.price}"/> <!-- 상품 가격 -->
                                             <span id="total-${item.goods_no}" class="item-total">
-                                            	<c:set var="goods_total_price" value="${(item.price-item.discount) * item.quantity + item.delivery_charge}" />
+                                            	<c:set var="goods_total_price" value="${((item.price)-item.discount) * item.quantity + item.delivery_charge}" />
                                                 <fmt:formatNumber value="${goods_total_price}" pattern="#,###"/> 원
                                             </span>
                                         </td>
                                         <!-- 상품 삭제 -->
                                         <td>
                                             <form action="${pageContext.request.contextPath}/cart/removeCartItem" method="post">
-                                                <input type="hidden" name="goods_no" value="${item.goods_no}"> <!-- 상품 번호 -->
+                                                <input type="hidden" name="cart_no" value="${item.cart_no}"> <!-- 상품 번호 -->
+                                                <input type="hidden" name="id" value="${item.id}"> <!-- 상품 번호 -->
                                                 <input type="submit" value="삭제" class="btn btn-danger"> <!-- Bootstrap 버튼 -->
                                             </form>
                                         </td>
@@ -269,7 +270,7 @@
             	<div class="total-section">
             	<c:if test="${!empty cartItems}">
                 	총 결제 금액: <strong id="finalTotal"><fmt:formatNumber value="${totalAmount}" pattern="#,###"/> 원</strong>
-				    <form id="paymentForm" class="float-right" method="post">
+				    <form id="paymentForm" class="float-right" method="get">
 					    <input type="hidden" name="id" value="${id}">
 					    <input type="button" value="결제하기" class="btn btn-success" onclick="submitPaymentForm()">                
 					</form>

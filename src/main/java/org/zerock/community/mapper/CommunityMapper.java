@@ -52,6 +52,7 @@ public interface CommunityMapper {
     void deleteReaction(@Param("community_no") Long communityNo, 
                         @Param("id") String id);
 
-    
+    // 특정 게시글의 좋아요/싫어요 반응 삭제
+    public void deleteReactions(Long community_no);
 }
 

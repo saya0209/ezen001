@@ -104,12 +104,18 @@
 	where community_no = #{community_no} and id = #{id}
 </update>
 	
-<!-- 댓글 삭제 쿼리 수정 -->
+<!-- 댓글 삭제 쿼리 -->
 <delete id="delete">
     delete from community
     where community_no = #{community_no}
 </delete>
 
+
+<!-- 특정 게시글의 모든 좋아요/싫어요 반응 삭제 -->
+<delete id="deleteReactions">
+    DELETE FROM community_reaction 
+    WHERE community_no = #{community_no}
+</delete>
 	
 <!-- //////////////////////////////////////////////////////// -->
 

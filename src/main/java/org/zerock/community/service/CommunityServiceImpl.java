@@ -87,12 +87,22 @@ public class CommunityServiceImpl implements CommunityService {
 
 	
 	// 5. 일반 게시판 글삭제
+//	@Override
+//	public Integer delete(Long community_no) {
+//	    log.info("delete() 호출됨: community_no = " + community_no);
+//	    return mapper.delete(community_no);  // 게시글 삭제
+//	}
+
 	@Override
 	public Integer delete(Long community_no) {
 	    log.info("delete() 호출됨: community_no = " + community_no);
-	    return mapper.delete(community_no);  // 게시글 삭제
+	    
+	    // 먼저 해당 게시글의 좋아요/싫어요 반응 삭제
+	    mapper.deleteReactions(community_no);
+	    
+	    // 그 후 게시글 삭제
+	    return mapper.delete(community_no);
 	}
-
 	
 ////////////////////////////////////////////////////////
 	

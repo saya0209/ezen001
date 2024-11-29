@@ -342,7 +342,7 @@
 			        <td>${vo.nicname}</td>
 			        <td><fmt:formatDate value="${vo.writeDate}" pattern="yyyy.MM.dd"/></td>
 			        <td>${vo.hit}</td>
-			        <td>0</td>
+			        <td>${vo.likeCnt}</td>
 			    </tr>
 			</c:forEach>
         </tbody>

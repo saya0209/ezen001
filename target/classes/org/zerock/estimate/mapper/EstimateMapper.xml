@@ -1,0 +1,169 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="org.zerock.estimate.mapper.EstimateMapper">
+
+    <!-- 견적 요청 목록 조회 -->
+    <select id="list" resultType="org.zerock.estimate.vo.EstimateRequestVO">
+        select request_no, id, nicname, title, content, category, budget, request_date, status
+        from (
+            select rownum rnum, request_no, id, nicname, title, content, category, budget, request_date, status
+            from (
+                select e.request_no, e.id,  m.nicname, e.title, e.content, e.category, 
+                       e.budget, e.request_date, e.status
+                from estimate_request e
+                join member m on e.id = m.id
+                <include refid="search"/>
+                order by request_no desc
+            )
+        )
+        where rnum between #{startRow} and #{endRow}
+    </select>
+
+    <!-- 견적 요청 게시판 전체 데이터 개수 -->
+    <select id="getTotalRow" resultType="Long">
+        select count(*)
+        from estimate_request e
+        join member m on e.id = m.id
+        <include refid="search"/>
+    </select>
+    
+    <!-- 검색 처리 -->
+    <sql id="search">
+        <if test="word != null and word != ''">
+            <trim prefix="where" prefixOverrides="or">
+                <if test="key.indexOf('t') >= 0">
+                    or title like '%' || #{word} || '%'
+                </if>
+                <if test="key.indexOf('c') >= 0">
+                    or content like '%' || #{word} || '%'
+                </if>
+                <if test="key.indexOf('w') >= 0">
+                    or e.id like '%' || #{word} || '%'
+                </if>
+            </trim>
+        </if>
+    </sql>
+
+    <!-- 견적 요청 상세 조회 -->
+    <select id="view" resultType="org.zerock.estimate.vo.EstimateRequestVO">
+        select e.request_no, e.id,  m.nicname, e.title, e.content, e.category, e.budget, e.request_date, e.status
+        from estimate_request e
+        join member m on e.id = m.id
+        where e.request_no = #{request_no}
+    </select>
+
+    <!-- 견적 요청 작성 -->
+	<insert id="write">
+	    <selectKey keyProperty="request_no" resultType="Long" order="BEFORE">
+	        select estimate_request_seq.nextval from dual
+	    </selectKey>
+	    insert into estimate_request(
+	        request_no, id, title, content, category,
+	        budget, request_date, status
+	    )
+	    values(
+	        #{request_no}, #{id}, #{title}, #{content}, 
+	        CASE 
+	            WHEN #{category} = 'gaming' THEN '게이밍'
+	            WHEN #{category} = 'office' THEN '사무용'
+	            WHEN #{category} = 'design' THEN '디자인'
+	            ELSE #{category}
+	        END,
+	        #{budget}, sysdate, NVL(#{status}, 'waiting')
+	    )
+	</insert>
+	
+	<!-- 견적 요청 수정 -->
+	<update id="update">
+	    update estimate_request
+	    <set>
+	        <if test="title != null">title = #{title},</if>
+	        <if test="content != null">content = #{content},</if>
+	        <if test="category != null">
+	            category = CASE 
+	                WHEN #{category} = 'gaming' THEN '게이밍'
+	                WHEN #{category} = 'office' THEN '사무용'
+	                WHEN #{category} = 'design' THEN '디자인'
+	                ELSE #{category}
+	            END,
+	        </if>
+	        <if test="budget != null">budget = #{budget}</if>
+	    </set>
+	    where request_no = #{request_no}
+	</update>
+
+
+    <!-- 견적 요청 삭제 -->
+    <delete id="delete">
+        delete from estimate_request where request_no = #{request_no}
+    </delete>
+
+    <!-- 견적 답변 목록 조회 -->
+    <select id="getAnswersByRequestNo" resultType="org.zerock.estimate.vo.EstimateAnswerVO">
+        select a.answer_no, a.id, m.nicname, a.title, a.content,
+               a.total_price, a.answer_date, a.reNo, a.ordNo, 
+               a.levNo, a.parentNo
+        from estimate_answer a
+        join member m on a.id = m.id
+        where a.parentNo = #{request_no}
+        order by a.ordNo
+    </select>
+
+    <!-- 견적 답변 작성 -->
+	<insert id="writeAnswer">
+	    <selectKey keyProperty="answer_no" resultType="Long" order="BEFORE">
+	        select estimate_answer_seq.nextval from dual
+	    </selectKey>
+	    insert into estimate_answer(
+	        answer_no, id, title, content, total_price,
+	        answer_date, reNo, ordNo, levNo, parentNo
+	    )
+	    values(
+	        #{answer_no}, #{id}, #{title}, #{content}, #{total_price},
+	        sysdate, 
+	        #{reNo}, 
+	        (select NVL(MAX(ordNo), 0) + 1 from estimate_answer where parentNo = #{parentNo}),
+	        1, 
+	        #{parentNo}
+	    )
+	</insert>
+
+
+    <!-- 견적 상태 업데이트 -->
+    <update id="updateStatus">
+        update estimate_request
+        set status = #{param2}
+        where request_no = #{param1}
+    </update>
+    
+    <!-- 글 확인 상태 업데이트 (답변이 있는 경우만) -->
+	<update id="updateViewStatus">
+	    UPDATE estimate_request e
+	    SET status = 'confirmed'
+	    WHERE e.request_no = #{request_no}
+	    AND e.id = #{id}
+	    AND EXISTS (
+	        SELECT 1 
+	        FROM estimate_answer a 
+	        WHERE a.parentNo = e.request_no
+	    )
+	    AND e.status = 'completed'
+	</update>
+
+    <!-- 견적 답변 수정 -->
+	<update id="updateAnswer">
+	    update estimate_answer
+	    <set>
+	        <if test="title != null">title = #{title},</if>
+	        <if test="content != null">content = #{content},</if>
+	        <if test="total_price != null">total_price = #{total_price}</if>
+	    </set>
+	    where answer_no = #{answer_no}
+	</update>
+
+    <!-- 견적 답변 삭제 -->
+    <delete id="deleteAnswer">
+        delete from estimate_answer where answer_no = #{answer_no}
+    </delete>
+
+</mapper>

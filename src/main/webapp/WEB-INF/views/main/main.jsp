@@ -32,6 +32,24 @@
             }, 30);
         });
     </script>
+    
+    <script>
+function submitForm() {
+    // 선택한 카테고리와 예산 범위 값을 가져오기
+    var category = document.getElementById("category").value;
+    var budget = document.getElementById("budget").value;
+
+    // 카테고리와 예산 범위가 선택되지 않았을 경우 경고 메시지
+    if (category == null || category == '용도 선택' || budget == null || budget == '예산 범위') {
+        alert("모든 항목을 선택해 주세요.");
+        return;
+    }
+
+    // URL에 선택한 값들을 쿼리스트링으로 추가하여 이동
+    var url = '../estimate/writeForm.do?category=' + encodeURIComponent(category) + '&budget=' + encodeURIComponent(budget);
+    location.href = url;
+}
+</script>
 </head>
 <body>
     <!-- 상단 알림 배너 -->
@@ -93,28 +111,30 @@
                     </div>
                     <div class="col-lg-9">
                         <form class="quote-form">
-                            <div class="row g-3">
-                                <div class="col-md-4">
-                                    <select class="form-control custom-select">
-                                        <option selected disabled>용도 선택</option>
-                                        <option>사무용</option>
-                                        <option>게이밍용</option>
-                                        <option>워크스테이션</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <select class="form-control custom-select">
-                                        <option selected disabled>예산 범위</option>
-                                        <option>~100만원</option>
-                                        <option>100~200만원</option>
-                                        <option>200만원 이상</option>
-                                    </select>
-                                </div>
-                                <div class="col-md-4">
-                                    <button type="submit" class="btn btn-primary btn-block">견적 받기</button>
-                                </div>
-                            </div>
-                        </form>
+						    <div class="row g-3">
+						        <div class="col-md-4">
+						            <select id="category" class="form-control custom-select">
+						                <option selected disabled>용도 선택</option>
+						                <option value="office">사무용</option>
+						                <option value="gaming">게이밍용</option>
+						                <option value="workstation">워크스테이션</option>
+						            </select>
+						        </div>
+						        <div class="col-md-4">
+						            <select id="budget" class="form-control custom-select">
+						                <option selected disabled>예산 범위</option>
+						                <option value="1000000">100만원</option>
+						                <option value="2000000">200만원</option>
+						                <option value="2000000">200만원 이상</option>
+						            </select>
+						        </div>
+						        <div class="col-md-4">
+						            <button type="button" class="btn btn-primary btn-block" onclick="submitForm()">
+						                견적 받기
+						            </button>
+						        </div>
+						    </div>
+						</form>
                     </div>
                 </div>
             </div>

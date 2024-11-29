@@ -84,7 +84,7 @@
 <div class="container p-3 my-3">
     <h1>
         <c:if test="${category == 'goods1' }">
-            인터넷/사무용
+            사무용/가정용
         </c:if>
         <c:if test="${category == 'goods2' }">
             3D게임/그래픽용

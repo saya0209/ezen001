@@ -114,19 +114,59 @@
 <!-- //////////////////////////////////////////////////////// -->
 
 <!-- 좋아요/싫어요 -->
-<update id="updateLike">
-    UPDATE community 
-    SET likeCnt = GREATEST(0, likeCnt + 
-        CASE WHEN #{amount} IN (1, -1) THEN #{amount} ELSE 0 END)
-    WHERE community_no = #{community_no}
-</update>
+<!-- <update id="updateLike"> -->
+<!--     UPDATE community  -->
+<!--     SET likeCnt = GREATEST(0, likeCnt +  -->
+<!--         CASE WHEN #{amount} IN (1, -1) THEN #{amount} ELSE 0 END) -->
+<!--     WHERE community_no = #{community_no} -->
+<!-- </update> -->
 
-<update id="updateDislike">
-    UPDATE community 
-    SET dislikeCnt = GREATEST(0, dislikeCnt + #{amount})
-    WHERE community_no = #{community_no}
-</update>
+<!-- <update id="updateDislike"> -->
+<!--     UPDATE community  -->
+<!--     SET dislikeCnt = GREATEST(0, dislikeCnt + #{amount}) -->
+<!--     WHERE community_no = #{community_no} -->
+<!-- </update> -->
+<!-- 사용자의 좋아요/싫어요 상태 확인 -->
 
+	<select id="checkUserReaction" resultType="string">
+	    SELECT reaction_type 
+	    FROM community_reaction 
+	    WHERE community_no = #{community_no} AND id = #{id}
+	</select>
+	
+	<!-- 좋아요/싫어요 등록 -->
+	<insert id="insertReaction">
+	    INSERT INTO community_reaction (community_no, id, reaction_type)
+	    VALUES (#{community_no}, #{id}, #{reactionType})
+	</insert>
+	
+	<!-- 좋아요/싫어요 취소 -->
+	<delete id="deleteReaction">
+	    DELETE FROM community_reaction 
+	    WHERE community_no = #{community_no} AND id = #{id}
+	</delete>
+	
+	<!-- 좋아요 업데이트 (기존 쿼리 수정) -->
+	<update id="updateLike">
+	    UPDATE community 
+	    SET likeCnt = (
+	        SELECT COUNT(*) 
+	        FROM community_reaction 
+	        WHERE community_no = #{community_no} AND reaction_type = 'like'
+	    )
+	    WHERE community_no = #{community_no}
+	</update>
+	
+	<!-- 싫어요 업데이트 (기존 쿼리 수정) -->
+	<update id="updateDislike">
+	    UPDATE community 
+	    SET dislikeCnt = (
+	        SELECT COUNT(*) 
+	        FROM community_reaction 
+	        WHERE community_no = #{community_no} AND reaction_type = 'dislike'
+	    )
+	    WHERE community_no = #{community_no}
+	</update>
 
 
 </mapper>

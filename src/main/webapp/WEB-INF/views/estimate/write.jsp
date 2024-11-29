@@ -7,8 +7,27 @@
     <jsp:include page="../jsp/webLib.jsp"></jsp:include>
     <!-- CSS -->
     <link href="${path}/resources/css/estimate.css" rel="stylesheet">
+
     <script type="text/javascript">
         $(function() {
+            // 쿼리스트링에서 값을 가져오는 함수
+            function getQueryParam(param) {
+                var urlParams = new URLSearchParams(window.location.search);
+                return urlParams.get(param);
+            }
+
+            // 카테고리와 예산 값을 가져와서 설정
+            var category = getQueryParam("category");
+            var budget = getQueryParam("budget");
+
+            if (category) {
+                $("#category").val(category);
+            }
+
+            if (budget) {
+                $("#budget").val(budget);
+            }
+
             // 취소 버튼 클릭 시 확인 다이얼로그
             $("#cancelBtn").click(function() {
                 if (confirm("작성 중인 내용이 사라질 수 있습니다. 정말 취소하시겠습니까?")) {

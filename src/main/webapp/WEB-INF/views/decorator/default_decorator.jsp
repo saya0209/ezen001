@@ -392,7 +392,7 @@ $(document).ready(function() {
 	            
 	            <ul class="main-menu">
 	                <li><a href="/estimate/list.do">PC견적</a></li>
-	                <li><a href="/shop/list.do">컴퓨터</a></li>
+	                <li><a href="/goods/list.do">컴퓨터</a></li>
 	                <li><a href="/weeklyBest.do">주간 BEST</a></li>
 	                <li><a href="/event/list.do">이벤트</a></li>
 	                <li><a href="/community/list.do">커뮤니티</a></li>

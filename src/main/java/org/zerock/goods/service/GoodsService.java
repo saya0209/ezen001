@@ -79,5 +79,7 @@ public interface GoodsService {
 	
 	public List<GoodsVO> getGoodsList(PageObject pageObject, String sort, String category);
 	
+	public List<GoodsVO> getGoodsByCategory(String category);
+	
 	
 }

@@ -65,6 +65,8 @@ public class GoodsController {
         return goods;
     }
     
+    
+    
     @GetMapping("/list.do")
     public String listGoods(PageObject pageObject,
                             @RequestParam(value = "category", required = false) String category,

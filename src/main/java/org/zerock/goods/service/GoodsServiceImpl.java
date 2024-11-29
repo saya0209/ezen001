@@ -87,6 +87,11 @@ public class GoodsServiceImpl implements GoodsService {
         List<GoodsVO> getCpuOptions();
     }
     
+    public List<GoodsVO> getGoodsByCategory(String category) {
+    	log.info("getGoodsByCategory()++, category:" + category);
+        return goodsMapper.getGoodsByCategory(category);
+    }
+    
     // 상품 수정 처리
     @Override
     public Integer update(GoodsVO goodsVO) {

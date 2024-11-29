@@ -93,6 +93,12 @@ public interface GoodsMapper {
 	public Memory getMemoryById(int memoryId);
 
 	public Cpu getCpuById(int cpuId);
+	
+	// 카테고리별 상품 조회
+    List<GoodsVO> getGoodsByCategory(String category);
+
+    // 모든 상품 조회 (기본값)
+    List<GoodsVO> getAllGoods();
 
 	public List<GoodsVO> selectGoodsCategory(@Param("category") String category, @Param("pageObject") PageObject pageObject);
 

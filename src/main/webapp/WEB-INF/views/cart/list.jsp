@@ -41,7 +41,7 @@
             align-items: center;
         }
     </style>
-    <script>
+<script>
 	    function updateQuantity(goods_no, change) {
 	        var input = document.getElementById('quantity-' + goods_no);
 	        var currentValue = parseInt(input.value);
@@ -70,21 +70,38 @@
 
         // 전체 결제 금액 업데이트 함수
         function updateTotalAmount() {
+		    console.log("updateTotalAmount 함수 시작"); // 함수 시작 시 로그 출력
 		    var totalAmount = 0;
 		    var items = document.querySelectorAll('.item-total'); // 각 상품 총 가격 요소를 NodeList로 가져오기
 		
-		    items.forEach(function(item) {
-		        var goods_no = item.id.split('-')[1]; // goods_no 추출
-		        var itemTotal = parseInt(item.innerHTML.replace(/ 원/g, '').replace(/,/g, '')); // 총 가격 추출
-		        var checkbox = document.querySelector('input[type="checkbox"].form-check-input[value="' + goods_no + '"]'); // 해당 상품의 체크박스 찾기
+		    console.log(items);
+		    // items 요소 확인
+		    console.log('items 길이: ' + items.length);
+		    if (items.length === 0) {
+		        console.warn("item-total 클래스를 가진 요소가 없습니다.");
+		    }
 		
-		        // 체크박스가 체크된 상태일 때만 해당 상품의 가격을 더함
-		        if (checkbox && checkbox.checked) {
-		            totalAmount += itemTotal;
+		    items.forEach(function(item) {
+		        // goods_no 및 itemTotal 추출 및 확인
+		        console.log(item);
+		        var goods_no = item.id.split('-')[1]; // goods_no 추출
+		        var itemTotal = parseInt(item.innerHTML.replace(/ 원/g, '').replace(/,/g, ''));
+		        console.log('상품 번호: ' + goods_no + ', 상품 총 가격: ' + itemTotal);
+		
+		        var checkboxList = document.querySelectorAll('input[type="checkbox"].form-check-input');
+		        var checkbox = Array.from(checkboxList).find(cb => cb.value === goods_no);
+
+		        if (checkbox) {
+		            console.log('체크박스 체크 여부 : '+goods_no+ ':' +checkbox.checked);
+		            if (checkbox.checked) {
+		                totalAmount += itemTotal;
+		            }
+		        } else {
+		            console.warn('체크박스를 찾을 수 없습니다. 상품 번호: '+goods_no);
 		        }
 		    });
 		
-		    // 최종 금액 업데이트
+		    console.log('최종 금액: '+totalAmount); // 최종 금액 로그
 		    document.getElementById('finalTotal').innerHTML = new Intl.NumberFormat().format(totalAmount) + ' 원';
 		}
 
@@ -112,7 +129,6 @@
             xhr.send("goods_no=" + encodeURIComponent(goods_no) + 
                      "&quantity=" + encodeURIComponent(quantity) + 
                      "&goods_total_price=" + encodeURIComponent(goods_total_price) +
-                     "&selected=" + encodeURIComponent(selected ? 1 : 0) +
                      "&id=" + encodeURIComponent('${id}'));
         }
 
@@ -192,18 +208,17 @@
                             <tbody>
                                 <c:forEach var="item" items="${cartItems}">
                                     <tr>
-                                        <!-- 선택여부 -->
+                                         <!-- 선택여부 -->
                                         <td>
 										    <div class="form-check centered">
 										        <label class="form-check-label">
-										            <input type="hidden" name="goods_no" value="${item.goods_no}">
-										            <input type="hidden" name="quantity-${item.goods_no}" value="${item.quantity}">
-										            <input type="hidden" name="price-${item.goods_no}" value="${item.price}">
-										            <input type="hidden" name="delivery_charge-${item.goods_no}" value="${item.delivery_charge}">
-										            <!-- 선택 상태(checked)가 1이면 체크박스가 선택됨 -->
+											        <input type="hidden" name="goods_no" value="${item.goods_no}">
+											        <input type="hidden" name="quantity-${item.goods_no}" value="${item.quantity}">
+											        <input type="hidden" name="price-${item.goods_no}" value="${item.price}">
+											        <input type="hidden" name="delivery_charge-${item.goods_no}" value="${item.delivery_charge}">
 										            <input type="checkbox" class="form-check-input" value="${item.goods_no}" 
-										                   <c:if test="${item.selected == 1}">checked</c:if>
-										                   onclick="handleCheckboxClick(this, ${item.goods_no})">
+												       ${item.selected == 1 ? 'checked' : ''} 
+												       onclick="handleCheckboxClick(this, ${item.goods_no})">
 										        </label>
 										    </div>
 										</td>

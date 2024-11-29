@@ -354,17 +354,6 @@ $(document).ready(function() {
                         </button>
                     </div>
                 </div>
-
-<!--                 <div class="user-widget"> -->
-<!--                     <a href="/member/mypageMain.do"> -->
-<!--                         <i class="fa fa-user"></i> -->
-<!--                         <span>마이페이지</span> -->
-<!--                     </a> -->
-<%--                     <a href="/cart/list/${login.id}"> --%>
-<!--                         <i class="fa fa-shopping-cart"></i> -->
-<!--                         <span>장바구니</span> -->
-<!--                     </a> -->
-<!--                 </div> -->
             </div>
         </div>
     </header>
@@ -393,7 +382,6 @@ $(document).ready(function() {
 	            <ul class="main-menu">
 	                <li><a href="/estimate/list.do">PC견적</a></li>
 	                <li><a href="/goods/list.do">컴퓨터</a></li>
-	                <li><a href="/weeklyBest.do">주간 BEST</a></li>
 	                <li><a href="/event/list.do">이벤트</a></li>
 	                <li><a href="/community/list.do">커뮤니티</a></li>
 	                <c:if test="${!empty login && login.gradeNo == 9}">

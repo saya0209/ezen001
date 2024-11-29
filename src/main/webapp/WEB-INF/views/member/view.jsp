@@ -117,7 +117,7 @@ $(function() {
 		  	<button type="button" class="btn btn-danger"
 		  		id="deleteBtn">탈퇴</button>
 	  	</c:if>
-	  	<button onclick="history.back()" class="btn btn-success">되돌아가기</button>
+	  	<button onclick="history.back()" class="btn btn-success">뒤로가기</button>
 	  </div>
 	</div>
 </div> <!-- end of class="container" -->

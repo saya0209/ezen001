@@ -472,7 +472,8 @@ $(function() {
 
 	    // 필요한 데이터 수집
 	    const id = document.getElementById("id").value; // 로그인한 사용자 ID
-	    const goods_no = 1; // 예시로 상품 번호를 고정하거나 페이지에서 동적으로 받아옴
+	    <input type="hidden" id="deleteNo" name="goods_no" value="${goods.goods_no }">
+	    let goodsno = document.getElementById("deleteNo").value;
 	    let goods_name = "";
 	    const image_name = document.getElementById("image_name").src; // 이미지 URL
 	    let price = parseFloat(document.getElementById("price").textContent || document.getElementById("price").innerText);
@@ -491,6 +492,7 @@ $(function() {
 	    const graphic_card_name = "${goods.graphic_Card_name}";
 	    price = ${goods.price};
 		
+	    console.log("goods_no"+goods_no);
 	 // category 값에 따라 goods_name 설정
 	    if (category == 'goods1') {
 	        goods_name = "인터넷/사무용";
@@ -514,7 +516,7 @@ $(function() {
 	    // JSON 객체 생성
 	    const data = {
 	        id: id,
-	        goods_no: goods_no,
+	        goods_no: goodsno,
 	        goods_name: goods_name,
 	        image_name: image_name,
 	        price: price,
@@ -557,7 +559,7 @@ $(function() {
 
 	    // 필요한 데이터 수집
 	    const id = document.getElementById("id").value;  // 로그인한 사용자 ID
-	    const goods_no = 1;  // 예시로 상품 번호를 고정하거나 페이지에서 동적으로 받아옴
+	    let goodsno = document.getElementById("deleteNo").value;
 	    let goods_name = "";  // 예시로 상품 이름을 설정
 	    const image_name = document.getElementById("image_name").src;  // 이미지 URL
 	    const price = parseFloat(document.getElementById("price").textContent || document.getElementById("price").innerText);
@@ -597,7 +599,7 @@ $(function() {
 	    // JSON 객체 생성
 	    const data = {
 	        id: id,
-	        goods_no: goods_no,
+	        goods_no: goodsno,
 	        goods_name: goods_name,
 	        image_name: image_name,
 	        price: price,

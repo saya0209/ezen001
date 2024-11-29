@@ -282,7 +282,7 @@ public class GoodsController {
             item.setQuantity(quantity);
             item.setDiscount(discount);
             item.setDelivery_charge(delivery_charge);
-
+            
             // 장바구니에 상품 추가
             cart.add(item);
 

@@ -8,6 +8,11 @@
     <title>컴마카세 - 전문가용 컴퓨터 구매</title>
     
     <style type="text/css">
+    #pickimg{
+    	style="width: 200px; 
+    	height: 150px;"
+    }
+    
     .row {
 	    display: flex;
 	    justify-content: center; /* 행의 콘텐츠를 중앙 정렬 */
@@ -24,7 +29,7 @@
 	
 	.card img {
 	    max-width: 100%; /* 이미지가 카드의 너비를 넘지 않도록 */
-	    height: auto; /* 이미지 비율을 유지 */
+	    height: 150px; /* 이미지 비율을 유지 */
 	    margin: 0 auto; /* 이미지를 중앙에 배치 */
 	}
     
@@ -339,20 +344,6 @@
             </div>
         </div>
     </section>
-
-    <!-- 제품 카테고리 -->
-    <section class="categories-section">
-        <div class="container">
-            <div class="section-header">
-                <h2>제품 카테고리</h2>
-                <p>목적에 맞는 최적의 PC를 찾아보세요</p>
-            </div>
-            <div class="row">
-                <!-- Category cards here (keeping existing structure) -->
-            </div>
-        </div>
-    </section>
-
     <!-- 추천 상품 섹션 -->
     <!-- 이달의 추천상품 섹션 -->
     <section class="featured-products">
@@ -386,7 +377,7 @@
 								<div class="card cartEvent" data-category="${goods.category}" data-goods_no="${goods.goods_no}">
 			                        <div class="imageDiv">
 			                            <!-- 여기에 상품 이미지 추가 -->
-			                            <img src="${goods.image_name}" alt="이미지">
+										<img id="pickimg" src="${goods.image_name}" alt="이미지" >
 			                        </div>
 			                        <div class="card-body">
 			                            <c:if test="${not empty goods.cpu_name and goods.cpu_name != '0'}">
@@ -410,8 +401,5 @@
             </div>
         </div>
     </section>
-
-
-
 </body>
 </html>

@@ -145,7 +145,7 @@
                 AND ROWNUM BETWEEN #{pageObject.startRow} AND #{pageObject.endRow}
             </if>
         </where>
-        ORDER BY g.total_price ASC
+        ORDER BY (g.total_price - g.discount + g.delivery_charge) ASC
     </select>
 
     <!-- 최고가순으로 정렬 -->
@@ -175,7 +175,7 @@
                 AND ROWNUM BETWEEN #{pageObject.startRow} AND #{pageObject.endRow}
             </if>
         </where>
-        ORDER BY g.total_price DESC
+        ORDER BY (g.total_price - g.discount + g.delivery_charge) DESC
     </select>
 
 
